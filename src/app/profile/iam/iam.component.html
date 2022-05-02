@@ -1,0 +1,18 @@
+<div class="content" *ngIf="user">
+  <div class="view-block">
+    <app-settings [user]="user"></app-settings>
+  </div>
+  <div class="view-block">
+    <app-role [user]="user"></app-role>
+  </div>
+  <div class="view-block">
+    <app-contacts [user]="user"></app-contacts>
+  </div>
+  <div class="view-block">
+    <app-login [user]="user"></app-login>
+  </div>
+  <hr />
+  <div class="view-block">
+    <app-delete [user]="user"></app-delete>
+  </div>
+</div>

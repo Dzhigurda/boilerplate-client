@@ -1,0 +1,68 @@
+<form id="phone" [formGroup]="contactForm">
+  <div class="row-contact">
+    <div class="icon">
+      <tui-svg [src]="contactForm.get('type')?.value?.icon"></tui-svg>
+    </div>
+    <div class="type">
+      <tui-select formControlName="type">
+        Type
+        <span class="tui-required"></span>
+        <tui-data-list-wrapper
+          *tuiDataList
+          [items]="types"
+          [itemContent]="typeContent"
+        ></tui-data-list-wrapper>
+      </tui-select>
+    </div>
+    <div class="title">
+      <tui-input formControlName="title">
+        Name of contact
+        <span class="tui-required"></span>
+      </tui-input>
+    </div>
+    <div class="value">
+      <tui-input-phone
+        formControlName="value"
+        *ngIf="contactForm.get('type')?.value?.id == 1"
+      >
+        Type a phone number
+        <span class="tui-required"></span>
+        <input tuiTextfield autocomplete="tel" />
+      </tui-input-phone>
+      <tui-input
+        formControlName="value"
+        *ngIf="contactForm.get('type')?.value?.id == 2"
+      >
+        Mail
+        <span class="tui-required"></span>
+        <input tuiTextfield autocomplete="email" />
+      </tui-input>
+      <tui-input
+        formControlName="value"
+        *ngIf="contactForm.get('type')?.value?.id == 3"
+      >
+        Adress
+        <span class="tui-required"></span>
+        <input tuiTextfield autocomplete="address-line1" />
+      </tui-input>
+      <tui-input
+        formControlName="value"
+        *ngIf="contactForm.get('type')?.value?.id == 4"
+      >
+        Link
+        <span class="tui-required"></span>
+        <input tuiTextfield autocomplete="url" />
+      </tui-input>
+    </div>
+    <div class="remove" (click)="onRemove(contactForm?.get('id')?.value)">
+      <tui-svg src="tuiIconCloseLarge"></tui-svg>
+    </div>
+  </div>
+</form>
+
+<ng-template #typeContent let-item>
+  <div class="type-item">
+    <span class="type-name">{{ item.name }}</span>
+    <span class="type-number">{{ item.id }}</span>
+  </div>
+</ng-template>

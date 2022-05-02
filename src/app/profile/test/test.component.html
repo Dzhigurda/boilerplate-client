@@ -1,0 +1,19 @@
+<div class="content" *ngIf="user">
+  <div class="tui-row tui-row_sme">
+    <div class="tui-col_12">
+      <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+      <p>
+        <small>
+          {{ user.firstName }} {{ user.secondName }} {{ user.lastName }}</small
+        >
+      </p>
+      <p>{{ role.value }} <tui-svg [src]="getStatusIcon()"></tui-svg></p>
+      <div class="contacts">
+        <div class="contact" *ngFor="let contact of user.contacts">
+          <div class="title">{{ contact.title }}</div>
+          <div class="value">{{ contact.value }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

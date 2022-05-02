@@ -1,0 +1,26 @@
+<div class="title">
+  <h2>2FA</h2>
+  <div class="link"><a routerLink="/auth/login">Sign in</a> instead?</div>
+</div>
+<p>
+  Two-Factor Authentication (2FA) is a great way to provide additional account
+  security so you don't have to worry about your account being used by someone
+  else.
+</p>
+<form [formGroup]="loginForm">
+  <div class="form-grid">
+    <tui-input formControlName="token">
+      Google auth token
+      <input tuiTextfield />
+    </tui-input>
+
+    <button
+      tuiButton
+      type="button"
+      [showLoader]="isLoading"
+      (click)="login()"
+    >
+      Sign In
+    </button>
+  </div>
+</form>

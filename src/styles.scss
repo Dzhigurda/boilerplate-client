@@ -1,0 +1,14 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+a {
+    color: #a00;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+    &:hover {
+        color: #f00;
+    }
+    &:focus {
+        color: #a05;
+        outline: none;
+    }
+}

@@ -1,0 +1,201 @@
+<h2>Privacy & Safety</h2>
+<div>
+  <div class="tui-form-field">
+    <button
+      tuiButton
+      type="button"
+      appearance="primary"
+      class="tui-space_right-3 tui-space_bottom-3"
+      (click)="showDialog(template)"
+    >
+      Change password
+    </button>
+  </div>
+</div>
+
+<h4 [class]="this.isEnable2FA === 'WITHIN_2FA' ? 'green' : 'red'">
+  Two-factor authentication
+</h4>
+<p>
+  Two-Factor Authentication (2FA) is a great way to provide additional account
+  security so you don't have to worry about your account being used by someone
+  else.
+</p>
+<div>
+  <div class="tui-form-field" *ngIf="isEnable2FA == 'WITHOUT_2FA'">
+    <button
+      tuiButton
+      type="button"
+      appearance="primary"
+      class="tui-space_right-3 tui-space_bottom-3"
+      (click)="show2FAEnable(twofactor, twofactorreserve)"
+    >
+      Enable 2FA
+    </button>
+  </div>
+  <div class="tui-form-field" *ngIf="isEnable2FA == 'WITHIN_2FA'">
+    <button
+      tuiButton
+      type="button"
+      appearance="primary"
+      class="tui-space_right-3 tui-space_bottom-3"
+      (click)="show2FADialog(twofactorreserve)"
+    >
+      Look reserv code
+    </button>
+    <button
+      tuiButton
+      type="button"
+      appearance="outline"
+      class="tui-space_right-3 tui-space_bottom-3"
+      (click)="disable2FA()"
+    >
+      Disable 2FA
+    </button>
+  </div>
+</div>
+
+<ng-template #twofactorreserve let-observer>
+  <div class="tui-row tui-row_sme">
+    <div class="tui-col_12">
+      <h3>Reserve codes</h3>
+      <p>Save this code in your computer.</p>
+      <div class="flex">
+        <div class="grid-fore">
+          <p *ngFor="let code of codes">
+            {{ code }}
+          </p>
+        </div>
+        <div class="tui-form-field">
+          <button
+            tuiButton
+            type="button"
+            appearance="primary"
+            class="tui-space_right-3 tui-space_bottom-3"
+            (click)="copyCodes(observer)"
+          >
+            Copy
+          </button>
+          <button
+            tuiButton
+            type="button"
+            appearance="outline"
+            class="tui-space_right-3 tui-space_bottom-3"
+            (click)="observer.complete()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #twofactor let-observer>
+  <div class="tui-row tui-row_sme">
+    <div class="tui-col_12">
+      <h3>Two-Factor Authentication</h3>
+      <p>
+        2FA is a great way to provide additional account security so you don't
+        have to worry about your account being used by someone else.
+      </p>
+      <p>
+        <img [src]="qr" />
+      </p>
+
+      <div class="flex">
+        <div class="tui-form-field">
+          <tui-input
+            tuiTextfieldExampleText="token"
+            [formControl]="tokenController"
+          >
+            Token from Google authentication
+            <span class="tui-required"></span>
+          </tui-input>
+        </div>
+        <div class="tui-form-field">
+          <button
+            tuiButton
+            type="button"
+            appearance="primary"
+            class="tui-space_right-3 tui-space_bottom-3"
+            (click)="enable2FA(observer, twofactorreserve)"
+          >
+            Enable
+          </button>
+          <button
+            tuiButton
+            type="button"
+            appearance="outline"
+            class="tui-space_right-3 tui-space_bottom-3"
+            (click)="observer.complete()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #template let-observer>
+  <form [formGroup]="loginForm">
+    <div class="tui-row tui-row_sme">
+      <div class="tui-col_12">
+        <h3>Authentitication</h3>
+        <p>You can change login or/and password</p>
+        <div class="flex">
+          <div class="tui-form-field">
+            <tui-input tuiTextfieldExampleText="Login" formControlName="login">
+              Login
+              <span class="tui-required"></span>
+            </tui-input>
+          </div>
+
+          <div class="tui-form-field">
+            <tui-input-password
+              tuiTextfieldExampleText="Password"
+              formControlName="password"
+              type="password"
+            >
+              Password
+              <span class="tui-required"></span>
+            </tui-input-password>
+          </div>
+
+          <div class="tui-form-field">
+            <tui-input-password
+              tuiTextfieldExampleText="Password"
+              formControlName="wpassword"
+              type="password"
+            >
+              Repeat password
+              <span class="tui-required"></span>
+            </tui-input-password>
+          </div>
+
+          <div class="tui-form-field">
+            <button
+              tuiButton
+              type="button"
+              appearance="primary"
+              class="tui-space_right-3 tui-space_bottom-3"
+              (click)="save(observer)"
+            >
+              Save
+            </button>
+            <button
+              tuiButton
+              type="button"
+              appearance="outline"
+              class="tui-space_right-3 tui-space_bottom-3"
+              (click)="observer.complete()"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-template>

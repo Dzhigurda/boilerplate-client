@@ -1,0 +1,31 @@
+ 
+.content {
+    padding: 10px 20px;
+    display: grid;
+    gap: 20px;
+    width: calc(100% - 240px);
+}
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+ 
+.scroll { 
+    min-height: 64px;
+    max-height: 200px;
+}
+
+.circle-bt {
+    border-radius: 50%;
+    display:inline-block;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    background-color: #f0f0f0;
+    opacity: 0.8;
+   margin-left: 10px;
+    &:hover {
+        opacity: 1;
+        background: #fff;
+    }
+}
+
+.tui-row_sme {
+    margin-bottom: 20px;
+}

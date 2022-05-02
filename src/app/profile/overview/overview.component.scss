@@ -1,0 +1,88 @@
+ 
+@import '~@taiga-ui/core/styles/taiga-ui-local';
+
+.content {
+    padding: 10px 20px;
+    display: grid;
+    gap: 20px;
+   
+}
+
+.grid { 
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 40px;
+}
+.kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0px;
+}
+.kpi {
+    height: 200px; 
+}
+
+.history {
+    height: 200px; 
+}
+
+.total {
+    padding: 10px 10px 20px 10px;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+}
+.total-earning {
+    padding: 10px 10px 20px 10px;
+    border-bottom: 1px solid #eee;
+}
+.total-fee {
+    padding: 10px 10px 20px 10px;
+    border-right: 1px solid #eee;
+}
+.total-fee-earning {
+    padding: 10px 10px 20px 10px;
+}
+h2 {
+    margin: 0;
+}
+
+p {
+    color: #888;
+    margin: 3px 0;
+}
+
+
+.wrapper {
+    display: flex;
+    align-items: center;
+ 
+    @media mobile {
+        flex-direction: column;
+    }
+}
+ 
+:host {
+    --tui-chart-0: #ff5f6d;
+    --tui-chart-1: #4bc0c8; 
+}
+
+.legend {
+    margin: 0 0 0 2rem;
+ 
+    @media mobile {
+        margin: 2rem 0 0;
+    }
+}
+ 
+.item {
+    margin: 0 0.5rem 0.75rem 0;
+}
+
+.axes {
+    height: 250px;
+}
+
+.status {
+    color: #080;
+    margin-bottom: 15px;
+}

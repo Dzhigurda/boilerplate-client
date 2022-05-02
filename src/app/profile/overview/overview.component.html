@@ -1,0 +1,52 @@
+<div class="content" *ngIf="user">
+  <div class="grid">
+    <div class="kpi">
+      <h1>Overview</h1>
+
+      <div class="kpi-grid">
+        <div class="total">
+          <p>Total views</p>
+          <h2>1203</h2>
+          <p class="status">+ 14.42%</p>
+        </div>
+        <div class="total-earning">
+          <p>Total earning</p>
+          <h2>20</h2>
+          <p class="status">+ 4.12%</p>
+        </div>
+
+        <div class="total-fee">
+          <p>Total fee</p>
+          <h2>1203</h2>
+          <p class="status">+ 14.42%</p>
+        </div>
+        <div class="total-fee-earning">
+          <p>Total earning</p>
+          <h2>20</h2>
+          <p class="status">+ 4.12%</p>
+        </div>
+      </div>
+    </div>
+    <div class="history">
+      <h1>Analytics</h1>
+
+      <tui-axes class="axes" [axisXLabels]="labelsX" [axisYLabels]="labelsY">
+        <tui-bar-chart [max]="10000" [value]="value"></tui-bar-chart>
+      </tui-axes>
+
+      <div class="legend">
+        <tui-legend-item
+          *ngFor="let label of labels; let index = index"
+          size="s"
+          class="item"
+          [color]="getColor(index)"
+          [text]="label"
+          [active]="isItemActive(index)"
+          (click)="onHover(index, $event)"
+        >
+          {{ value[index][value[index].length - 1] }}
+        </tui-legend-item>
+      </div>
+    </div>
+  </div>
+</div>

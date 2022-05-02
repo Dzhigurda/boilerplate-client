@@ -1,0 +1,47 @@
+<h2>Disable account</h2>
+<p>By disconnecting your account, you can restore it at any time.</p>
+<div *ngIf="user.STATUS !== 'DELETED'">
+  <div class="tui-form-field">
+    <button
+      tuiButton
+      type="button"
+      appearance="primary"
+      class="tui-space_right-3 tui-space_bottom-3"
+      (click)="remove()"
+    >
+      Disable account
+    </button>
+    <button
+      tuiButton
+      type="button"
+      appearance="outline"
+      class="tui-space_right-3 tui-space_bottom-3"
+      (click)="delete()"
+    >
+      Delete account
+    </button>
+  </div>
+</div>
+
+<div *ngIf="user.STATUS === 'DELETED'">
+  <div class="tui-form-field">
+    <button
+      tuiButton
+      type="button"
+      appearance="primary"
+      class="tui-space_right-3 tui-space_bottom-3"
+      (click)="recover()"
+    >
+      Enable account
+    </button>
+    <button
+      tuiButton
+      type="button"
+      appearance="outline"
+      class="tui-space_right-3 tui-space_bottom-3"
+      (click)="delete()"
+    >
+      Delete account
+    </button>
+  </div>
+</div>

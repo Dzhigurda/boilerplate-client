@@ -3,16 +3,16 @@
     <h2>Users</h2>
   </div>
 
-  <div class="view-block">
+  <div class="view-block" *ngIf="user && roles">
     <form [formGroup]="form">
-        <tui-filter
-            formControlName="filters"
-            size="s" 
-            [items]="items"
-        ></tui-filter>
+      <tui-filter
+        formControlName="filters"
+        size="s"
+        [items]="roles" 
+      ></tui-filter>
     </form>
   </div>
-  <div class="view-block">
+  <div class="view-block" *ngIf="user">
     <tui-scrollbar>
       <cdk-virtual-scroll-viewport
         #viewport
@@ -52,11 +52,11 @@
               <th
                 *tuiHead="'STATUS'"
                 tuiTh
-                [sticky]="true" 
+                [sticky]="true"
                 [style.top.px]="-viewport['_renderedContentOffset']"
               >
                 Status
-              </th>
+              </th> 
             </tr>
           </thead>
           <tbody tuiTbody>
@@ -68,11 +68,16 @@
                 {{ item.lastName }}
               </td>
               <td *tuiCell="'role'" tuiTd>
-                {{ item.role | role }}
+                <div class="flex-wrapper">
+                  <span>{{ item.role | role }} </span>
+                  <button tuiButton (click)="openRoleEditor(item)" [size]="'s'">
+                    Edit
+                  </button>
+                </div>
               </td>
-              <td *tuiCell="'STATUS'" tuiTd> 
-                <div [class]="item.STATUS">{{item.STATUS}}</div>
-              </td>
+              <td *tuiCell="'STATUS'" tuiTd>
+                <div [class]="item.STATUS">{{ item.STATUS }}</div>
+              </td> 
             </tr>
           </tbody>
         </table>
@@ -87,3 +92,15 @@
     ></tui-table-pagination>
   </div> -->
 </div>
+
+<ng-template #roleview let-observer>
+  <div class="tui-row tui-row_sme">
+    <div class="tui-col_12">
+      <form [formGroup]="roleForm">
+        <div class="flex">
+          <app-role [user]="currentUser!" (userChange)="recount()"></app-role>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>

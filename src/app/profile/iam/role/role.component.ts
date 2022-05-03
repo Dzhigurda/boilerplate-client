@@ -1,4 +1,13 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { debounceTime, Subscription } from 'rxjs';
@@ -8,21 +17,22 @@ import { Role, RoleService } from '../../role.service';
 @Component({
   selector: 'app-role',
   templateUrl: './role.component.html',
-  styleUrls: ['./role.component.scss']
+  styleUrls: ['./role.component.scss'],
 })
 export class RoleComponent implements OnInit, OnDestroy {
-
   @Input()
   user!: ClientUser;
-  
+
+  @Output()
+  userChange = new EventEmitter();
+
   authForm: FormGroup = new FormGroup({
     role: new FormControl(null, Validators.required),
   });
   authsub!: Subscription;
 
-
   items: Role[] = [];
-  
+
   private notifyOptions = {
     status: TuiNotification.Error,
   };
@@ -31,17 +41,16 @@ export class RoleComponent implements OnInit, OnDestroy {
     status: TuiNotification.Success,
   };
 
-  constructor( 
-    private roleService: RoleService, 
+  constructor(
+    private roleService: RoleService,
     @Inject(TuiNotificationsService)
-    private readonly notificationsService: TuiNotificationsService
+    private readonly notificationsService: TuiNotificationsService,
+    private ref: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.initAuth();
-    this.authsub = this.authForm.valueChanges
-    .pipe(debounceTime(2000))
-    .subscribe((part) => {
+    this.authsub = this.authForm.valueChanges.subscribe((part) => {
       console.log(this.authForm.valid, this.authForm.errors);
       if (!this.authForm.valid) return;
       if (part.role === this.oldRole) return;
@@ -52,22 +61,24 @@ export class RoleComponent implements OnInit, OnDestroy {
           this.notificationsService
             .show('Role saved', this.notifyOptionsSuccess)
             .subscribe();
+          this.userChange.emit();
+          this.ref.detectChanges();
         },
         error: (er) => {
-          console.log(er);
           this.notificationsService
             .show(er.error, this.notifyOptions)
             .subscribe();
           this.setDefaultRole();
+
+          this.ref.detectChanges();
         },
       });
     });
   }
- 
-  ngOnDestroy(): void {
-    this.authsub.unsubscribe(); 
-  }
 
+  ngOnDestroy(): void {
+    this.authsub.unsubscribe();
+  }
 
   oldRole: any;
   private initAuth() {
@@ -78,5 +89,4 @@ export class RoleComponent implements OnInit, OnDestroy {
   private setDefaultRole() {
     this.authForm.get('role')?.setValue(this.oldRole);
   }
-
 }

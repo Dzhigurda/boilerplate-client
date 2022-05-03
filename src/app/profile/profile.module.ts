@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileRouterModule } from './profile-router/profile-router.module';
 import {TuiMobileDialogModule} from '@taiga-ui/addon-mobile';
-import {TuiInputPasswordModule} from '@taiga-ui/kit';
+import {TuiAccordionModule, TuiInputPasswordModule} from '@taiga-ui/kit';
 
 import {
   TuiCheckboxModule,
@@ -91,7 +91,9 @@ import { RolePipe } from '../utilites/role.pipe';
     TuiBarChartModule,
     TuiAxesModule,
     TuiTableModule,
-    TuiTablePaginationModule
+    TuiTablePaginationModule,
+    TuiSvgModule,
+    TuiAccordionModule
   ],
 })
 export class ProfileModule {} 

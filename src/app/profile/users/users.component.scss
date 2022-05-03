@@ -71,3 +71,21 @@ table {
 .CHECKED:before {
   background: var(--tui-success-fill);
 }
+
+
+.flex-wrapper {
+    display: flex;
+    align-items: center;
+    span {
+        flex: 1;
+        display: block;
+    }
+    button {
+        display: block;
+    }
+}
+.flex {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

@@ -1,0 +1,106 @@
+<div class="content" *ngIf="user">
+  <div class="view-block">
+    <h2>Users</h2>
+  </div>
+
+  <div class="view-block" *ngIf="user && roles">
+    <form [formGroup]="form">
+      <tui-filter
+        formControlName="filters"
+        size="s"
+        [items]="roles" 
+      ></tui-filter>
+    </form>
+  </div>
+  <div class="view-block" *ngIf="user">
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        #viewport
+        tuiScrollable
+        class="viewport tui-zero-scrollbar"
+        [itemSize]="45"
+        [maxBufferPx]="500"
+        [minBufferPx]="400"
+      >
+        <table tuiTable [columns]="columns">
+          <thead>
+            <tr tuiThGroup>
+              <th
+                *tuiHead="'firstName'"
+                tuiTh
+                [sticky]="true"
+                [style.top.px]="-viewport['_renderedContentOffset']"
+              >
+                FirstName
+              </th>
+              <th
+                *tuiHead="'lastName'"
+                tuiTh
+                [sticky]="true"
+                [style.top.px]="-viewport['_renderedContentOffset']"
+              >
+                LastName
+              </th>
+              <th
+                *tuiHead="'role'"
+                tuiTh
+                [sticky]="true"
+                [style.top.px]="-viewport['_renderedContentOffset']"
+              >
+                Role
+              </th>
+              <th
+                *tuiHead="'STATUS'"
+                tuiTh
+                [sticky]="true"
+                [style.top.px]="-viewport['_renderedContentOffset']"
+              >
+                Status
+              </th> 
+            </tr>
+          </thead>
+          <tbody tuiTbody>
+            <tr *cdkVirtualFor="let item of data | tuiTableSort" tuiTr>
+              <td *tuiCell="'firstName'" tuiTd>
+                {{ item.firstName }}
+              </td>
+              <td *tuiCell="'lastName'" tuiTd>
+                {{ item.lastName }}
+              </td>
+              <td *tuiCell="'role'" tuiTd>
+                <div class="flex-wrapper">
+                  <span>{{ item.role | role }} </span>
+                  <button tuiButton (click)="openRoleEditor(item)" [size]="'s'">
+                    Edit
+                  </button>
+                </div>
+              </td>
+              <td *tuiCell="'STATUS'" tuiTd>
+                <div [class]="item.STATUS">{{ item.STATUS }}</div>
+              </td> 
+            </tr>
+          </tbody>
+        </table>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </div>
+  <!-- <div class="view-block">
+    <tui-table-pagination
+      [total]="data.length"
+      [(page)]="page"
+      [(size)]="size"
+    ></tui-table-pagination>
+  </div> -->
+</div>
+
+<ng-template #roleview let-observer>
+  <div class="tui-row tui-row_sme">
+    <div class="tui-col_12">
+      <form [formGroup]="roleForm">
+        <div class="flex">
+          <app-role [user]="currentUser!" (userChange)="recount()"></app-role>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>

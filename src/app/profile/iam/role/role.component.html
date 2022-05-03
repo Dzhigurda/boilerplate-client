@@ -1,0 +1,36 @@
+<form [formGroup]="authForm">
+  <div class="tui-row tui-row_sme">
+    <div class="tui-col_12">
+      <h2>Role</h2>
+      <div class="tui-form__row tui-form__row_multi-fields">
+        <div class="tui-form__multi-field">
+          <tui-select
+            class="b-form"
+            formControlName="role"
+            [valueContent]="cardContent"
+          >
+            Role
+            <tui-data-list-wrapper
+              *tuiDataList
+              [items]="items"
+              [itemContent]="cardContent"
+            ></tui-data-list-wrapper>
+          </tui-select>
+        </div>
+      </div>
+
+      <div class="tui-form__row tui-form__row_multi-fields">
+        <div class="tui-form__multi-field">
+          {{ oldRole.comment ?? "Нет комментариев" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<ng-template #cardContent let-item>
+  <div class="card-item">
+    <tui-svg src="tuiIconUser"></tui-svg>
+    <span class="card-name">{{ item.value }}</span>
+  </div>
+</ng-template>

@@ -1,0 +1,20 @@
+.title {
+    display: flex;
+    align-items: baseline;
+    h2 {
+        flex: 1;
+    }
+}
+.form-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.submenu {
+    display: flex;
+    align-items: center;
+    .checkbox {
+        flex: 1;
+    }
+}
+ 

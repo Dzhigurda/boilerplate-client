@@ -1,0 +1,133 @@
+<div class="container">
+  <div class="menu">
+    <img src="/assets/logo.png" />
+    <ul class="panel">
+      <li>
+        <a tuiLink [routerLink]="'/profile'">
+          <tui-svg src="tuiIconEyeOpen"></tui-svg> <span>Overview</span></a
+        >
+      </li>
+      <li>
+        <a tuiLink [routerLink]="'/profile/task'"
+          ><tui-svg src="tuiIconCalendar"></tui-svg> <span>Tasks</span></a
+        >
+      </li>
+      <li>
+        <a tuiLink [routerLink]="'/profile/articles'"
+          ><tui-svg src="tuiIconDraft"></tui-svg> <span>Articles</span></a
+        >
+      </li>
+      <li>
+        <a tuiLink [routerLink]="'/profile/fee'"
+          ><tui-svg src="tuiIconFile"></tui-svg> <span>Fee</span></a
+        >
+      </li>
+      <li>
+        <a tuiLink [routerLink]="'/profile/analitics'"
+          ><tui-svg src="tuiIconTime"></tui-svg> <span>Analitics</span></a
+        >
+      </li>
+      <li>
+        <a tuiLink [routerLink]="'/profile/photo'"
+          ><tui-svg src="tuiIconPicture"></tui-svg> <span>Phtots</span></a
+        >
+      </li>
+      <hr />
+      <li>
+        <a tuiLink [routerLink]="'/profile/users'"
+          ><tui-svg src="tuiIconUsers"></tui-svg> <span>Users</span></a
+        >
+      </li>
+      <li>
+        <a tuiLink [routerLink]="'/profile/fee/report'"
+          ><tui-svg src="tuiIconAttach"></tui-svg> <span>Fee report</span></a
+        >
+      </li>
+      <li>
+        <a tuiLink [routerLink]="'/profile/analitics/report'"
+          ><tui-svg src="tuiIconFilter"></tui-svg>
+          <span>Analitics report</span></a
+        >
+      </li>
+
+      <li>
+        <a tuiLink [routerLink]="'/profile/test'"
+          ><tui-svg src="tuiIconUsers"></tui-svg> <span>Test</span></a
+        >
+      </li>
+      <li class="last-item" (click)="logout()">
+        <tui-svg src="tuiIconUpload"></tui-svg> <span>Log out</span>
+      </li>
+    </ul>
+    <hr />
+    <div class="between"></div>
+    <p class="version">
+      Stable 2.1.12<br />
+      Angular 13.3.00 / Fastify 3.28.0
+    </p> 
+    <div class="personal-view">
+      <div class="icon">
+        <tui-svg src="tuiIconSettings" class="svg-icon"></tui-svg>
+      </div>
+      <div class="text" routerLink="/profile/iam">
+        <h4 *ngIf="!user">Загрузка...</h4>
+        <ng-container *ngIf="user">
+          <h4>{{ user.firstName }} {{ user.lastName }}</h4>
+          <p [title]="role.comment">{{ role.value }}</p>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="content-side">
+    <tui-scrollbar>
+      <div class="content" *ngIf="user">
+        <router-outlet (activate)="onActivate($event)"></router-outlet>
+      </div>
+    </tui-scrollbar>
+  </div>
+</div>
+
+
+
+<ng-template #verifyemail let-observer>
+  <div class="tui-row tui-row_sme">
+    <div class="tui-col_12">
+      <h3>Please verify your email</h3>
+      <p>
+        An email with a verification code has been sent to your email,<br/> please enter it in this form.
+      </p> 
+
+      <div class="flex">
+        <div class="tui-form-field">
+          <tui-input
+            tuiTextfieldExampleText="token"
+            [formControl]="verifyCode"
+          >
+            Code from yout email
+            <span class="tui-required"></span>
+          </tui-input>
+        </div>
+        <div class="tui-form-field">
+          <button
+            tuiButton
+            type="button"
+            appearance="primary"
+            class="tui-space_right-3 tui-space_bottom-3"
+            (click)="verify(observer)"
+          >
+            Verofy
+          </button>
+          <button
+            tuiButton
+            type="button"
+            appearance="outline"
+            class="tui-space_right-3 tui-space_bottom-3"
+            (click)="observer.complete()"
+          >
+            Later
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,176 @@
+@import "~@taiga-ui/core/styles/taiga-ui-local";
+
+.content {
+  background-color: #fff;
+  padding: 10px 20px;
+  display: grid;
+  gap: 20px;
+  min-height: 100%;
+}
+.kpi-view {
+    border: 1px solid #f9f9f9;
+//   background-color: #f9f9f9;
+  // box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+.grid {
+  display: grid;
+  //   grid-template-columns: 300px auto;
+  //   grid-template-rows: 380px auto;
+  gap: 10px;
+  grid-template-areas:
+    "A B B B"
+    "C C C C";
+}
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  height: calc(100% - 80px);
+  gap: 0px;
+}
+.kpi {
+  grid-area: A;
+}
+
+.history {
+  grid-area: B;
+}
+.table {
+  grid-area: C;
+}
+.total {
+  padding: 10px 10px 20px 10px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+.total-earning {
+  padding: 10px 10px 20px 10px;
+  border-bottom: 1px solid #eee;
+}
+.total-fee {
+  padding: 10px 10px 20px 10px;
+  border-right: 1px solid #eee;
+}
+.total-fee-earning {
+  padding: 10px 10px 20px 10px;
+}
+h2 {
+  margin: 0;
+}
+
+p {
+  color: #888;
+  margin: 3px 0;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+
+  @media mobile {
+    flex-direction: column;
+  }
+}
+
+:host {
+  --tui-chart-0: #ff5f6d;
+  --tui-chart-1: #4bc0c8;
+}
+
+.legend {
+  margin: 0 0 0 2rem;
+
+  @media mobile {
+    margin: 2rem 0 0;
+  }
+}
+
+.item {
+  margin: 0 0.5rem 0.75rem 0;
+}
+
+.axes {
+  height: 250px;
+}
+
+.status {
+  color: #080;
+  margin-bottom: 15px;
+}
+
+///
+
+@import "~@taiga-ui/core/styles/taiga-ui-local";
+
+.container {
+  max-width: 100%;
+}
+
+.operation-header {
+  font: var(--tui-font-text-l);
+  display: flex;
+  align-items: center;
+}
+
+.operation-date {
+  font: var(--tui-font-text-xl);
+  text-align: center;
+}
+
+.operation-date,
+.operation-info {
+  color: var(--tui-text-02);
+}
+
+.operation-month,
+.operation-status {
+  font: var(--tui-font-text-s);
+}
+
+.operation-pic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0 1.5rem;
+  background: var(--tui-secondary-active);
+  border-radius: 100%;
+  width: 3rem;
+  height: 3rem;
+  color: var(--tui-text-03);
+}
+
+.operation-title {
+  margin-right: 1.5rem;
+  flex-grow: 1;
+}
+
+.operation-info {
+  text-align: right;
+}
+
+.operation-status {
+  &_success {
+    color: var(--tui-success-fill);
+  }
+
+  &_error {
+    color: var(--tui-error-fill);
+  }
+}
+
+.form-title {
+  font: var(--tui-font-heading-6);
+  margin: 0 0 1.25rem;
+}
+
+.input {
+  max-width: 28.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.buttons {
+  display: flex;
+}

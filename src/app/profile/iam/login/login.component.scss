@@ -1,0 +1,53 @@
+p {
+  padding: 0px 0;
+}
+.content {
+  padding: 10px 20px;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+h4 {
+  &.green {
+    color: #3aa981;
+  }
+  &.red {
+    color: #a00;
+  }
+}
+// tui-wrapper[data-appearance="outline-negative"] {
+//   background: #fff;
+//   color: #dd4c1e;
+//   border: 1px solid #dd4c1e;
+
+//   &[data-state="hovered"] {
+//     color: #e38163;
+//   }
+
+//   &[data-state="pressed"] {
+//     color: #dd4c1e;
+//   }
+
+//   &[data-state="disabled"] {
+//     color: rgba(27,31,59,0.4);
+//     border: 1px solid rgba(27,31,59,0.4);
+//   }
+// }
+
+.grid-fore {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
+  p {
+    font-weight: bold;
+    text-align: center;
+    background: #f0f0f0;
+    border-radius: 5px;
+    margin: 0;
+    padding: 10px;
+    font-size: 20px;
+  }
+}

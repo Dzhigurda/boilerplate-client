@@ -1,0 +1,36 @@
+<div class="title">
+  <h2>Sign In</h2>
+  <div class="link">
+    <a routerLink="/auth/registration">Create Account</a> instead?
+  </div>
+</div>
+<form [formGroup]="loginForm">
+  <div class="form-grid">
+    <tui-input formControlName="login">
+      Login (email)
+      <input tuiTextfield />
+    </tui-input>
+    <tui-input-password formControlName="password">
+      Password
+      <input tuiTextfield />
+    </tui-input-password>
+    <div class="submenu">
+      <div class="checkbox">
+        <tui-checkbox-labeled formControlName="keep">
+          Keep me signed in
+        </tui-checkbox-labeled>
+      </div>
+      <div class="link">
+        <a routerLink="/auth/remind">Forgot Password?</a>
+      </div>
+    </div>
+    <button
+      tuiButton
+      type="button" 
+      [showLoader]="isLoading"
+      (click)="onClick($event)"
+    >
+      Sign In
+    </button>
+  </div>
+</form>

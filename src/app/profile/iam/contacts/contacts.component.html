@@ -1,0 +1,19 @@
+<div class="tui-row tui-row_sme">
+  <div class="tui-col_12">
+    <h2>
+      Contacts
+      <span class="circle-bt" (click)="addContact()"
+        ><tui-svg src="tuiIconPlus"></tui-svg
+      ></span>
+    </h2>
+    <p *ngIf="!contacts.length">Нет контактов</p>
+    <app-contact
+      *ngFor="let contact of contacts; let i = index"
+      [contactForm]="contact"
+      [user]="user"
+      (remove)="removeContact($event, i)"
+      (add)="setContact($event, i)"
+      (update)="updateContact($event, i)"
+    ></app-contact>
+  </div>
+</div>

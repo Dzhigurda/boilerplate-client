@@ -1,0 +1,91 @@
+p {
+  padding: 10px;
+}
+.content {
+  padding: 10px 20px;
+}
+
+.view-block {
+  margin: 10px 0;
+}
+
+table {
+  width: 100%;
+
+  td,
+  th {
+    white-space: nowrap;
+    border-color: transparent;
+    border-right-color: var(--tui-base-04);
+
+    &:last-child {
+      border-right-color: transparent;
+    }
+
+    &:first-child {
+      width: 10rem;
+      font-weight: bold;
+    }
+
+    &:last-child {
+      width: 3rem;
+    }
+  }
+
+  tbody {
+    border-color: transparent;
+  }
+
+  tr:nth-child(even) td {
+    background: var(--tui-base-02);
+  }
+
+  tr {
+    height: 45px;
+  }
+}
+
+.viewport {
+  height: calc(100vh - 200px);
+}
+
+.CHECKED,
+.DELETED,
+.CREATED {
+  display: flex;
+  align-items: center;
+  text-transform: capitalize;
+
+  &:before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 100%;
+    margin-right: 0.5rem;
+    background: var(--tui-base-04);
+  }
+}
+.DELETED::before {
+  background: var(--tui-error-fill);
+}
+.CHECKED:before {
+  background: var(--tui-success-fill);
+}
+
+
+.flex-wrapper {
+    display: flex;
+    align-items: center;
+    span {
+        flex: 1;
+        display: block;
+    }
+    button {
+        display: block;
+    }
+}
+.flex {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

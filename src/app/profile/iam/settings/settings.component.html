@@ -1,0 +1,40 @@
+
+  <form [formGroup]="userForm">
+    <div class="tui-row tui-row_sme">
+      <div class="tui-col_12">
+        <h2>Setting</h2>
+        <div class="tui-form__row tui-form__row_multi-fields">
+          <div class="tui-form__multi-field">
+            <tui-input
+              tuiTextfieldExampleText="Field placeholder"
+              formControlName="firstName"
+              tuiHintContent="A tooltip"
+            >
+              First name
+              <span class="tui-required"></span>
+            </tui-input>
+          </div>
+          <div class="tui-form__multi-field">
+            <tui-input
+              tuiTextfieldExampleText="Field placeholder"
+              formControlName="secondName"
+              tuiHintContent="A tooltip"
+            >
+              Second name
+              <span class="tui-required"></span>
+            </tui-input>
+          </div>
+          <div class="tui-form__multi-field">
+            <tui-input
+              tuiTextfieldExampleText="Field placeholder"
+              formControlName="lastName"
+              tuiHintContent="A tooltip"
+            >
+              Last name
+              <span class="tui-required"></span>
+            </tui-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form> 

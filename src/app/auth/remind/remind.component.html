@@ -1,0 +1,25 @@
+<div class="title">
+  <h2>Trouble signing in?</h2>
+  <div class="link"><a routerLink="/auth/login">Sign In</a> instead?</div>
+</div>
+<p>
+  Don't worry, we've got your back! Just enter your email<br />
+  address and we'll send you a link with which you can reset<br />
+  your password.
+</p>
+<form [formGroup]="loginForm">
+  <div class="form-grid">
+    <tui-input formControlName="login">
+      Login (email)
+      <input tuiTextfield />
+    </tui-input>
+    <button
+      tuiButton
+      type="button"
+      [showLoader]="isLoading"
+      (click)="onClick($event)"
+    >
+      Submit
+    </button>
+  </div>
+</form>

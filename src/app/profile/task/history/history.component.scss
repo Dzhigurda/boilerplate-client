@@ -1,0 +1,35 @@
+table {
+  width: 100%;
+
+  td,
+  th {
+    white-space: nowrap;
+    border-color: transparent;
+    border-right-color: var(--tui-base-04);
+
+    &:last-child {
+      border-right-color: transparent;
+    }
+
+    &:first-child {
+      width: 10rem;
+      font-weight: bold;
+    }
+
+    &:last-child {
+      width: 3rem;
+    }
+  }
+
+  tbody {
+    border-color: transparent;
+  }
+
+  tr:nth-child(even) td {
+    background: var(--tui-base-02);
+  }
+
+  tr {
+    height: 45px;
+  }
+}

@@ -5,8 +5,17 @@ import { BaseComponent } from './base/base.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileRouterModule } from './profile-router/profile-router.module';
-import {TuiMobileDialogModule} from '@taiga-ui/addon-mobile';
-import {TuiAccordionModule, TuiInputPasswordModule} from '@taiga-ui/kit';
+import { TuiMobileDialogModule } from '@taiga-ui/addon-mobile';
+import {
+  TuiAccordionModule,
+  TuiBadgedContentModule,
+  TuiInputDateModule,
+  TuiInputNumberModule,
+  TuiInputPasswordModule,
+  TuiProgressModule,
+  TuiTagModule,
+  TuiTextAreaModule,
+} from '@taiga-ui/kit';
 
 import {
   TuiCheckboxModule,
@@ -20,6 +29,8 @@ import {
 import {
   TuiButtonModule,
   TuiDataListModule,
+  TuiFormatNumberPipeModule,
+  TuiLabelModule,
   TuiLinkModule,
   TuiPrimitiveTextfieldModule,
   TuiScrollbarModule,
@@ -37,12 +48,31 @@ import { SettingsComponent } from './iam/settings/settings.component';
 import { LoginComponent } from './iam/login/login.component';
 import { ContactsComponent } from './iam/contacts/contacts.component';
 import { DeleteComponent } from './iam/delete/delete.component';
-import { TuiAxesModule, TuiBarChartModule, TuiLegendItemModule, TuiRingChartModule } from '@taiga-ui/addon-charts';
-import { TuiMoneyModule } from '@taiga-ui/addon-commerce';
+import {
+  TuiAxesModule,
+  TuiBarChartModule,
+  TuiLegendItemModule,
+  TuiRingChartModule,
+} from '@taiga-ui/addon-charts';
+import {
+  TuiCurrencyPipeModule,
+  TuiMoneyModule,
+} from '@taiga-ui/addon-commerce';
 import { VerifyComponent } from './verify/verify.component';
 import { UsersComponent } from './users/users.component';
-import { TuiTableModule, TuiTablePaginationModule } from '@taiga-ui/addon-table';
+import {
+  TuiTableModule,
+  TuiTablePaginationModule,
+} from '@taiga-ui/addon-table';
 import { RolePipe } from '../utilites/role.pipe';
+import { HistoryComponent } from './task/history/history.component';
+import { InformationWithFormEditorComponent } from './task/information-with-form-editor/information-with-form-editor.component';
+import { InformationWithFormArticleComponent } from './task/information-with-form-article/information-with-form-article.component';
+import { InformationWithFormGuestComponent } from './task/information-with-form-guest/information-with-form-guest.component';
+import { AboutComponent } from './task/about/about.component';
+import { TaskItemComponent } from './task/task-item/task-item.component';
+import { ControlComponent } from './task/control/control.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -59,7 +89,14 @@ import { RolePipe } from '../utilites/role.pipe';
     DeleteComponent,
     VerifyComponent,
     UsersComponent,
-    RolePipe
+    RolePipe,
+    HistoryComponent,
+    InformationWithFormEditorComponent,
+    InformationWithFormArticleComponent,
+    InformationWithFormGuestComponent,
+    AboutComponent,
+    TaskItemComponent,
+    ControlComponent,
   ],
   imports: [
     ProfileRouterModule,
@@ -93,7 +130,17 @@ import { RolePipe } from '../utilites/role.pipe';
     TuiTableModule,
     TuiTablePaginationModule,
     TuiSvgModule,
-    TuiAccordionModule
+    TuiAccordionModule,
+    TuiBadgedContentModule,
+    TuiInputNumberModule,
+    TuiCurrencyPipeModule,
+    TuiProgressModule,
+    TuiTagModule,
+    TuiInputDateModule,
+    TuiFormatNumberPipeModule,
+    TuiLabelModule,
+    TuiTextAreaModule,
+    MarkdownModule.forRoot(),
   ],
 })
-export class ProfileModule {} 
+export class ProfileModule {}

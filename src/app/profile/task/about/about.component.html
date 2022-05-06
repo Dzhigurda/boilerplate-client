@@ -1,0 +1,72 @@
+<ng-container *ngIf="task">
+  <form [formGroup]="form">
+    <div class="flex">
+      <h2 *ngIf="isView()">
+        {{ task.title }}
+      </h2>
+
+      <tui-input formControlName="title" *ngIf="!isView()">
+        Title
+        <input tuiTextfield />
+      </tui-input>
+      <button
+        *ngIf="isView() && this.task.status === 'CREATED'"
+        tuiIconButton
+        type="button"
+        size="m"
+        icon="tuiIconSettings"
+        (click)="edit()"
+      ></button>
+      <button
+        *ngIf="!isView()"
+        tuiIconButton
+        type="button"
+        size="m"
+        icon="tuiIconCheckCircle"
+        (click)="save()"
+      ></button>
+      <button
+        *ngIf="!isView()"
+        tuiIconButton
+        type="button"
+        size="m"
+        icon="tuiIconClose"
+        (click)="cancel()"
+      ></button>
+    </div>
+    <div class="tags">
+      <tui-tag
+        size="s"
+        [status]="task.statusClass"
+        [value]="task.status"
+      ></tui-tag>
+    </div>
+    <markdown *ngIf="isView()">{{ task.description }}</markdown>
+
+    <tui-text-area formControlName="description" *ngIf="!isView()">
+      Description
+    </tui-text-area>
+  </form>
+  <h4>Information {{ mode }}</h4>
+  <app-information-with-form-article
+    [user]="user"
+    [task]="task"
+    *ngIf="isAuthor()"
+  ></app-information-with-form-article>
+  <app-information-with-form-editor
+    [user]="user"
+    [task]="task"
+    *ngIf="isEditor()"
+  ></app-information-with-form-editor>
+  <app-information-with-form-guest
+    [user]="user"
+    [task]="task"
+    *ngIf="isGuest()"
+  ></app-information-with-form-guest>
+  <h4>History</h4>
+  <app-history [task]="task"></app-history>
+  <app-control [task]="task" [user]="user"></app-control>
+</ng-container>
+<ng-container *ngIf="!task">
+  <h2>Task had not selected</h2>
+</ng-container>

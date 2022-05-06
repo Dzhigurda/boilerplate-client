@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="row-item">
+    <label tuiLabel label="Editor">
+      {{ task.editorRef?.getFullName() }}
+    </label>
+  </div>
+
+  <div class="row-item">
+    <label tuiLabel label="Author">
+      {{ task.authorRef?.getFullName() }}
+    </label>
+  </div>
+
+  <div class="row-item">
+    <label tuiLabel label="Date end">
+      {{ task.dateEnd! | date: "dd.MM.yyyy" }}
+    </label>
+  </div>
+
+  <div class="row-item">
+    <label tuiLabel label="Fee"> {{ task.fee }} руб. </label>
+  </div>
+</div>
+<div class="row" *ngIf="task.status != 'PUBLISHED'">
+  <div class="row-item-long" *ngIf="task.status !== 'DISTRIBUTED'">
+    <a
+      class="card-article"
+      [routerLink]="'/profile/articles/' + task.art?.id"
+      target="_blank"
+    >
+      <div class="image">
+        <img [src]="task.art?.imageSq" />
+      </div>
+      <div class="description">
+        <h2>{{ task.art?.title }}</h2>
+        <p>Смотреть</p>
+      </div>
+    </a>
+  </div>
+</div>

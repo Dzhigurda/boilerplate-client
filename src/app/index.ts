@@ -40,4 +40,8 @@ export class ClientUser {
       role: this.role,
     };
   }
+
+  getFullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
 }

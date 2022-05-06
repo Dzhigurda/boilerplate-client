@@ -1,0 +1,48 @@
+<form class="b-form" [formGroup]="form">
+  <div class="row">
+    <div class="row-item">
+      <tui-combo-box tuiTextfieldSize="m" formControlName="editor">
+        Editor
+        <input tuiTextfield />
+        <tui-data-list-wrapper
+          *tuiDataList
+          [items]="users"
+        ></tui-data-list-wrapper>
+      </tui-combo-box>
+    </div>
+
+    <div class="row-item">
+      <tui-input-date class="b-form" formControlName="dateEnd">
+        Choose a date end
+      </tui-input-date>
+    </div>
+
+    <div class="row-item">
+      <tui-input-number formControlName="fee" [postfix]="'RUR' | tuiCurrency">
+        Fee
+      </tui-input-number>
+    </div>
+  </div>
+  <div class="row">
+    <div class="row-item">
+      <tui-combo-box tuiTextfieldSize="m" formControlName="author">
+        Author
+        <input tuiTextfield />
+        <tui-data-list-wrapper
+          *tuiDataList
+          [items]="users"
+        ></tui-data-list-wrapper>
+      </tui-combo-box>
+    </div>
+    <div class="row-item-long">
+      <tui-combo-box tuiTextfieldSize="m" formControlName="article">
+        Belong article
+        <input tuiTextfield />
+        <tui-data-list-wrapper
+          *tuiDataList
+          [items]="articles"
+        ></tui-data-list-wrapper>
+      </tui-combo-box>
+    </div>
+  </div>
+</form>

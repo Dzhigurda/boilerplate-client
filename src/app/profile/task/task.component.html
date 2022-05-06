@@ -1,3 +1,42 @@
 <div class="content" *ngIf="user">
+  <div class="task-side">
     <h1>Tasks</h1>
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        #viewport
+        tuiScrollable
+        class="viewport tui-zero-scrollbar"
+        [itemSize]="45"
+        [maxBufferPx]="500"
+        [minBufferPx]="400"
+      >
+        <div class="task-grid">
+          <ng-container *ngFor="let task of items">
+            <app-task-item
+              [task]="task"
+              [isActive]="task.id == currentTask?.id"
+              (select)="select($event)"
+            ></app-task-item>
+          </ng-container>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </div>
+  <div class="task-editor-side">
+    <h1>About</h1> 
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        #viewport2
+        tuiScrollable
+        class="viewport2 tui-zero-scrollbar"
+        [itemSize]="45"
+        [maxBufferPx]="500"
+        [minBufferPx]="400"
+      >
+        <div class="task-about">
+          <app-about [task]="currentTask" [user]="user"></app-about> 
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </div>
 </div>

@@ -1,0 +1,13 @@
+.row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.row-item {
+  flex: 1;
+}
+
+.row-item-long {
+  flex: 2;
+}

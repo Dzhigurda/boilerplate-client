@@ -1,0 +1,28 @@
+<div class="history" *ngIf="task">
+  <table tuiTable class="table" [columns]="columns">
+    <thead>
+      <tr tuiThGroup>
+        <th tuiTh>Date</th>
+        <th tuiTh>User</th>
+        <th tuiTh>Status</th>
+      </tr>
+    </thead>
+    <tbody tuiTbody [data]="history" #table >
+      <tr *tuiRow="let item of history" tuiTr>
+        <td *tuiCell="'date'" tuiTd>
+          {{ item.date | date: "dd/MM/yyyy" }}
+        </td>
+        <td *tuiCell="'name'" tuiTd>
+          <b>{{ item.name }}</b>
+        </td>
+        <td *tuiCell="'status'" tuiTd>
+          <tui-tag
+            size="s"
+            [status]="item.statusClass"
+            [value]="item.status"
+          ></tui-tag>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

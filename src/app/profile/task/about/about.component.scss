@@ -1,0 +1,17 @@
+ 
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  h2, tui-input {
+    flex: 1;
+  }
+  button {
+    margin: 0;
+  }
+}
+
+.tags {
+  margin-bottom: 10px;
+}

@@ -1,16 +1,25 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subscriber, Subscription } from 'rxjs';
+import { debounceTime, Subscriber, Subscription } from 'rxjs';
 import { ClientUser } from 'src/app';
 import { UserService } from 'src/app/user.service';
 import {
   ArtilcesService,
   ArtilceTumbanian,
-} from '../../artilces/artilces.service';
+} from '../../articles/artilces.service';
 import { RoleService } from '../../role.service';
 import { ClientUserTumbanian, TaskPresenter } from '../Task';
 import { TuiDay } from '@taiga-ui/cdk';
 import { TaskService } from '../task.service';
+import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
+import { UserTumbanianFactory } from '../UserTumbanianFactory';
 
 @Component({
   selector: 'app-information-with-form-editor',
@@ -36,6 +45,9 @@ export class InformationWithFormEditorComponent implements OnInit {
   @Input()
   user!: ClientUser;
 
+  @Input()
+  canSeeFee = false;
+
   @Output()
   change = new EventEmitter<TaskPresenter>();
 
@@ -47,15 +59,27 @@ export class InformationWithFormEditorComponent implements OnInit {
     article: new FormControl(null),
   });
 
-  users: ClientUserTumbanian[] = [];
+  authors: ClientUserTumbanian[] = [];
+  editors: ClientUserTumbanian[] = [];
   articles: ArtilceTumbanian[] = [];
 
   private form$?: Subscription;
-  constructor(
-    private readonly userService: UserService,
+
+  private notifyOptions = {
+    status: TuiNotification.Error,
+  };
+
+  private notifyOptionsSuccess = {
+    status: TuiNotification.Success,
+  };
+
+  constructor( 
     private readonly roleService: RoleService,
     private readonly articlesService: ArtilcesService,
-    private readonly taskService: TaskService
+    private readonly taskService: TaskService,
+    private readonly tumb: UserTumbanianFactory,
+    @Inject(TuiNotificationsService)
+    private readonly notificationsService: TuiNotificationsService
   ) {}
 
   ngOnInit(): void {
@@ -63,13 +87,20 @@ export class InformationWithFormEditorComponent implements OnInit {
     if (!this.form.get('editor')!.value) {
       this.form
         .get('editor')!
-        .setValue(this.createClientUserTumbanian(this.user));
+        .setValue(this.tumb.createFromClientUser(this.user));
     }
-    this.userService.getAll().subscribe((users) => {
-      this.users = users.map((user) => this.createClientUserTumbanian(user));
+    this.tumb.takeAllAuthor().subscribe((userSpec) => {
+      this.authors = userSpec.authors.map((u) =>
+        this.tumb.createFromClientUser(u)
+      );
+      this.editors = userSpec.editors.map((u) =>
+        this.tumb.createFromClientUser(u)
+      );
       this.updateForm();
     });
-    this.articles = this.articlesService.getAllForTask();
+    this.articlesService.getAllTumbanian().subscribe((art) => {
+      this.articles = art;
+    });
 
     this.taskChange.subscribe((r) => {
       this.updateForm();
@@ -77,24 +108,84 @@ export class InformationWithFormEditorComponent implements OnInit {
   }
 
   initForm() {
-    this.form$ = this.form.valueChanges.subscribe((tsk) => {
-      if (!this.form.valid) return alert(this.form.errors);
-      try {
-      this.task.setArticle(tsk.article);
-      this.task.setAuthor(tsk.author);
-      this.task.setEditor(tsk.editor);
-      this.task.dateEnd = new Date(tsk.dateEnd.toUtcNativeDate());
-      this.task.fee = tsk.fee;
-      this.change.emit(this.task);
-      } catch(ex) {
-        this.updateForm();
-      }
+    this.form$ = this.form.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe((tsk) => {
+        if (!this.form.valid) return alert(this.form.errors);
+        try {
+          // TODO: После завершения блока статей
+          this.task.setArticle(tsk.article);
+
+          if (this.task?.authorId !== tsk.author?.id) {
+            this.changeAuthor(tsk.author);
+          }
+
+          if (this.task?.editorId !== tsk.editor?.id) {
+            this.changeEditor(tsk.author);
+          }
+
+          const newDateEnd = new Date(tsk.dateEnd.toUtcNativeDate());
+          if (+this.task.dateEnd! !== +newDateEnd) {
+            this.changeDateEnd(newDateEnd);
+          }
+
+          if (this.task.fee !== tsk.fee) {
+            this.changeFee(tsk.fee);
+          }
+        } catch (ex) {
+          this.updateForm();
+        }
+      });
+  }
+
+  changeAuthor(author: ClientUserTumbanian) {
+    this.taskService.setAuthor(this.task.id!, author.id).subscribe({
+      next: (res) => {
+        this.task.setAuthor(author);
+        this.notificationsService.show('Исполнитель был изменён').subscribe();
+        this.change.emit(this.task);
+      },
+      error: (err) => this.showError(err),
     });
+  }
+  changeFee(fee: number) {
+    this.taskService.setFee(this.task.id!, fee).subscribe({
+      next: (res) => {
+        this.task.fee = fee;
+        this.notificationsService.show('Гонорар изменён').subscribe();
+        this.change.emit(this.task);
+      },
+      error: (err) => this.showError(err),
+    });
+  }
+  changeEditor(editor: ClientUserTumbanian) {
+    this.taskService.setEditor(this.task.id!, editor.id).subscribe({
+      next: (res) => {
+        this.task.setEditor(editor);
+        this.notificationsService.show('Редактор был изменён').subscribe();
+        this.change.emit(this.task);
+      },
+      error: (err) => this.showError(err),
+    });
+  }
+  changeDateEnd(dateEnd: Date) {
+    this.taskService.setDateEnd(this.task.id!, dateEnd).subscribe({
+      next: (res) => {
+        this.task.dateEnd = dateEnd;
+        this.notificationsService.show('Срок сдачи изменён').subscribe();
+        this.change.emit(this.task);
+      },
+      error: (err) => this.showError(err),
+    });
+  }
+
+  private showError(err: any) {
+    this.notificationsService.show(err.error, this.notifyOptions).subscribe();
   }
 
   updateForm() {
     this.form$?.unsubscribe();
-    
+
     if (!this.task) {
       console.log('NOT HAVE TASK');
       return;
@@ -106,7 +197,7 @@ export class InformationWithFormEditorComponent implements OnInit {
       this.form.get('author')?.setValue(null);
     }
     if (!this.task.editorRef) {
-      this.task.setEditor(this.createClientUserTumbanian(this.user));
+      this.task.setEditor(this.tumb.createFromClientUser(this.user));
     }
     this.form.get('editor')?.setValue(this.task.editorRef);
 
@@ -119,19 +210,13 @@ export class InformationWithFormEditorComponent implements OnInit {
       this.task.dateEnd = this.taskService.getConfig().defaultDuration;
     }
     this.form.get('dateEnd')?.setValue(this.dateDecorator(this.task.dateEnd));
-    this.form.get('fee')?.setValue(this.task.fee ?? this.taskService.getConfig().defaultFee);
+    this.form
+      .get('fee')
+      ?.setValue(this.task.fee ?? this.taskService.getConfig().defaultFee);
     this.initForm();
-  }
-
-  createClientUserTumbanian(user: ClientUser) {
-    return new ClientUserTumbanian().restore(
-      user,
-      this.roleService.getOne(user.role)?.value.substring(0, 3)
-    );
   }
 
   dateDecorator(date: Date) {
     return new TuiDay(date.getFullYear(), date.getMonth(), date.getDate());
   }
 }
-// 214528

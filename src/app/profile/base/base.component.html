@@ -73,7 +73,7 @@
         <h4 *ngIf="!user">Загрузка...</h4>
         <ng-container *ngIf="user">
           <h4>{{ user.firstName }} {{ user.lastName }}</h4>
-          <p [title]="role.comment">{{ role.value }}</p>
+          <p [title]="role.comment">{{ role.name }}</p>
         </ng-container>
       </div>
     </div>

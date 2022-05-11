@@ -6,7 +6,7 @@
         <input tuiTextfield />
         <tui-data-list-wrapper
           *tuiDataList
-          [items]="users"
+          [items]="editors"
         ></tui-data-list-wrapper>
       </tui-combo-box>
     </div>
@@ -17,7 +17,7 @@
       </tui-input-date>
     </div>
 
-    <div class="row-item">
+    <div class="row-item" *ngIf="canSeeFee">
       <tui-input-number formControlName="fee" [postfix]="'RUR' | tuiCurrency">
         Fee
       </tui-input-number>
@@ -30,7 +30,7 @@
         <input tuiTextfield />
         <tui-data-list-wrapper
           *tuiDataList
-          [items]="users"
+          [items]="authors"
         ></tui-data-list-wrapper>
       </tui-combo-box>
     </div>

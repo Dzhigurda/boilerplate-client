@@ -3,6 +3,7 @@ import {
   UserContactDTO,
   UserDTO,
 } from '../../../server/src/domains/user';
+import { Role, UserRole } from './profile/role.service';
 export interface UserPage {
   user: ClientUser;
 }
@@ -16,8 +17,9 @@ export class ClientUser {
   role!: number;
 
   contacts: UserContactDTO[] = [];
+  roleRef!: UserRole;
 
-  restore(dto: UserDTO & UserAuthorizationDTO) {
+  restore(dto: UserDTO & UserAuthorizationDTO & {roleRef: Role}) {
     this.id = dto.id;
     this.STATUS = dto.STATUS;
 
@@ -28,6 +30,8 @@ export class ClientUser {
     this.secondName = dto.secondName;
 
     this.contacts = dto.contacts ?? [];
+
+    this.roleRef = new UserRole().restore(dto.roleRef)
     return this;
   }
   toJSON(): UserDTO & UserAuthorizationDTO {

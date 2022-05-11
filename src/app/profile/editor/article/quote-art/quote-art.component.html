@@ -1,0 +1,13 @@
+<div class="quote">
+  <div class="text">
+    <div class="icon">
+      <tui-svg src="tuiIconBookmark"></tui-svg>
+    </div>
+    <div class="textarea">
+      <ng-content></ng-content>
+    </div>
+  </div>
+  <div class="author" *ngIf="author">
+    <p>{{ author }}</p>
+  </div>
+</div>

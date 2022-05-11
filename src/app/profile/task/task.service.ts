@@ -1,71 +1,16 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of, switchMap } from 'rxjs';
-import { ClientUser } from 'src/app';
-import { UserService } from 'src/app/user.service';
-import { ArtilcesService } from '../artilces/artilces.service';
-import { RoleService } from '../role.service';
-import { ClientUserTumbanian, FakeMMTask, TaskPresenter } from './Task';
+import { map } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { FakeMMTask, TaskPresenter } from './Task';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TaskService {
-  private items: FakeMMTask[] = [
-    {
-      id: 1,
-      title: 'Написать статью про ТОП 10 музыкантов',
-      description: 'Эти музыканты должны быть из Вьетнама или Кореи...',
-      status: 'PUBLISHED',
-
-      editor: 1,
-      dateEnd: new Date('2022-05-08'),
-      fee: 300,
-    },
-    {
-      id: 2,
-      title: 'Топ 5 женщин из кино',
-      description: 'Эти женщины должны быть объеденены одной профессией',
-      fee: 180,
-      editor: 2,
-      author: 1,
-      dateEnd: new Date('2022-06-08'),
-      status: 'DISTRIBUTED',
-    },
-    {
-      id: 3,
-      title: 'Эпоха дворцовых переворотов',
-      description: ` Путешествие по местам питера **test** any *test*
-      
-      * пункт 1
-      * пункт 2
-      `,
-      fee: 180,
-      editor: 1,
-    },
-  ];
+export class TaskService { 
   constructor(
-    private userService: UserService,
-    private roleService: RoleService,
-    private articleService: ArtilcesService
+    private http: HttpClient, 
   ) {}
-
-  getAllTask() {
-    return this.userService.getAll().pipe(
-      switchMap((users: ClientUser[]) => {
-        const usersRef = users.map((r) =>
-          new ClientUserTumbanian().restore(
-            r,
-            this.roleService.getOne(r.role).value
-          )
-        );
-        const articles = this.articleService.getAllForTask();
-        const result = this.items.map((r) =>
-          TaskPresenter.create(r, usersRef, articles)
-        );
-        return of(result);
-      })
-    );
-  }
 
   getConfig() {
     return {
@@ -73,4 +18,163 @@ export class TaskService {
       defaultFee: 150,
     };
   }
+  //#region request
+
+  getAll() {
+    return this.http.get<FakeMMTask[]>(environment.API_URL + `/v1/task/`).pipe(
+      map((r) => {
+        return r.map((ref) => TaskPresenter.create(ref));
+      })
+    );
+  }
+  getOne(id: number) {
+    return this.http
+      .get<FakeMMTask>(environment.API_URL + `/v1/task/${id}`)
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+  getByAuthor(id: number) {
+    return this.http
+      .get<FakeMMTask[]>(environment.API_URL + `/v1/task/author/${id}`)
+      .pipe(
+        map((r) => {
+          return r.map((ref) => TaskPresenter.create(ref));
+        })
+      );
+  }
+  getByEditor(id: number) {
+    return this.http
+      .get<FakeMMTask[]>(environment.API_URL + `/v1/task/editor/${id}`)
+      .pipe(
+        map((r) => {
+          return r.map((ref) => TaskPresenter.create(ref));
+        })
+      );
+  }
+  getByArticle(id: number) {
+    return this.http
+      .get<FakeMMTask>(environment.API_URL + `/v1/task/article/${id}`)
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+  //#endregion
+  //#region EDIT
+  create() {
+    return this.http
+      .post<FakeMMTask>(environment.API_URL + `/v1/task/`, {})
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+
+  editDescription(
+    id: number,
+    taskDescription: { title: string; description: string }
+  ) {
+    return this.http
+      .patch<FakeMMTask>(
+        `${environment.API_URL}/v1/task/${id}`,
+        taskDescription
+      )
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+  setDateEnd(id: number, date: Date) {
+    return this.http
+      .patch<FakeMMTask>(`${environment.API_URL}/v1/task/${id}/set/dateEnd`, {
+        dateEnd: date,
+      })
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+  setFee(id: number, fee: number) {
+    return this.http
+      .patch<FakeMMTask>(`${environment.API_URL}/v1/task/${id}/set/fee`, {
+        fee,
+      })
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+  setAuthor(id: number, author: number) {
+    return this.http
+      .patch<FakeMMTask>(`${environment.API_URL}/v1/task/${id}/set/author`, {
+        author,
+      })
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+  setEditor(id: number, editor: number) {
+    return this.http
+      .patch<FakeMMTask>(`${environment.API_URL}/v1/task/${id}/set/editor`, {
+        editor,
+      })
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+  //#endregion
+  //#region Command
+
+  private sendSimpleCommand(name: string, id: number) {
+    return this.http
+      .patch<FakeMMTask>(`${environment.API_URL}/v1/task/${id}/${name}`, {})
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+  publish(id: number) {
+    return this.sendSimpleCommand('publish', id);
+  }
+  unpublish(id: number) {
+    return this.sendSimpleCommand('unpublish', id);
+  }
+  distribute(id: number) {
+    return this.sendSimpleCommand('distribute', id);
+  }
+  refuse(id: number) {
+    return this.sendSimpleCommand('refuse', id);
+  }
+  sendToResolve(id: number) {
+    return this.sendSimpleCommand('sendToResolve', id);
+  }
+  revision(id: number) {
+    return this.sendSimpleCommand('revision', id);
+  }
+  reject(id: number) {
+    return this.sendSimpleCommand('reject', id);
+  }
+  resolve(id: number) {
+    return this.sendSimpleCommand('resolve', id);
+  }
+  cancel(id: number) {
+    return this.sendSimpleCommand('cancel', id);
+  }
+  archive(id: number) {
+    return this.sendSimpleCommand('archive', id);
+  }
+  //#endregion
 }

@@ -12,7 +12,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { debounceTime, Subscription } from 'rxjs';
 import { ClientUser } from 'src/app';
-import { Role, RoleService } from '../../role.service';
+import { Role, RoleService, UserRole } from '../../role.service';
 
 @Component({
   selector: 'app-role',
@@ -31,7 +31,7 @@ export class RoleComponent implements OnInit, OnDestroy {
   });
   authsub!: Subscription;
 
-  items: Role[] = [];
+  items: UserRole[] = [];
 
   private notifyOptions = {
     status: TuiNotification.Error,
@@ -53,11 +53,11 @@ export class RoleComponent implements OnInit, OnDestroy {
     this.authsub = this.authForm.valueChanges.subscribe((part) => {
       console.log(this.authForm.valid, this.authForm.errors);
       if (!this.authForm.valid) return;
-      if (part.role === this.oldRole) return;
+      if (part.role === this.currentRole) return;
       this.roleService.changeRole(this.user.id, part.role.id).subscribe({
         next: (r) => {
           this.user.role = part.role.id;
-          this.oldRole = part.role;
+          this.currentRole = part.role;
           this.notificationsService
             .show('Role saved', this.notifyOptionsSuccess)
             .subscribe();
@@ -80,13 +80,15 @@ export class RoleComponent implements OnInit, OnDestroy {
     this.authsub.unsubscribe();
   }
 
-  oldRole: any;
+  currentRole!: UserRole;
   private initAuth() {
-    this.items = this.roleService.getAll();
-    this.oldRole = this.items.find((r) => r.id === this.user.role);
-    this.setDefaultRole();
+    this.roleService.getAll().subscribe((roles) => {
+      this.items = roles;
+      this.currentRole = this.items.find((r) => r.id === this.user.role)!;
+      this.setDefaultRole();
+    });
   }
   private setDefaultRole() {
-    this.authForm.get('role')?.setValue(this.oldRole);
+    this.authForm.get('role')?.setValue(this.currentRole);
   }
 }

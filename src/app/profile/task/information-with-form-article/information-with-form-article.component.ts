@@ -1,11 +1,18 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ClientUser } from 'src/app';
 import {
   ArtilcesService,
   ArtilceTumbanian,
-} from '../../artilces/artilces.service';
+} from '../../articles/artilces.service';
 import { TaskPresenter } from '../Task';
 
 interface Employee {
@@ -41,26 +48,30 @@ export class InformationWithFormArticleComponent implements OnInit, OnDestroy {
   @Input()
   user!: ClientUser;
 
+  @Input()
+  canSeeFee = false;
+
   form = new FormGroup({
     article: new FormControl(0),
   });
-  
+
   articles: ArtilceTumbanian[] = [];
 
   @Output()
   change = new EventEmitter<TaskPresenter>();
-  
+
   private form$?: Subscription;
- 
+
   constructor(private readonly articlesService: ArtilcesService) {}
 
   ngOnInit(): void {
-    this.articles = this.articlesService.getAllForTask();
+    this.articlesService.getAllTumbanian().subscribe((art) => {
+      this.articles = art;
+    });
     this.taskChange.subscribe((r) => {
       this.updateForm();
     });
     this.updateForm();
- 
   }
 
   ngOnDestroy(): void {
@@ -71,15 +82,14 @@ export class InformationWithFormArticleComponent implements OnInit, OnDestroy {
     this.form$ = this.form.valueChanges.subscribe((tsk) => {
       if (!this.form.valid) return alert(this.form.errors);
       try {
-      this.task.setArticle(tsk.article); 
-      this.change.emit(this.task);
-      } catch(ex) {
+        this.task.setArticle(tsk.article);
+        this.change.emit(this.task);
+      } catch (ex) {
         this.updateForm();
       }
     });
   }
 
-  
   public updateForm() {
     if (!this.task) return;
     this.form$?.unsubscribe();
@@ -87,7 +97,7 @@ export class InformationWithFormArticleComponent implements OnInit, OnDestroy {
       this.form.get('article')?.setValue(this.task.art);
     } else {
       this.form.get('article')?.setValue(null);
-    }   
+    }
     this.initForm();
   }
 }

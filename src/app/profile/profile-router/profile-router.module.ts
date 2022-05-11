@@ -8,6 +8,8 @@ import { TestComponent } from '../test/test.component';
 import { TaskComponent } from '../task/task.component';
 import { VerifyComponent } from '../verify/verify.component';
 import { UsersComponent } from '../users/users.component';
+import { ArticlesComponent } from '../articles/articles.component';
+import { EditorComponent } from '../editor/editor.component';
 
 const routes = [
   {
@@ -16,6 +18,8 @@ const routes = [
     children: [
       { path: 'iam', component: IamComponent },
       { path: 'task', component: TaskComponent },
+      { path: 'articles', component: ArticlesComponent},
+      { path: 'articles/:id', component: EditorComponent},
       { path: 'test', component: TestComponent, data: { test: true } },
       { path: 'verify/:code', component: VerifyComponent },
       { path: 'users', component: UsersComponent },

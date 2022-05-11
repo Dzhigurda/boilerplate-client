@@ -1,13 +1,19 @@
 <div class="row">
   <div class="row-item">
-    <label tuiLabel label="Editor">
+    <label tuiLabel label="Editor" *ngIf="task.editorRef">
       {{ task.editorRef?.getFullName() }}
+    </label>
+    <label tuiLabel label="Editor" *ngIf="!task.editorRef">
+      Не назначен
     </label>
   </div>
 
   <div class="row-item">
-    <label tuiLabel label="Author">
+    <label tuiLabel label="Author" *ngIf="task.authorRef">
       {{ task.authorRef?.getFullName() }}
+    </label>
+    <label tuiLabel label="Author" *ngIf="!task.authorRef">
+      Не назначен
     </label>
   </div>
 
@@ -17,12 +23,12 @@
     </label>
   </div>
 
-  <div class="row-item">
+  <div class="row-item" *ngIf="canSeeFee">
     <label tuiLabel label="Fee"> {{ task.fee }} руб. </label>
   </div>
 </div>
-<div class="row" *ngIf="task.status != 'PUBLISHED'">
-  <div class="row-item-long" *ngIf="task.status !== 'DISTRIBUTED'">
+<div class="row" *ngIf="task.art">
+  <div class="row-item-long">
     <a
       class="card-article"
       [routerLink]="'/profile/articles/' + task.art?.id"

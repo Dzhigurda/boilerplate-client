@@ -1,7 +1,7 @@
 import { EventEmitter } from '@angular/core';
-import { TuiStatusT } from '@taiga-ui/kit';
-import { ClientUser } from 'src/app';
-import { ArtilceTumbanian } from '../artilces/artilces.service';
+import { ClientUser } from 'src/app'; 
+import { ArtilceTumbanian } from '../articles/artilces.service';
+import { HistoryPresenter, History } from './History';
 
 export class ClientUserTumbanian {
   id!: number;
@@ -44,6 +44,10 @@ export interface FakeMMTask {
   fee?: number;
   author?: number;
   article?: number;
+  editorRef?: any;
+  authorRef?: any;
+
+  history: History[];
 }
 
 export class TaskPresenter {
@@ -69,6 +73,14 @@ export class TaskPresenter {
   }
   get title() {
     return this._title;
+  }
+
+  get authorId() {
+    return this.author;
+  }
+
+  get editorId() {
+    return this.editor;
   }
 
   set title(value: string) {
@@ -119,6 +131,7 @@ export class TaskPresenter {
   get art() {
     return this._art;
   }
+ 
 
   get authorRef() {
     return this._authorRef;
@@ -164,21 +177,16 @@ export class TaskPresenter {
   get history() {
     return this._history;
   }
-  private _history: {
-    date: Date;
-    name: string;
-    status: TaskStatus;
-    statusClass: TuiStatusT;
-  }[] = [];
+  private _history: HistoryPresenter[] = [];
 
   appendHisotry(userName: string) {
-    this._history.push({
-      date: new Date(),
-      name: userName,
-      status: this.status,
-      statusClass: this.statusClass,
-    });
-    this.changeHistory.emit();
+    // this._history.push(new HistoryPresenter.pr{
+    //   date: new Date(),
+    //   name: userName,
+    //   status: this.status,
+    //   statusClass: this.statusClass,
+    // });
+    // this.changeHistory.emit();
   }
 
   setArticle(art?: ArtilceTumbanian) {
@@ -230,18 +238,39 @@ export class TaskPresenter {
     return this.editor === user.id;
   }
 
+  update(ref: TaskPresenter) {
+    this.restore(ref.toJSON())
+  }
   private restore(ref: FakeMMTask) {
     this._id = ref.id;
     this._title = ref.title ?? '';
     this._description = ref.description ?? '';
     this._fee = ref.fee ?? 0;
-    this._dateEnd = ref.dateEnd;
+    if (ref.dateEnd) this._dateEnd = new Date(ref.dateEnd);
     this._status = ref.status ?? 'CREATED';
 
     this.author = ref.author;
     this.article = ref.article;
     this.editor = ref.editor;
+    if (this.editor) {
+      this._editorRef = new ClientUserTumbanian().restore(
+        ref.editorRef,
+        ref.editorRef.roleName
+      );
+    }
 
+    if (this.author) {
+      this._authorRef = new ClientUserTumbanian().restore(
+        ref.authorRef,
+        ref.authorRef.roleName
+      );
+    }
+    this._history = ref.history.map((h) => {
+      let name = h.user === ref.editor ?  this._editorRef?.getFullName() : undefined;
+          name = !name && h.user === ref.author ?  this._authorRef?.getFullName() : name;
+      
+      return new HistoryPresenter().restore(h,name ?? "Неизвестно")
+    });
     return this;
   }
 
@@ -253,28 +282,30 @@ export class TaskPresenter {
       status: this._status,
       fee: this._fee,
       dateEnd: this._dateEnd,
-
       author: this.author,
+      authorRef: this.authorRef,
       article: this.article,
       editor: this.editor,
+      editorRef: this.editorRef,
+      history: this.history.map((r) => r.toJSON()),
     };
   }
-
+ 
   static create(
     ref: FakeMMTask,
-    users: ClientUserTumbanian[],
-    articles: ArtilceTumbanian[]
+    users?: ClientUserTumbanian[],
+    articles?: ArtilceTumbanian[]
   ) {
     const task = new TaskPresenter();
-    if (ref.author) {
+    if (ref.author && users) {
       const author = users.find((r) => r.id === ref.author)!;
       task.setAuthor(author);
     }
-    if (ref.editor) {
+    if (ref.editor && users) {
       const editor = users.find((r) => r.id === ref.editor)!;
       task.setEditor(editor);
     }
-    if (ref.article) {
+    if (ref.article && articles) {
       const article = articles.find((r) => r.id === ref.article)!;
       task.setArticle(article);
     }
@@ -331,7 +362,7 @@ export class TaskPresenter {
 
   refuse(author: ClientUser) {
     if (this.status === 'CREATED') return;
-    if (!this.canRefuse(author)) throw new Error('Не позволено'); 
+    if (!this.canRefuse(author)) throw new Error('Не позволено');
     this._status = 'PUBLISHED';
     this.setAuthor();
     this.appendHisotry(author.getFullName());

@@ -1,0 +1,45 @@
+.head-menu {
+  display: flex;
+  margin-right: 0px;
+  padding: 0 20px;
+  align-items: center;
+  gap: 10px;
+  h1 {
+    flex: 1;
+  }
+}
+
+.content {
+  padding: 10px 0px;
+}
+
+.viewport {
+  height: calc(100vh - 130px);
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px 30px;
+  padding: 20px 20px;
+}
+
+.empty {
+  padding: 20px;
+  display: flex;
+  height: calc(100vh - 180px);
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px dashed #f0f0f0;
+  .emptyImg {
+    width: 100%;
+    max-width: 350px;
+    opacity: 0.1;
+  }
+
+  p {
+    font-size: 22px;
+    color: #ccc;
+    text-align: center;
+  }
+}

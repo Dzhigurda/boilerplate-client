@@ -1,6 +1,64 @@
 <div class="content" *ngIf="user">
   <div class="task-side">
-    <h1>Tasks</h1>
+    <div class="head-menu">
+      <h1>Tasks</h1>
+
+      <!-- <p *ngIf="!isEmptyFilter()">{{ filter.value.status }}</p> -->
+
+      <button
+        tuiIconButton
+        type="button"
+        size="s"
+        [appearance]="btSelected === 'CREATED' ? 'outline' : 'flat'"
+        icon="tuiIconEdit"
+        (click)="openCreated()"
+        *ngIf="canCreate()"
+      ></button>
+      <button
+        tuiIconButton
+        type="button"
+        size="s"
+        [appearance]="btSelected === 'CANCELED' ? 'outline' : 'flat'"
+        appearance="flat"
+        icon="tuiIconTrash"
+        (click)="openCanceled()"
+      ></button>
+      <button
+        tuiIconButton
+        type="button"
+        size="s"
+        [appearance]="btSelected === 'DISTRIBUTED' ? 'outline' : 'flat'"
+        appearance="flat"
+        icon="tuiIconAttach"
+        (click)="openDistribute()"
+      ></button>
+      <button
+        tuiIconButton
+        type="button"
+        size="s"
+        [appearance]="btSelected === 'PUBLISHED' ? 'outline' : 'flat'"
+        appearance="flat"
+        icon="tuiIconUsers"
+        (click)="openPubllish()"
+      ></button>
+      <button
+        tuiIconButton
+        type="button"
+        size="s"
+        appearance="primary"
+        icon="tuiIconFilter"
+        (click)="openFilterForm()"
+      ></button>
+      <button
+        tuiIconButton
+        type="button"
+        size="s"
+        appearance="flat"
+        icon="tuiIconPlus"
+        *ngIf="canCreate()"
+        (click)="add()"
+      ></button>
+    </div>
     <tui-scrollbar>
       <cdk-virtual-scroll-viewport
         #viewport
@@ -16,27 +74,101 @@
               [task]="task"
               [isActive]="task.id == currentTask?.id"
               (select)="select($event)"
+              [canSeeFee]="isCanSeeFee"
             ></app-task-item>
           </ng-container>
         </div>
-      </cdk-virtual-scroll-viewport>
-    </tui-scrollbar>
-  </div>
-  <div class="task-editor-side">
-    <h1>About</h1> 
-    <tui-scrollbar>
-      <cdk-virtual-scroll-viewport
-        #viewport2
-        tuiScrollable
-        class="viewport2 tui-zero-scrollbar"
-        [itemSize]="45"
-        [maxBufferPx]="500"
-        [minBufferPx]="400"
-      >
-        <div class="task-about">
-          <app-about [task]="currentTask" [user]="user"></app-about> 
+        <div class="empty" *ngIf="items?.length == 0">
+          <div class="centerbox">
+            <img src="/assets/empty.gif" class="emptyImg" />
+            <p>Empty</p>
+          </div>
         </div>
       </cdk-virtual-scroll-viewport>
     </tui-scrollbar>
   </div>
+  <div class="task-editor-side"> 
+          <app-about
+            [task]="currentTask"
+            [canSeeFee]="isCanSeeFee"
+            [user]="user"
+          ></app-about> 
+  </div>
 </div>
+
+<ng-template #filterDialog let-observer>
+  <div class="tui-row tui-row_sme">
+    <div class="tui-col_12">
+      <div class="flex">
+        <h1>Filter</h1>
+
+        <form [formGroup]="filter">
+          <div class="row">
+            <div class="row-item" *ngIf="editors">
+              <tui-combo-box tuiTextfieldSize="m" formControlName="editor">
+                Editor
+                <input tuiTextfield />
+                <tui-data-list-wrapper
+                  *tuiDataList
+                  [items]="editors"
+                ></tui-data-list-wrapper>
+              </tui-combo-box>
+            </div>
+            <div class="row-item" *ngIf="authors">
+              <tui-combo-box tuiTextfieldSize="m" formControlName="author">
+                Author
+                <input tuiTextfield />
+                <tui-data-list-wrapper
+                  *tuiDataList
+                  [items]="authors"
+                ></tui-data-list-wrapper>
+              </tui-combo-box>
+            </div>
+            <div class="row-item" *ngIf="statuses">
+              <tui-multi-select
+                tuiTextfieldSize="m"
+                tuiTextfieldExampleText="Ignored text"
+                formControlName="status"
+                [editable]="false"
+              >
+                Status
+                <tui-data-list-wrapper
+                  *tuiDataList
+                  tuiMultiSelectGroup
+                  [items]="statuses"
+                ></tui-data-list-wrapper>
+              </tui-multi-select>
+            </div>
+          </div>
+        </form>
+
+        <div class="row-top">
+          <button
+            tuiButton
+            appearance="primary"
+            size="m"
+            (click)="onFilter(); observer.complete()"
+          >
+            Filter
+          </button>
+          <button
+            tuiButton
+            appearance="flat"
+            size="m"
+            (click)="cleanFilter()"
+          >
+            clear
+          </button>
+          <button
+            tuiButton
+            appearance="flat"
+            size="m"
+            (click)="observer.complete()"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

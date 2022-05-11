@@ -17,6 +17,9 @@ export class TaskItemComponent implements OnInit {
   @Input()
   isActive = false;
 
+  @Input()
+  canSeeFee = false;
+
   constructor() { }
 
   ngOnInit(): void {

@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { ClientUser, UserPage } from 'src/app';
 import { UserService } from 'src/app/user.service';
-import { RoleService } from '../role.service';
+import { Role, RoleService } from '../role.service';
 
 @Component({
   selector: 'app-test',
@@ -17,11 +18,13 @@ export class TestComponent implements OnInit, UserPage {
     private roleService: RoleService
   ) {}
 
-  ngOnInit(): void {}
-
-  get role() {
-    return this.roleService.getOne(this.user.role);
+  ngOnInit(): void {
+     this.roleService.getOne(this.user.role).subscribe(r => {
+      this.role = r;
+     });
   }
+ 
+  role?: Role;
 
   getStatusIcon() {
     switch (this.user.STATUS) {

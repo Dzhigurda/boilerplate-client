@@ -1,103 +1,112 @@
-
-  <h4>Control</h4>
-  <div class="row">
-    <button
-      tuiButton
-      type="button"
-      appearance="primary"
-      class="tui-space_right-3 tui-space_bottom-3"
-      *ngIf="task.canPublish(user)"
-      (click)="publish()"
-    >
-      Distribute
-    </button>
-    <button
-      tuiButton
-      type="button"
-      appearance="primary"
-      class="tui-space_right-3 tui-space_bottom-3"
-      *ngIf="task.status === 'PUBLISHED'"
-      (click)="accept()"
-    >
-      Accept
-    </button>
-    <button
-      tuiButton
-      type="button"
-      appearance="outline"
-      class="tui-space_right-3 tui-space_bottom-3"
-      *ngIf="task.status === 'PUBLISHED' && task.isBelongEditor(user)"
-      (click)="unpublish()"
-    >
-      Unpublish
-    </button>
-    <button
-      tuiButton
-      type="button"
-      appearance="primary"
-      *ngIf="task.canSendToResolve(user) && task.isBelongAuthor(user)"
-      class="tui-space_right-3 tui-space_bottom-3"
-      (click)="sendToResolve()"
-    >
-      Send for review
-    </button>
-    <button
-      tuiButton
-      type="button"
-      appearance="outline"
-      *ngIf="task.status === 'DISTRIBUTED' && task.isBelongAuthor(user)"
-      class="tui-space_right-3 tui-space_bottom-3"
-      (click)="refuse()"
-    >
-      Refuse
-    </button>
-    <button
-      tuiButton
-      type="button"
-      appearance="primary"
-      *ngIf="task.status === 'PENDING_RESOLVE' && task.isBelongEditor(user)"
-      class="tui-space_right-3 tui-space_bottom-3"
-      (click)="resolve()"
-    >
-      Resolve
-    </button>
-    <button
-      tuiButton
-      type="button"
-      appearance="outline"
-      *ngIf="task.canReject(user)"
-      class="tui-space_right-3 tui-space_bottom-3"
-      (click)="reject()"
-    >
-      Reject
-    </button>
-    <button
-      tuiButton
-      type="button"
-      appearance="primary"
-      *ngIf="task.canEnd(user)"
-      class="tui-space_right-3 tui-space_bottom-3"
-      (click)="end()"
-    >
-      Publish article
-    </button>
-    <button
-      tuiButton
-      type="button"
-      appearance="primary"
-      *ngIf="task.canArchive(user)"
-      class="tui-space_right-3 tui-space_bottom-3"
-      (click)="archive()"
-    >
-      Archivate
-    </button>
-    <button
-      tuiButton
-      type="button"
-      appearance="outline"
-      *ngIf="task.canRevision(user)"
-      class="tui-space_right-3 tui-space_bottom-3"
-      (click)="revision()"
-    >
-      Revision
-    </button>
+<div class="row">
+  <button
+    tuiButton
+    type="button"
+    appearance="primary"
+    size="s"
+    class="tui-space_right-3 tui-space_bottom-3"
+    *ngIf="task.canPublish(user)"
+    (click)="publish()"
+  >
+    Publish
+  </button>
+  <button
+    tuiButton
+    type="button"
+    appearance="primary"
+    size="s"
+    class="tui-space_right-3 tui-space_bottom-3"
+    *ngIf="task.status === 'PUBLISHED'"
+    (click)="accept()"
+  >
+    Accept
+  </button>
+  <button
+    tuiButton
+    type="button"
+    appearance="flat"
+    size="s"
+    class="tui-space_right-3 tui-space_bottom-3"
+    *ngIf="task.status === 'PUBLISHED' && task.isBelongEditor(user)"
+    (click)="unpublish()"
+  >
+    Unpublish
+  </button>
+  <button
+    tuiButton
+    type="button"
+    appearance="primary"
+    size="s"
+    *ngIf="task.canSendToResolve(user) && task.isBelongAuthor(user)"
+    class="tui-space_right-3 tui-space_bottom-3"
+    (click)="sendToResolve()"
+  >
+    Send for review
+  </button>
+  <button
+    tuiButton
+    type="button"
+    appearance="flat"
+    size="s"
+    *ngIf="task.status === 'DISTRIBUTED' && task.isBelongAuthor(user)"
+    class="tui-space_right-3 tui-space_bottom-3"
+    (click)="refuse()"
+  >
+    Refuse
+  </button>
+  <button
+    tuiButton
+    type="button"
+    appearance="primary"
+    size="s"
+    *ngIf="task.status === 'PENDING_RESOLVE' && task.isBelongEditor(user)"
+    class="tui-space_right-3 tui-space_bottom-3"
+    (click)="resolve()"
+  >
+    Resolve
+  </button>
+  <button
+    tuiButton
+    type="button"
+    appearance="flat"
+    size="s"
+    *ngIf="task.canReject(user)"
+    class="tui-space_right-3 tui-space_bottom-3"
+    (click)="reject()"
+  >
+    Reject
+  </button>
+  <button
+    tuiButton
+    type="button"
+    appearance="primary"
+    size="s"
+    *ngIf="task.canEnd(user)"
+    class="tui-space_right-3 tui-space_bottom-3"
+    (click)="end()"
+  >
+    Publish article
+  </button>
+  <button
+    tuiButton
+    type="button"
+    appearance="primary"
+    size="s"
+    *ngIf="task.canArchive(user)"
+    class="tui-space_right-3 tui-space_bottom-3"
+    (click)="archive()"
+  >
+    Archivate
+  </button>
+  <button
+    tuiButton
+    type="button"
+    appearance="flat"
+    size="s"
+    *ngIf="task.canRevision(user)"
+    class="tui-space_right-3 tui-space_bottom-3"
+    (click)="revision()"
+  >
+    Revision
+  </button>
+</div>

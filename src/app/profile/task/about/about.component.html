@@ -1,72 +1,122 @@
-<ng-container *ngIf="task">
-  <form [formGroup]="form">
-    <div class="flex">
-      <h2 *ngIf="isView()">
-        {{ task.title }}
-      </h2>
+<div class="head-menu">
+  <h1>About</h1>
+  <ng-container *ngIf="task">
+    <button
+      *ngIf="isView() && task.status === 'CREATED'"
+      tuiIconButton
+      type="button"
+      size="s"
+      icon="tuiIconSettings"
+      (click)="edit()"
+    ></button>
+    <button
+      *ngIf="!isView()"
+      tuiIconButton
+      type="button"
+      size="s"
+      icon="tuiIconCheckCircle"
+      (click)="save()"
+    ></button>
+    <button
+      *ngIf="!isView()"
+      tuiIconButton
+      type="button"
+      size="s"
+      icon="tuiIconClose"
+      (click)="cancel()"
+    ></button>
 
-      <tui-input formControlName="title" *ngIf="!isView()">
-        Title
-        <input tuiTextfield />
-      </tui-input>
-      <button
-        *ngIf="isView() && this.task.status === 'CREATED'"
-        tuiIconButton
-        type="button"
-        size="m"
-        icon="tuiIconSettings"
-        (click)="edit()"
-      ></button>
-      <button
-        *ngIf="!isView()"
-        tuiIconButton
-        type="button"
-        size="m"
-        icon="tuiIconCheckCircle"
-        (click)="save()"
-      ></button>
-      <button
-        *ngIf="!isView()"
-        tuiIconButton
-        type="button"
-        size="m"
-        icon="tuiIconClose"
-        (click)="cancel()"
-      ></button>
-    </div>
-    <div class="tags">
-      <tui-tag
-        size="s"
-        [status]="task.statusClass"
-        [value]="task.status"
-      ></tui-tag>
-    </div>
-    <markdown *ngIf="isView()">{{ task.description }}</markdown>
+    <button
+      *ngIf="task?.canCanceled(user)"
+      tuiIconButton
+      type="button"
+      size="s"
+      appearance="flat"
+      icon="tuiIconTrash"
+      (click)="cancelTask()"
+    ></button>
+    <button
+      *ngIf="task?.canArchive(user)"
+      tuiIconButton
+      type="button"
+      size="s"
+      appearance="flat"
+      icon="tuiIconTrash"
+      (click)="archiveTask()"
+    ></button>
+  </ng-container>
+</div>
+<tui-scrollbar>
+  <cdk-virtual-scroll-viewport
+    #viewport2
+    tuiScrollable
+    [ngClass]="{
+      viewportWithControl: task,
+      viewport: !task,
+      'tui-zero-scrollbar': true
+    }"
+    [itemSize]="45"
+    [maxBufferPx]="500"
+    [minBufferPx]="400"
+  >
+    <div class="task-about">
+      <ng-container *ngIf="task">
+        <form [formGroup]="form">
+          <div class="flex">
+            <h2 *ngIf="isView()">
+              {{ task.title }}
+            </h2>
 
-    <tui-text-area formControlName="description" *ngIf="!isView()">
-      Description
-    </tui-text-area>
-  </form>
-  <h4>Information {{ mode }}</h4>
-  <app-information-with-form-article
-    [user]="user"
-    [task]="task"
-    *ngIf="isAuthor()"
-  ></app-information-with-form-article>
-  <app-information-with-form-editor
-    [user]="user"
-    [task]="task"
-    *ngIf="isEditor()"
-  ></app-information-with-form-editor>
-  <app-information-with-form-guest
-    [user]="user"
-    [task]="task"
-    *ngIf="isGuest()"
-  ></app-information-with-form-guest>
-  <h4>History</h4>
-  <app-history [task]="task"></app-history>
-  <app-control [task]="task" [user]="user"></app-control>
-</ng-container>
-<ng-container *ngIf="!task">
-  <h2>Task had not selected</h2>
-</ng-container>
+            <tui-input formControlName="title" *ngIf="!isView()">
+              Title
+              <input tuiTextfield />
+            </tui-input>
+          </div>
+          <div class="tags">
+            <tui-tag
+              size="s"
+              [status]="task.statusClass"
+              [value]="task.status"
+            ></tui-tag>
+          </div>
+          <markdown *ngIf="isView()" [data]="task.description"></markdown>
+
+          <tui-text-area formControlName="description" [expandable]="true" *ngIf="!isView()">
+            Description
+          </tui-text-area>
+        </form>
+        <hr />
+        <h4>Information</h4>
+        <app-information-with-form-article
+          [user]="user"
+          [task]="task"
+          *ngIf="isAuthor()"
+          [canSeeFee]="canSeeFee"
+        ></app-information-with-form-article>
+        <app-information-with-form-editor
+          [user]="user"
+          [task]="task"
+          *ngIf="isEditor()"
+          [canSeeFee]="canSeeFee"
+        ></app-information-with-form-editor>
+        <app-information-with-form-guest
+          [user]="user"
+          [task]="task"
+          *ngIf="isGuest()"
+          [canSeeFee]="canSeeFee"
+        ></app-information-with-form-guest>
+        <hr />
+        <h4>History</h4>
+        <app-history [task]="task"></app-history>
+      </ng-container>
+      <ng-container *ngIf="!task">
+        <div class="empty">
+          <div class="centerbox">
+            <img src="/assets/logo.png" class="emptyImg" />
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </cdk-virtual-scroll-viewport>
+  <app-control [task]="task" [user]="user" *ngIf="task"></app-control>
+</tui-scrollbar>

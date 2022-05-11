@@ -69,7 +69,7 @@
               </td>
               <td *tuiCell="'role'" tuiTd>
                 <div class="flex-wrapper">
-                  <span>{{ item.role | role }} </span>
+                  <span>{{ item.roleRef.name }} </span>
                   <button tuiButton (click)="openRoleEditor(item)" [size]="'s'">
                     Edit
                   </button>

@@ -1,0 +1,25 @@
+.quote {
+  padding: 5px 0px;
+  background: #efefef;
+  color: #444;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.author {
+  text-align: center;
+  font-size: 10px;
+}
+
+.text {
+  display: flex;
+  .icon {
+    flex: 0 0 20px;
+    font-size: 11px;
+    padding: 7px 0px 0 14px;
+  }
+  .textarea {
+      margin-left: -5px;
+    flex: 1;
+  }
+}

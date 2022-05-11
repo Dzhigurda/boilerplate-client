@@ -1,7 +1,21 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TuiMobileDialogService } from '@taiga-ui/addon-mobile';
+import {
+  TuiNotification,
+  tuiNotificationOptionsProvider,
+  TuiNotificationsService,
+} from '@taiga-ui/core';
 import { ClientUser } from 'src/app';
 import { ClientUserTumbanian, TaskPresenter } from '../Task';
+import { TaskService } from '../task.service';
 
 @Component({
   selector: 'app-about',
@@ -20,10 +34,12 @@ export class AboutComponent implements OnInit {
     this.taskChange.emit();
   }
 
+  @Input()
+  canSeeFee = false;
+
   get task() {
     return this._task!;
   }
-
 
   @Input()
   user!: ClientUser;
@@ -36,20 +52,45 @@ export class AboutComponent implements OnInit {
     description: new FormControl('', Validators.required),
   });
 
-  constructor() {}
+  private notifyOptions = {
+    status: TuiNotification.Error,
+  };
+
+  private notifyOptionsSuccess = {
+    status: TuiNotification.Success,
+  };
+
+  constructor(
+    private ref: ChangeDetectorRef,
+    @Inject(TuiNotificationsService)
+    private readonly notificationsService: TuiNotificationsService,
+    private taskService: TaskService,
+    private readonly dialogsService: TuiMobileDialogService
+  ) {}
 
   ngOnInit(): void {
-    this.taskChange.subscribe(r => {
+    this.taskChange.subscribe((r) => {
       // this.updateForm();
       this.cancel();
-    })
+    });
   }
   edit() {
     this.mode = 'EDIT';
     this.updateForm();
   }
   save() {
-    this.mode = 'VIEW';
+    if (!this.form.valid) return;
+    this.taskService
+      .editDescription(this.task!.id!, {
+        title: this.form.get('title')?.value,
+        description: this.form.get('description')?.value,
+      })
+      .subscribe((res) => {
+        this.task!.title = res.title;
+        this.task!.description = res.description;
+        this.notificationsService.show('Сохранено', this.notifyOptionsSuccess);
+        this.mode = 'VIEW';
+      });
   }
   cancel() {
     this.mode = 'VIEW';
@@ -61,16 +102,52 @@ export class AboutComponent implements OnInit {
     return !this.isAuthor() && !this.isEditor();
   }
   isAuthor() {
-    return [2, 3].includes(this.user.role)  && this.task?.isBelongAuthor(this.user);
+    return (
+      [2, 3].includes(this.user.role) && this.task?.isBelongAuthor(this.user)
+    );
   }
   isEditor() {
-    return [5, 6, 7].includes(this.user.role) && this.task?.isBelongEditor(this.user);
+    return (
+      [5, 6, 7].includes(this.user.role) && this.task?.isBelongEditor(this.user)
+    );
   }
 
   updateForm() {
-    if(!this.task) return;
-
+    if (!this.task) return;
     this.form.get('title')?.setValue(this.task.title);
     this.form.get('description')?.setValue(this.task.description);
+  }
+
+  canCanceled() {
+    return this.task!.canCanceled(this.user);
+  }
+  cancelTask() {
+    this.dialogsService
+      .open('Do you want to cancel this task?', {
+        label: 'Are you sure',
+        actions: ['Yes', 'Cancel'],
+      })
+      .subscribe((index) => {
+        if (index !== 0) return;
+        this.taskService.cancel(this.task!.id!).subscribe((res) => {
+          this.task!.update(res);
+        });
+      });
+  }
+  canArchive() {
+    return this.task!.canArchive(this.user);
+  }
+  archiveTask() {
+    this.dialogsService
+      .open('Do you want to archivate this task?', {
+        label: 'Are you sure',
+        actions: ['Yes', 'Cancel'],
+      })
+      .subscribe((index) => {
+        if (index !== 0) return;
+        this.taskService.archive(this.task!.id!).subscribe((res) => {
+          this.task!.update(res);
+        });
+      });
   }
 }

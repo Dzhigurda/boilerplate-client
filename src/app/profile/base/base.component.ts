@@ -57,8 +57,8 @@ export class BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.getMe().subscribe((r) => {
-      this.user = r;
-      this.role = this.roleService.getOne(this.user.role);
+      this.user = r; 
+      this.role = r.roleRef;
       if (this.user.STATUS === 'CREATED') {
         /// show dialog verify
         this.showDialog(this.dialogVerify);

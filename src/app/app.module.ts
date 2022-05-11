@@ -5,6 +5,7 @@ import {
   TuiDialogModule,
   TuiNotificationsModule,
   TUI_SANITIZER,
+  TuiAlertModule,
 } from '@taiga-ui/core';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -14,10 +15,10 @@ import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from './utilites/auth.intercepter';
-import { TuiMobileDialogModule } from '@taiga-ui/addon-mobile';
-import { RolePipe } from './utilites/role.pipe';
+import { TuiMobileDialogModule } from '@taiga-ui/addon-mobile';  
+import { TuiTabsModule } from '@taiga-ui/kit';
 @NgModule({
-  declarations: [AppComponent, PageNotFoundComponent],
+  declarations: [AppComponent, PageNotFoundComponent ],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -27,6 +28,8 @@ import { RolePipe } from './utilites/role.pipe';
     TuiDialogModule,
     TuiNotificationsModule,
     TuiMobileDialogModule,
+    TuiTabsModule,
+    TuiAlertModule
   ],
   providers: [
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },

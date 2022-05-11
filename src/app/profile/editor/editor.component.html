@@ -1,0 +1,140 @@
+<div class="content">
+  <div class="edit-side">
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        #viewport
+        tuiScrollable
+        class="viewport tui-zero-scrollbar"
+        [itemSize]="45"
+        [maxBufferPx]="500"
+        [minBufferPx]="400"
+      > 
+        <form [formGroup]="form" *ngIf="article">
+          <div class="layout">
+            <div class="field">
+              <tui-input formControlName="title">
+                Title
+                <input tuiTextfield />
+              </tui-input>
+              <tui-error
+                formControlName="title"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+            <div class="field">
+              <tui-text-area formControlName="description" [expandable]="true">
+                Description
+              </tui-text-area>
+              <tui-error
+                formControlName="description"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+            <div class="field">
+              <tui-input formControlName="keywords">
+                Meta keywords
+                <input tuiTextfield />
+              </tui-input>
+
+              <tui-error
+                formControlName="keywords"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+            <div class="field">
+              <tui-text-area
+                #text
+                class="autoHeight"
+                formControlName="text"
+                [expandable]="true"
+                [rows]="1000"
+                >Text</tui-text-area
+              >
+
+              <tui-error
+                formControlName="text"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+            <div class="row">
+              <div class="field">
+                <tui-input formControlName="nick">
+                  Author nick
+                  <input tuiTextfield />
+                </tui-input>
+                <tui-error
+                  formControlName="nick"
+                  [error]="[] | tuiFieldError | async"
+                ></tui-error>
+              </div>
+              <div class="field">
+                <tui-input formControlName="photographer">
+                  Photographer
+                  <input tuiTextfield />
+                </tui-input>
+                <tui-error
+                  formControlName="photographer"
+                  [error]="[] | tuiFieldError | async"
+                ></tui-error>
+              </div>
+            </div>
+            <div class="field">
+              <tui-input formControlName="source">
+                source
+                <input tuiTextfield />
+              </tui-input>
+              <tui-error
+                formControlName="source"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+            <div class="row-inline">
+              <button
+                tuiButton
+                type="button"
+                appearance="primary"
+                (click)="save()"
+              >
+                Save
+              </button>
+              <button
+                tuiButton
+                type="button"
+                appearance="secondary"
+                (click)="restore()"
+              >
+                restore
+              </button>
+              <button
+                tuiButton
+                type="button"
+                appearance="flat"
+                (click)="archivate()"
+              >
+                Archivate
+              </button>
+            </div>
+          </div>
+        </form>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </div>
+  <div class="history-side">
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        #viewport
+        tuiScrollable
+        class="viewport tui-zero-scrollbar"
+        [itemSize]="45"
+        [maxBufferPx]="500"
+        [minBufferPx]="400"
+      >
+        <div class="preview-container">
+          <app-preview #dynamic></app-preview>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </div>
+</div>
+
+ 

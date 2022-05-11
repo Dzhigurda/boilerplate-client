@@ -7,7 +7,7 @@
           {{ user.firstName }} {{ user.secondName }} {{ user.lastName }}</small
         >
       </p>
-      <p>{{ role.value }} <tui-svg [src]="getStatusIcon()"></tui-svg></p>
+      <p>{{  role }} <tui-svg [src]="getStatusIcon()"></tui-svg></p>
       <div class="contacts">
         <div class="contact" *ngFor="let contact of user.contacts">
           <div class="title">{{ contact.title }}</div>

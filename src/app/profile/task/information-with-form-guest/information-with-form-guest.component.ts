@@ -15,6 +15,10 @@ export class InformationWithFormGuestComponent implements OnInit {
 
   @Input()
   user!: ClientUser;
+
+  @Input()
+  canSeeFee = false;
+  
   constructor() { }
 
   ngOnInit(): void {

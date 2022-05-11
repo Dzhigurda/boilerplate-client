@@ -1,0 +1,44 @@
+.content {
+  padding: 10px 20px;
+  display: flex;
+  height: calc(100vh - 60px);
+}
+.edit-side {
+  flex: 0 0 824px;
+}
+
+.history-side {
+  flex: 1;
+  border-left: 1px solid #eee;
+}
+
+.field {
+    flex: 1;
+}
+
+.viewport {
+  height: calc(100vh - 60px);
+}
+
+.layout {
+  display: grid;
+  gap: 20px;
+  margin: 10px 30px 30px 10px;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+  tui-input {
+    flex: 1;
+  }
+}
+.row-inline {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.preview-container {
+  margin: 0 30px 30px 10px;
+}

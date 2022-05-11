@@ -18,11 +18,11 @@
       </label>
     </div>
 
-    <div class="row-item">
+    <div class="row-item" *ngIf="canSeeFee">
       <label tuiLabel label="Fee"> {{ task.fee }} руб. </label>
     </div>
   </div>
-  <div class="row" *ngIf="task.status != 'PUBLISHED'">
+  <div class="row" *ngIf="articles.length && task.status != 'PUBLISHED'">
     <div class="row-item-long" *ngIf="task.status !== 'DISTRIBUTED'">
       <a
         class="card-article"
@@ -38,7 +38,7 @@
         </div>
       </a>
     </div>
-    <div class="row-item-long" *ngIf="task.status === 'DISTRIBUTED'">
+    <div class="row-item-long" *ngIf="articles.length && task.status === 'DISTRIBUTED'">
       <tui-combo-box tuiTextfieldSize="m" formControlName="article">
         Belong article
         <input tuiTextfield />

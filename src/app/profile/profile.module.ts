@@ -9,10 +9,13 @@ import { TuiMobileDialogModule } from '@taiga-ui/addon-mobile';
 import {
   TuiAccordionModule,
   TuiBadgedContentModule,
+  TuiFieldErrorPipeModule,
   TuiInputDateModule,
   TuiInputNumberModule,
   TuiInputPasswordModule,
+  TuiMultiSelectModule,
   TuiProgressModule,
+  TuiTabsModule,
   TuiTagModule,
   TuiTextAreaModule,
 } from '@taiga-ui/kit';
@@ -29,11 +32,14 @@ import {
 import {
   TuiButtonModule,
   TuiDataListModule,
+  TuiErrorModule,
   TuiFormatNumberPipeModule,
+  TuiHintModule,
   TuiLabelModule,
   TuiLinkModule,
   TuiPrimitiveTextfieldModule,
   TuiScrollbarModule,
+  TuiTooltipModule,
 } from '@taiga-ui/core';
 import { TuiSvgModule } from '@taiga-ui/core';
 import { OverviewComponent } from './overview/overview.component';
@@ -73,6 +79,12 @@ import { AboutComponent } from './task/about/about.component';
 import { TaskItemComponent } from './task/task-item/task-item.component';
 import { ControlComponent } from './task/control/control.component';
 import { MarkdownModule } from 'ngx-markdown';
+import { ArticlesComponent } from './articles/articles.component';
+import { ArticlesItemComponent } from './articles-item/articles-item.component';
+import { TimeAgoExtendsPipe } from '../utilites/TimeAgoExtends.pipe';
+import { EditorComponent } from './editor/editor.component';
+import { Ng4FilesModule } from '../utilites/ng4-files';
+import { ArticleModule } from './editor/article/article.module';
 
 @NgModule({
   declarations: [
@@ -97,6 +109,10 @@ import { MarkdownModule } from 'ngx-markdown';
     AboutComponent,
     TaskItemComponent,
     ControlComponent,
+    ArticlesComponent,
+    ArticlesItemComponent,
+    TimeAgoExtendsPipe,
+    EditorComponent,
   ],
   imports: [
     ProfileRouterModule,
@@ -140,7 +156,15 @@ import { MarkdownModule } from 'ngx-markdown';
     TuiFormatNumberPipeModule,
     TuiLabelModule,
     TuiTextAreaModule,
+    TuiMultiSelectModule,
+    TuiTooltipModule,
+    TuiHintModule,
+    TuiTabsModule,
     MarkdownModule.forRoot(),
+    Ng4FilesModule,
+    ArticleModule,
+    TuiErrorModule,
+    TuiFieldErrorPipeModule 
   ],
 })
 export class ProfileModule {}

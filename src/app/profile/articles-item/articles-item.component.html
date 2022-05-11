@@ -1,0 +1,16 @@
+<a class="flex" [routerLink]="'/profile/articles/' + article.id">
+  <div class="image">
+    <img [src]="article.imageSq" />
+  </div>
+  <div class="description">
+    <h3>{{ article.title }}</h3>
+    <p>
+      <span>{{ article.status }}</span>  
+      <tui-svg src="tuiIconToggleOn"  ></tui-svg>
+      <span>{{article.createdAt | timeAgo}}</span>
+    </p>
+  </div>
+  <div class="side">
+      <tui-svg src="tuiIconBookmark" class="icon"></tui-svg>
+  </div>
+</a>

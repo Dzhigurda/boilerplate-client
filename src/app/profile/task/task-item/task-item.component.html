@@ -16,7 +16,7 @@
       ></tui-tag> <span class="user"> {{ task.authorRef?.firstName }} {{ task.authorRef?.lastName }}</span>
     </p>
   </div>
-  <div class="right-side">
+  <div class="right-side" *ngIf="canSeeFee">
     <h3>Fee</h3>
     <h2><tui-money [value]="task.fee"></tui-money></h2>
   </div>

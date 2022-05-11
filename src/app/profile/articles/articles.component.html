@@ -1,0 +1,80 @@
+<div class="content">
+  <div class="head-menu">
+    <h1>Articles</h1>
+    <button
+      tuiIconButton
+      type="button"
+      size="s"
+      [appearance]="btSelected === 'CREATED' ? 'outline' : 'flat'"
+      icon="tuiIconEdit"
+      (click)="filterCreated()"
+    ></button>
+    <button
+      tuiIconButton
+      type="button"
+      size="s"
+      [appearance]="btSelected === 'DISTRIBUTED' ? 'outline' : 'flat'"
+      appearance="flat"
+      icon="tuiIconAttach"
+    ></button>
+
+    <button
+      tuiIconButton
+      type="button"
+      size="s"
+      [appearance]="btSelected === 'CANCELED' ? 'outline' : 'flat'"
+      appearance="flat"
+      icon="tuiIconTrash"
+    ></button>
+    <button
+      tuiIconButton
+      type="button"
+      size="s"
+      [appearance]="btSelected === 'BOOKMARK' ? 'outline' : 'flat'"
+      appearance="flat"
+      icon="tuiIconBookmark"
+    ></button>
+    <button
+      tuiIconButton
+      type="button"
+      size="s"
+      appearance="primary"
+      icon="tuiIconFilter"
+    ></button>
+    <button
+      tuiIconButton
+      type="button"
+      size="s"
+      appearance="flat"
+      icon="tuiIconPlus"
+      (click)="create()"
+    ></button>
+  </div>
+
+  <tui-scrollbar>
+    <cdk-virtual-scroll-viewport
+      #viewport
+      tuiScrollable
+      class="viewport tui-zero-scrollbar"
+      [itemSize]="45"
+      [maxBufferPx]="500"
+      [minBufferPx]="400"
+    >
+      <ng-container *ngIf="articles.length">
+        <div class="grid">
+          <app-articles-item
+            *ngFor="let article of articles"
+            [article]="article"
+          ></app-articles-item>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!articles.length">
+        <div class="empty">
+          <div class="centerbox">
+            <img src="/assets/logo.png" class="emptyImg" />
+          </div>
+        </div>
+      </ng-container>
+    </cdk-virtual-scroll-viewport>
+  </tui-scrollbar>
+</div>

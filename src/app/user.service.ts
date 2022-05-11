@@ -7,7 +7,8 @@ import { User, UserSettingDTO } from '../../../server/src/domains/user';
 @Injectable({
   providedIn: 'root',
 })
-export class UserService {
+export class UserService { 
+  
   constructor(private http: HttpClient) {}
 
   getMe() {

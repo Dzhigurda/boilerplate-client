@@ -6,13 +6,20 @@
     flex: 0 0 400px;
   }
 }
- 
+.head-menu {
+  display: flex;
+  margin-right: 20px;
+  align-items: center;
+  gap: 10px;
+  h1 {
+    flex: 1;
+  }
+}
 
 .task-grid {
   display: grid;
   gap: 10px;
 }
- 
 
 .viewport {
   height: calc(100vh - 130px);
@@ -26,7 +33,37 @@
 }
 .task-about {
   margin-right: 20px;
-} 
+}
 .example {
   color: var(--tui-text-03);
+}
+
+.row {
+  display: grid;
+  gap: 10px;
+}
+
+.row-top {
+  margin-top: 15px;
+  display: flex;
+  gap: 15px;
+}
+
+.empty {
+  padding: 20px;
+  display: flex;
+  height: calc(100vh - 180px);
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px dashed #f0f0f0;
+  .emptyImg {
+    width: 100%;
+  }
+
+  p {
+    font-size: 22px;
+    color: #ccc;
+    text-align: center;
+  }
 }

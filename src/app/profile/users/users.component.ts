@@ -11,7 +11,7 @@ import { ClientUser } from 'src/app';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Role, RoleService, UserRole } from '../role.service';
-import { debounceTime } from 'rxjs';
+import { debounceTime, forkJoin } from 'rxjs';
 import { UserService } from 'src/app/user.service';
 import {
   TuiDialogContext,
@@ -60,24 +60,17 @@ export class UsersComponent implements OnInit {
       this.enabledLogin = part.filters;
       this.filters();
     });
-    this.userService.getAll().subscribe((r) => {
-      this.users = r;
-
-      this.roles = this.roleService.getAll().map((r) => {
-        return Object.assign(r, {
-          count: 0,
-          valueOf: function () {
-            return this.count;
-          },
-        });
-      });
-
-      for (let i of this.users) {
-        const role = this.roles.find((role) => role.id === i.role);
-        role!.count += 1;
+    forkJoin([this.roleService.getAll(), this.userService.getAll()]).subscribe(
+      ([roles, users]) => {
+        this.users = users;
+        this.roles = roles.map((r) => Object.assign(r, { count: 0, valueOf: function() { return this.count; } }));
+        for (let i of this.users) {
+          const role = this.roles.find((role) => role.id === i.role);
+          role!.count += 1;
+        }
+        this.filters();
       }
-      this.filters();
-    });
+    );
   }
 
   recount() {
@@ -106,7 +99,6 @@ export class UsersComponent implements OnInit {
   dialogRole!: PolymorpheusContent<TuiDialogContext>;
 
   currentUser?: ClientUser;
- 
 
   openRoleEditor(user: ClientUser) {
     this.currentUser = user;

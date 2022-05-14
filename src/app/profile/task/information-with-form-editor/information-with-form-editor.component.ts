@@ -62,6 +62,7 @@ export class InformationWithFormEditorComponent implements OnInit {
   authors: ClientUserTumbanian[] = [];
   editors: ClientUserTumbanian[] = [];
   articles: ArtilceTumbanian[] = [];
+  articlesForDI: ArtilceTumbanian[] = [];
 
   private form$?: Subscription;
 
@@ -73,7 +74,7 @@ export class InformationWithFormEditorComponent implements OnInit {
     status: TuiNotification.Success,
   };
 
-  constructor( 
+  constructor(
     private readonly roleService: RoleService,
     private readonly articlesService: ArtilcesService,
     private readonly taskService: TaskService,
@@ -98,8 +99,12 @@ export class InformationWithFormEditorComponent implements OnInit {
       );
       this.updateForm();
     });
-    this.articlesService.getAllTumbanian().subscribe((art) => {
-      this.articles = art;
+    this.articlesService.getByEditor(this.user.id).subscribe((art) => {
+      this.articles = art
+        .filter((r) => r.status === 'CREATED')
+        .filter((r) => r.task == this.task.id || !r.task)
+        .map((r) => new ArtilceTumbanian().restore(r));
+      console.log(this.articles);
     });
 
     this.taskChange.subscribe((r) => {
@@ -114,7 +119,10 @@ export class InformationWithFormEditorComponent implements OnInit {
         if (!this.form.valid) return alert(this.form.errors);
         try {
           // TODO: После завершения блока статей
-          this.task.setArticle(tsk.article);
+
+          if (this.task?.art?.id != tsk.article?.id) {
+            this.changeArticle(tsk.article);
+          }
 
           if (this.task?.authorId !== tsk.author?.id) {
             this.changeAuthor(tsk.author);
@@ -145,7 +153,10 @@ export class InformationWithFormEditorComponent implements OnInit {
         this.notificationsService.show('Исполнитель был изменён').subscribe();
         this.change.emit(this.task);
       },
-      error: (err) => this.showError(err),
+      error: (err) => {
+        this.form.get('author')?.setValue(this.task.authorRef);
+        this.showError(err);
+      },
     });
   }
   changeFee(fee: number) {
@@ -155,7 +166,10 @@ export class InformationWithFormEditorComponent implements OnInit {
         this.notificationsService.show('Гонорар изменён').subscribe();
         this.change.emit(this.task);
       },
-      error: (err) => this.showError(err),
+      error: (err) => {
+        this.form.get('fee')?.setValue(this.task.fee);
+        this.showError(err);
+      },
     });
   }
   changeEditor(editor: ClientUserTumbanian) {
@@ -165,7 +179,10 @@ export class InformationWithFormEditorComponent implements OnInit {
         this.notificationsService.show('Редактор был изменён').subscribe();
         this.change.emit(this.task);
       },
-      error: (err) => this.showError(err),
+      error: (err) => {
+        this.form.get('editor')?.setValue(this.task.editorRef);
+        this.showError(err);
+      },
     });
   }
   changeDateEnd(dateEnd: Date) {
@@ -175,12 +192,62 @@ export class InformationWithFormEditorComponent implements OnInit {
         this.notificationsService.show('Срок сдачи изменён').subscribe();
         this.change.emit(this.task);
       },
-      error: (err) => this.showError(err),
+      error: (err) => {
+        if (this.task.dateEnd) {
+          this.form
+            .get('dateEnd')
+            ?.setValue(this.dateDecorator(this.task.dateEnd!));
+        }
+        this.showError(err);
+      },
     });
   }
 
+  changeArticle(tumbanian?: ArtilceTumbanian) {
+    if (this.task!.status !== 'DISTRIBUTED') {
+      this.notificationsService
+        .show('Not permited', this.notifyOptions)
+        .subscribe();
+      if (this.task.articleId) {
+        this.form.get('article')?.setValue(this.task.art);
+      }
+      return;
+    }
+    if (!tumbanian?.id) {
+      this.removeAticle();
+    } else {
+      this.setArticle(tumbanian.id);
+    }
+  }
+  private removeAticle() {
+    this.taskService.removeArticle(this.task.id!).subscribe((r) => {
+      if (!r) {
+        this.showDenie('Не удалось');
+        return;
+      }
+      this.showSuccess('Статья убрана');
+    });
+  }
+
+  private setArticle(articleId: number) {
+    this.taskService.setArticle(this.task.id!, articleId).subscribe((r) => {
+      if (!r) {
+        this.showDenie('Не удалось');
+        return;
+      }
+      this.showSuccess('Статья закреплена');
+    });
+  }
+  private showDenie(err: any) {
+    this.notificationsService.show(err, this.notifyOptions).subscribe();
+  }
   private showError(err: any) {
     this.notificationsService.show(err.error, this.notifyOptions).subscribe();
+  }
+  private showSuccess(msg: any) {
+    this.notificationsService
+      .show(msg, this.notifyOptionsSuccess)
+      .subscribe();
   }
 
   updateForm() {

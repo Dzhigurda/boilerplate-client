@@ -46,6 +46,7 @@ export interface FakeMMTask {
   article?: number;
   editorRef?: any;
   authorRef?: any;
+  articleRef?: any;
 
   history: History[];
 }
@@ -81,6 +82,10 @@ export class TaskPresenter {
 
   get editorId() {
     return this.editor;
+  }
+
+  get articleId() {
+    return this.article;
   }
 
   set title(value: string) {
@@ -264,6 +269,9 @@ export class TaskPresenter {
         ref.authorRef,
         ref.authorRef.roleName
       );
+    }
+    if(this.article) {
+      this._art = new ArtilceTumbanian().restore(ref.articleRef)
     }
     this._history = ref.history.map((h) => {
       let name = h.user === ref.editor ?  this._editorRef?.getFullName() : undefined;

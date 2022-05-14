@@ -1,0 +1,16 @@
+<div class="flex"  >
+  <a class="image" [routerLink]="'/profile/articles/' + article.id">
+    <img [src]="article.imageSq" />
+  </a>
+  <a class="description" [routerLink]="'/profile/articles/' + article.id">
+    <h3>{{ article.title }}</h3>
+    <p>
+      <span>{{ article.status }}</span>  
+      <tui-svg src="tuiIconToggleOn"  ></tui-svg>
+      <span>{{article.createdAt.toString() | timeAgo}}</span>
+    </p>
+  </a>
+  <div [ngClass]="{ side: true, isMarked: isMarkbook}" (click)="addMarkbook()">
+      <tui-svg src="tuiIconBookmark" class="icon"></tui-svg>
+  </div>
+</div>

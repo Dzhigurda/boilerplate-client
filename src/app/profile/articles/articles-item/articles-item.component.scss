@@ -2,7 +2,6 @@
   display: flex;
   gap: 15px;
   align-items: center;
-  text-decoration: none;
   border-radius: 15px;
   cursor: pointer;
   box-shadow: 0 0 0px rgba(0, 0, 0, 0);
@@ -10,12 +9,12 @@
     background: #f0f0f0;
     transition: 0.2s ease-in-out;
     .image {
-      box-shadow: 0 0 24px rgba(0, 0, 0, 0.3); 
+      box-shadow: 0 0 24px rgba(0, 0, 0, 0.3);
       transform: translateX(-10px);
     }
-    .icon { 
+    .icon {
       color: rgb(0, 77, 128);
-    //   transform: translateX(10px);
+      //   transform: translateX(10px);
     }
   }
 }
@@ -24,6 +23,8 @@
   flex: 0 0 70px;
   border-radius: 15px;
   transition: 0.2s ease-in-out;
+  display: block;
+  text-decoration: none;
   img {
     width: 70px;
     border-radius: 15px;
@@ -31,7 +32,9 @@
   }
 }
 .description {
+  display: block;
   flex: 1;
+  text-decoration: none;
   h3 {
     margin: 0;
     line-height: 1.2;
@@ -54,8 +57,18 @@
   align-items: center;
   justify-content: center;
   color: #c9c9c9;
-}
-.icon {
+  &.isMarked .icon {
+    color: #09f;
+  }
+  &:hover {
+    .icon {
+      transition: 0.1s ease-in-out;
+      color: #a00;
+    }
+  }
+  .icon {
     transition: 0.4s ease-in-out;
-  font-size: 20px;
+    font-size: 20px;
+  }
 }
+

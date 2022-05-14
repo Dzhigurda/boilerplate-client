@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Article, ArticleStatus, CoverResponce, ImageReposnce } from '.';
 import { BaseArticle } from './Article';
@@ -15,11 +15,19 @@ export class ArtilceTumbanian {
 
   createDif!: number;
 
-  restore(article: any) {
-    this.id = article.id;
+  restore(article: BaseArticle | Article) {
+    if (article instanceof BaseArticle) {
+      this.id = article?.getId();
+    } else {
+      this.id = article.id;
+    }
     this.title = article.title;
-    this.image = article.image ? environment.API_URL + "/" + article.image : "/assets/default.vs.png";
-    this.imageSq = article.imageSq ? environment.API_URL + "/" + article.imageSq : "/assets/default.sq.png";
+    this.image = article.verticalSmallImage
+      ? environment.API_URL + '/' + article.verticalSmallImage
+      : '/assets/default.vs.png';
+    this.imageSq = article.squareImage
+      ? environment.API_URL + '/' + article.squareImage
+      : '/assets/default.sq.png';
     this.status = article.status;
     this.createdAt = new Date(article.createdAt);
     this.createDif = +new Date() - article.createdAt;
@@ -75,6 +83,40 @@ export class ArtilcesService {
       .post<Article>(`${environment.API_URL}/v1/articles/`, article)
       .pipe(this.restoreBaseArticleEntity());
   }
+
+  setCategory(articleID: number, category: number): Observable<boolean> {
+    return this.http.patch<boolean>(
+      `${environment.API_URL}/v1/articles/${articleID}/category`,
+      { category }
+    );
+  }
+
+  setEditor(articleID: number, editor: number): Observable<boolean> {
+    return this.http.patch<boolean>(
+      `${environment.API_URL}/v1/articles/${articleID}/editor`,
+      { editor }
+    );
+  }
+
+  setAuthor(articleID: number, author: number): Observable<boolean> {
+    return this.http.patch<boolean>(
+      `${environment.API_URL}/v1/articles/${articleID}/author`,
+      { author }
+    );
+  }
+
+  setTask(articleID: number, taskId: number): Observable<boolean> {
+    return this.http.patch<boolean>(
+      `${environment.API_URL}/v1/articles/${articleID}/task`,
+      { taskId }
+    );
+  }
+  removeTask(articleID: number): Observable<boolean> {
+    return this.http.delete<boolean>(
+      `${environment.API_URL}/v1/articles/${articleID}/task`
+    );
+  }
+
   save(article: any) {
     return this.http
       .patch<Article>(
@@ -87,7 +129,7 @@ export class ArtilcesService {
     const fd = new FormData();
     fd.append('image', file);
     return this.http.post<ImageReposnce>(
-      `${environment.API_URL}/v1/articles/${id}`,
+      `${environment.API_URL}/v1/articles/${id}/image`,
       fd
     );
   }
@@ -95,7 +137,7 @@ export class ArtilcesService {
     const fd = new FormData();
     fd.append('cover', file);
     return this.http.post<CoverResponce>(
-      `${environment.API_URL}/v1/articles/${id}`,
+      `${environment.API_URL}/v1/articles/${id}/cover`,
       fd
     );
   }

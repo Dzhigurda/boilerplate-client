@@ -17,6 +17,9 @@ export class PreviewComponent implements OnInit {
   title?: string;
   @Input()
   description?: string;
+  @Input()
+  image!: string;
+
   source?: any[];
   error?: string;
 
@@ -31,6 +34,7 @@ export class PreviewComponent implements OnInit {
 
   update() {
     try {
+      this.error ="";
       this.source = new SerializeText(this.article).render().getSource();
       console.log(this.source);
     } catch (ex: any) {

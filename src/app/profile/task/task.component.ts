@@ -7,6 +7,7 @@ import { ClientUserTumbanian, TaskPresenter, TaskStatus } from './Task';
 import { TaskService } from './task.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
+  TuiAlertService,
   TuiDialogContext,
   TuiDialogService,
   TuiNotification,
@@ -68,8 +69,8 @@ export class TaskComponent implements OnInit {
   constructor(
     private taskService: TaskService,
     @Inject(TuiDialogService) private readonly dialogService: TuiDialogService,
-    @Inject(TuiNotificationsService)
-    private readonly notificationsService: TuiNotificationsService,
+    @Inject(TuiAlertService)
+    private readonly notificationsService: TuiAlertService,
     private tumb: UserTumbanianFactory
   ) {}
 
@@ -167,10 +168,10 @@ export class TaskComponent implements OnInit {
     }
   }
   private showSuccess(text: string) {
-    this.notificationsService.show(text, this.notifyOptionsSuccess).subscribe();
+    this.notificationsService.open(text, this.notifyOptionsSuccess).subscribe();
   }
   private showError(err: any) {
-    this.notificationsService.show(err.error, this.notifyOptions).subscribe();
+    this.notificationsService.open(err.error, this.notifyOptions).subscribe();
   }
   select(task: TaskPresenter) {
     this.currentTask = task;

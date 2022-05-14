@@ -7,10 +7,8 @@ import { FakeMMTask, TaskPresenter } from './Task';
 @Injectable({
   providedIn: 'root',
 })
-export class TaskService { 
-  constructor(
-    private http: HttpClient, 
-  ) {}
+export class TaskService {
+  constructor(private http: HttpClient) {}
 
   getConfig() {
     return {
@@ -117,6 +115,29 @@ export class TaskService {
       .patch<FakeMMTask>(`${environment.API_URL}/v1/task/${id}/set/author`, {
         author,
       })
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+  setArticle(id: number, article: number) {
+    return this.http
+      .patch<FakeMMTask>(`${environment.API_URL}/v1/task/${id}/set/article`, {
+        article,
+      })
+      .pipe(
+        map((r) => {
+          return TaskPresenter.create(r);
+        })
+      );
+  }
+  removeArticle(id: number) {
+    return this.http
+      .delete<FakeMMTask>(
+        `${environment.API_URL}/v1/task/${id}/set/article`,
+        {}
+      )
       .pipe(
         map((r) => {
           return TaskPresenter.create(r);

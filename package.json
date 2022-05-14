@@ -33,6 +33,7 @@
     "@taiga-ui/kit": "^2.41.1",
     "@tinkoff/ng-dompurify": "3.0.0",
     "dompurify": "2.2.9",
+    "fast-average-color": "^7.1.0",
     "ng4-files": "^0.0.1",
     "ngx-markdown": "^13.1.0",
     "qrcode": "^1.5.0",

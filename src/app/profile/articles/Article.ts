@@ -1,6 +1,6 @@
 import { Article, ArticleHistory, ArticleStatus } from '.';
 
-export class BaseArticle { 
+export class BaseArticle {
   id?: number;
   title!: string;
   description!: string;
@@ -20,7 +20,7 @@ export class BaseArticle {
   nick!: string;
   photographer!: string;
   status: ArticleStatus = 'CREATED';
-
+  createdAt: number = 0;
   getId() {
     return this.id!;
   }
@@ -105,6 +105,12 @@ export class BaseArticle {
       comment: comment ?? '',
     };
   }
+  canPublish(editor: number) {
+    if (this.status === 'PUBLISHED') return false;
+    if (!this.author) return false;
+    if (![1, this.editor].includes(editor)) return false;
+    return true;
+  }
   publish(editor: number) {
     if (this.status === 'PUBLISHED') throw new Error('Не позволено');
     if (!this.author) throw new Error('Нельзя публиковать статью без автора');
@@ -112,18 +118,33 @@ export class BaseArticle {
     return this.createHistory(editor);
   }
 
+  canUnpublish(editor: number) {
+    if (this.status === 'CREATED') return false; 
+    if (this.editor !== editor) return false;
+    if (![1, this.editor, this.author].includes(editor)) return false;
+    return true;
+  }
   unpublish(editor: number) {
     if (this.status === 'CREATED') throw new Error('Не позволено');
     this.status = 'CREATED';
     return this.createHistory(editor);
   }
 
+  canArchive(editor: number) {
+    if (this.status === 'ARCHIVED') return false;
+    if (![1, this.editor].includes(editor)) return false;
+    return true;
+  }
   archive(editor: number) {
     if (this.status === 'ARCHIVED') throw new Error('Не позволено');
     this.status = 'ARCHIVED';
     return this.createHistory(editor);
   }
-
+  canUnArchive(editor: number) { 
+    if (this.status !== 'ARCHIVED') return false;
+    if (![1, this.editor].includes(editor)) return false;
+    return true;
+  }
   unarchive(editor: number) {
     if (this.status !== 'ARCHIVED') throw new Error('Не позволено');
     this.status = 'PUBLISHED';
@@ -136,6 +157,10 @@ export class BaseArticle {
     this.horizontalSmallImage = hs;
     this.verticalLargeImage = vl;
     this.verticalSmallImage = vs;
+  }
+
+  hasImages() {
+    return !!this.verticalLargeImage;
   }
 
   setCover(el?: string) {
@@ -190,22 +215,22 @@ export class BaseArticle {
       nick: this.nick,
       photographer: this.photographer,
       status: this.status,
+      createdAt: this.createdAt,
     };
   }
 
-  getTextForm(): { [key: string]: any; } {
+  getTextForm(user: number): { [key: string]: any } {
     return {
-        id: this.id,
+      id: this.id,
 
-        title: this.title,
-        description:  this.description,
-        text: this.text,
-        keywords: this.keywords,
+      title: this.title,
+      description: this.description,
+      text: this.text,
+      keywords: this.keywords,
 
-        source: this.source,
-        photographer: this.photographer,
-        nick: this.nick,
-
-    }
+      source: this.source,
+      photographer: this.photographer,
+      nick: this.nick, 
+    };
   }
 }

@@ -8,7 +8,26 @@
         [itemSize]="45"
         [maxBufferPx]="500"
         [minBufferPx]="400"
-      > 
+      >
+        <ng4-files-drop (filesSelect)="filesSelect($event)">
+          <div class="imageUploader" *ngIf="article">
+            <img [src]="imageHB" />
+            <div class="right-image">
+              <img [src]="imageVS" />
+              <div
+                class="middleColor"
+                [style]="'background-color: ' + midColor"
+              ></div>
+            </div>
+          </div>
+
+          <p>{{ selectedFiles }}</p>
+          <ng4-files-click (filesSelect)="filesSelect($event)">
+            <span class="information">
+              Move the image to the gray area or click here to download...
+            </span>
+          </ng4-files-click>
+        </ng4-files-drop>
         <form [formGroup]="form" *ngIf="article">
           <div class="layout">
             <div class="field">
@@ -88,6 +107,38 @@
                 [error]="[] | tuiFieldError | async"
               ></tui-error>
             </div>
+            <div class="row">
+              <div class="field">
+                <tui-input [formControl]="authorControl">
+                  Author
+                  <input tuiTextfield />
+                </tui-input>
+                <tui-error
+                [formControl]="authorControl"
+                  [error]="[] | tuiFieldError | async"
+                ></tui-error>
+              </div>
+              <div class="field">
+                <tui-input [formControl]="editorControl">
+                  Editor
+                  <input tuiTextfield />
+                </tui-input>
+                <tui-error
+                [formControl]="editorControl"
+                  [error]="[] | tuiFieldError | async"
+                ></tui-error>
+              </div>
+            </div>
+            <div class="field">
+              <tui-input [formControl]="catalogControl">
+                Category
+                <input tuiTextfield />
+              </tui-input>
+              <tui-error
+                [formControl]="catalogControl"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
             <div class="row-inline">
               <button
                 tuiButton
@@ -109,9 +160,28 @@
                 tuiButton
                 type="button"
                 appearance="flat"
+                *ngIf="canArchive()"
                 (click)="archivate()"
               >
                 Archivate
+              </button>
+              <button
+                tuiButton
+                type="button"
+                appearance="secondary"
+                *ngIf="canPublish()"
+                (click)="publish()"
+              >
+                Publish
+              </button>
+              <button
+                tuiButton
+                type="button"
+                appearance="flat"
+                *ngIf="canUnpublish()"
+                (click)="unpublish()"
+              >
+                Unpublish
               </button>
             </div>
           </div>
@@ -119,7 +189,13 @@
       </cdk-virtual-scroll-viewport>
     </tui-scrollbar>
   </div>
-  <div class="history-side">
+  <div class="history-side" [style]="'background-color: ' + midColor">
+    <div
+      class="back"
+      *ngIf="srcHB"
+      [style]="'background: url(' + srcHB + ') 50% 50% /100% '"
+    ></div>
+    <div class="back-2"></div>
     <tui-scrollbar>
       <cdk-virtual-scroll-viewport
         #viewport
@@ -136,5 +212,3 @@
     </tui-scrollbar>
   </div>
 </div>
-
- 

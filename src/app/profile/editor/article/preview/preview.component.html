@@ -1,7 +1,8 @@
 <div class="error" *ngIf="error">{{ error }}</div>
 <div class="success" *ngIf="!error">Success!</div>
 <h1>{{ title ?? "Нет заголовка" }}</h1>
-<div class="description">{{ description }}</div>
+<img [src]="image" />
+<div class="description">{{ description }}</div> 
 <ng-container *ngIf="source">
   <ng-container *ngFor="let s of source">
     <app-album

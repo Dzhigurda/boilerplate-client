@@ -19,10 +19,18 @@ h1 {
     color: #a00;
     padding: 10px 20px;
     border-radius: 15px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
 }
 .success {
     background: #f0fffc;
     color: #00aa6c;
     padding: 10px 20px;
     border-radius: 15px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
 }

@@ -80,7 +80,7 @@ import { TaskItemComponent } from './task/task-item/task-item.component';
 import { ControlComponent } from './task/control/control.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { ArticlesComponent } from './articles/articles.component';
-import { ArticlesItemComponent } from './articles-item/articles-item.component';
+import { ArticlesItemComponent } from './articles/articles-item/articles-item.component';
 import { TimeAgoExtendsPipe } from '../utilites/TimeAgoExtends.pipe';
 import { EditorComponent } from './editor/editor.component';
 import { Ng4FilesModule } from '../utilites/ng4-files';

@@ -26,14 +26,16 @@
       appearance="flat"
       icon="tuiIconTrash"
     ></button>
-    <button
-      tuiIconButton
-      type="button"
-      size="s"
-      [appearance]="btSelected === 'BOOKMARK' ? 'outline' : 'flat'"
-      appearance="flat"
-      icon="tuiIconBookmark"
-    ></button>
+    <tui-badged-content size="s" class="badgad" [contentTop]="countMark" [rounded]="false">
+      <button
+        tuiIconButton 
+        type="button"
+        size="s"
+        [appearance]="btSelected === 'BOOKMARK' ? 'outline' : 'flat'"
+        appearance="flat"
+        icon="tuiIconBookmark"
+      ></button>
+    </tui-badged-content>
     <button
       tuiIconButton
       type="button"
@@ -62,7 +64,7 @@
     >
       <ng-container *ngIf="articles.length">
         <div class="grid">
-          <app-articles-item
+          <app-articles-item (marked)="toggleMarked($event)"
             *ngFor="let article of articles"
             [article]="article"
           ></app-articles-item>

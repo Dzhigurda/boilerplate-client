@@ -64,10 +64,11 @@ export class InformationWithFormArticleComponent implements OnInit, OnDestroy {
 
   constructor(private readonly articlesService: ArtilcesService) {}
 
-  ngOnInit(): void {
-    this.articlesService.getAllTumbanian().subscribe((art) => {
-      this.articles = art;
+  ngOnInit(): void { 
+    this.articlesService.getByAuthor(this.user.id).subscribe((art) => {
+      this.articles = art.map(r => new ArtilceTumbanian().restore(r));
     });
+
     this.taskChange.subscribe((r) => {
       this.updateForm();
     });

@@ -1,22 +1,36 @@
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { TuiMobileDialogService } from '@taiga-ui/addon-mobile';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TuiTextAreaComponent } from '@taiga-ui/kit';
+import FastAverageColor from 'fast-average-color';
 import { ClientUser } from 'src/app';
+import {
+  Ng4FilesConfig,
+  Ng4FilesSelected,
+  Ng4FilesService,
+  Ng4FilesStatus,
+} from 'src/app/utilites/ng4-files';
+import { environment } from 'src/environments/environment';
 import { BaseArticle } from '../articles/Article';
 import { ArtilcesService } from '../articles/artilces.service';
 import { PreviewComponent } from './article/preview/preview.component';
 
-export function TextFieldValidator(
-  field: AbstractControl
-): Validators | null {
+export function TextFieldValidator(field: AbstractControl): Validators | null {
   return field.value !== ''
     ? null
     : {
@@ -41,8 +55,13 @@ export class EditorComponent implements OnInit {
     keywords: new FormControl('', Validators.required),
     nick: new FormControl(''),
     photographer: new FormControl(''),
-    source: new FormControl(''),
+    source: new FormControl(''), 
   });
+
+  authorControl = new FormControl('', Validators.required);
+  editorControl = new FormControl('', Validators.required);
+
+  catalogControl = new FormControl(0, Validators.required);
   article?: BaseArticle;
 
   activeItemIndex: number = 1;
@@ -57,15 +76,23 @@ export class EditorComponent implements OnInit {
   code?: string;
   error?: string;
   articleText: string = '';
+  imageHB?: any;
+  imageVS?: any;
+  imageHS?: any;
+  srcHB?: string;
 
   constructor(
     private router: ActivatedRoute,
     private articleService: ArtilcesService,
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
-    private readonly dialogsService: TuiMobileDialogService
+    private readonly dialogsService: TuiMobileDialogService,
+    private ssd: DomSanitizer,
+    private changeRef: ChangeDetectorRef,
+    private ng4FilesService: Ng4FilesService
   ) {}
 
   ngOnInit(): void {
+    this.ng4FilesService.addConfig(this.imageConfig);
     this.router.params.subscribe((params) => {
       this.id = +params['id'];
       this.updateArticle(this.id!);
@@ -80,19 +107,61 @@ export class EditorComponent implements OnInit {
     this.form.get('description')?.valueChanges.subscribe((value) => {
       this.preview.description = value;
     });
+
+    this.catalogControl.valueChanges.subscribe((value: number) => {
+      if(this.article?.category === value) return;
+      this.articleService.setCategory(this.article!.getId(),  value).subscribe(r => {
+        return this.alertService.open('Category changed').subscribe();
+      })
+    })
+ 
+    this.authorControl.valueChanges.subscribe((value: number) => {
+      if(this.article?.author === value) return;
+      this.articleService.setAuthor(this.article!.getId(),  value).subscribe(r => {
+        return this.alertService.open('Author changed').subscribe();
+      })
+    })
+    this.editorControl.valueChanges.subscribe((value: number) => {
+      if(this.article?.editor === value) return;
+      this.articleService.setEditor(this.article!.getId(),  value).subscribe(r => {
+        return this.alertService.open('Editor changed').subscribe();
+      })
+    })
   }
 
   private updateArticle(id: number) {
     this.articleService.getOne(id).subscribe((r) => {
       this.article = r;
-      this.form.setValue(this.article.getTextForm());
-      this.form.valid;
+      this.form.setValue(this.article.getTextForm(this.user.id));
+      this.form.valid; 
+      this.catalogControl.setValue(this.article.getCategory());
+      this.authorControl.setValue(this.article.getAuthor());
+      this.editorControl.setValue(this.article.getEditor())
+      this.updateImage();
       this.updatePreview();
     });
   }
   updatePreview() {
     this.preview.title = this.article?.title;
     this.preview?.articleChange?.emit(this.article?.text);
+    this.preview.image = this.imageHS;
+  }
+  updateImage() {
+    const h = Math.round(Math.random() * 10000);
+    this.srcHB = this.article!.hasImages()
+      ? this.articleService.getHorizontalLargeImage(this.article!.id!) + `?h=${h}`
+      : '/assets/default.hb.jpg';
+    let srcHS = this.article!.hasImages()
+      ? this.articleService.getHorizontalSmallImage(this.article!.id!)+ `?h=${h}`
+      : '/assets/default.hs.jpg';
+    let srcVS = this.article!.hasImages()
+      ? this.articleService.getVerticalSmallImage(this.article!.id!) + `?h=${h}`
+      : '/assets/default.vs.png';
+
+    this.imageHB = this.ssd.bypassSecurityTrustUrl(this.srcHB);
+    this.imageHS = this.ssd.bypassSecurityTrustUrl(srcHS);
+    this.imageVS = this.ssd.bypassSecurityTrustUrl(srcVS);
+    this.calcMidColor(this.srcHB);
   }
 
   restore() {
@@ -116,22 +185,134 @@ export class EditorComponent implements OnInit {
       return this.alertService.open('Article is saved').subscribe();
     });
   }
-  archivate() {
-
+  canUnarchive() {
+    return this.article?.canArchive(this.user.id);
+  }
+  unarchivate() {
     this.dialogsService
       .open('Do you want to restore a content of article?', {
         label: 'Are you sure',
         actions: ['Yes', 'Cancel'],
       })
       .subscribe((index: number) => {
-        if(index != 0) return;
-        this.articleService.archive(this.id!).subscribe(r => {
+        if (index != 0) return;
+        this.articleService.restore(this.id!).subscribe((r) => {
+          return this.alertService.open('Article is restore').subscribe();
+        });
+      });
+  }
+  canArchive() {
+    return this.article?.canArchive(this.user.id);
+  }
+  archivate() {
+    this.dialogsService
+      .open('Do you want to archive a content of article?', {
+        label: 'Are you sure',
+        actions: ['Yes', 'Cancel'],
+      })
+      .subscribe((index: number) => {
+        if (index != 0) return;
+        this.articleService.archive(this.id!).subscribe((r) => {
           return this.alertService.open('Article is archived').subscribe();
-        })
+        });
+      });
+  }
+  canUnpublish() {
+    return this.article?.canUnpublish(this.user.id);
+  }
+  unpublish() {
+    this.dialogsService
+      .open('Do you want to unpublish this article?', {
+        label: 'Are you sure',
+        actions: ['Yes', 'Cancel'],
+      })
+      .subscribe((index: number) => {
+        if (index != 0) return;
+        this.articleService.unpublish(this.id!).subscribe((r) => {
+          return this.alertService.open('Article is not a public').subscribe();
+        });
+      });
+  }
+  canPublish() {
+    return this.article?.canPublish(this.user.id);
+  } 
+  publish() {
+    this.dialogsService
+      .open('Do you want to publish this article?', {
+        label: 'Are you sure',
+        actions: ['Yes', 'Cancel'],
+      })
+      .subscribe((index: number) => {
+        if (index != 0) return;
+        this.articleService.publish(this.id!).subscribe((r) => {
+          return this.alertService.open('Article is published').subscribe();
+        });
       });
   }
 
-  uploadFile(files: any) {
-    console.log(files);
+
+  midColor: string = '#f0f0f0';
+  calcMidColor(url: string) {
+    const fac = new FastAverageColor();
+    fac
+      .getColorAsync(url, {
+        ignoredColor: [
+          [230, 230, 230, 255], // white
+          [30, 30, 30, 255], // black
+        ],
+      })
+      .then((color) => {
+        this.midColor = color.hex;
+        console.log('Average color', color);
+        this.changeRef.detectChanges();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+  rgbToHex(r: number, g: number, b: number) {
+    if (r > 255 || g > 255 || b > 255) throw 'Invalid color component';
+    return ((r << 16) | (g << 8) | b).toString(16);
+  }
+
+  private imageConfig: Ng4FilesConfig = {
+    acceptExtensions: ['jpg', 'png', 'jpeg'],
+    maxFilesCount: 1,
+    maxFileSize: 20971520, // 20 мгБайт
+    totalFilesSize: 20971520,
+  };
+
+  loaded_image = false;
+
+  selectedFiles?: any[];
+  filesSelect(selectedFiles: Ng4FilesSelected) {
+    if (selectedFiles.status !== Ng4FilesStatus.STATUS_SUCCESS) {
+      this.alertService
+        .open('Не удалось загрузить изображение: ' + selectedFiles.status)
+        .subscribe();
+      return;
+    }
+    this.loaded_image = true;
+    this.selectedFiles = Array.from(selectedFiles.files).map((file: File) => {
+      this.articleService
+        .uploadImage(this.article!.id!, file)
+        .subscribe((res) => {
+          this.alertService.open(
+            'Изображение загружено: ' + selectedFiles.status
+          );
+          this.loaded_image = false;
+          const random = Math.round(Math.random() * 10000);
+          this.article?.setImages(
+            `${res.sq}?h=${random}`,
+            `${res.hl}?h=${random}`,
+            `${res.hs}?h=${random}`,
+            `${res.vl}?h=${random}`,
+            `${res.vs}?h=${random}`
+          );
+          this.updateImage();
+          this.updatePreview();
+        });
+      return file.name;
+    });
   }
 }

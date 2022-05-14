@@ -26,6 +26,7 @@ export interface Article {
   photographer: string;
 
   status: ArticleStatus;
+  createdAt: number;
 }
 
 export interface History {

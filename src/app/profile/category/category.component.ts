@@ -1,5 +1,6 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { TuiAlertService, TuiDialogService } from '@taiga-ui/core';
+import { ClientUser } from 'src/app';
 import { Category } from './Category';
 import { CategoryService } from './category.service';
 
@@ -11,6 +12,8 @@ import { CategoryService } from './category.service';
 export class CategoryComponent implements OnInit {
   categories!: readonly Category[];
   enabled!: readonly Category[];
+  @Input() 
+  user!: ClientUser;
   constructor(
     @Inject(TuiAlertService) private readonly alertService: TuiAlertService,
     @Inject(TuiDialogService) private readonly dialogService: TuiDialogService,

@@ -1,4 +1,7 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TimeAgoPipe } from 'time-ago-pipe';
+import { ArtilceTumbanian } from '../artilces.service';
 
 import { ArticlesItemComponent } from './articles-item.component';
 
@@ -8,14 +11,15 @@ describe('ArticlesItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ArticlesItemComponent ]
-    })
-    .compileComponents();
+      declarations: [ArticlesItemComponent, TimeAgoPipe],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ArticlesItemComponent);
     component = fixture.componentInstance;
+    component.article = new ArtilceTumbanian();
     fixture.detectChanges();
   });
 

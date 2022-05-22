@@ -18,7 +18,7 @@ export class HistoryComponent implements OnInit {
   };
   readonly columns = ['date', 'name', 'comment','status' ];
 
-  constructor(private ref: ChangeDetectorRef, private tumb: UserTumbanianFactory) { }
+  constructor() { }
 
   @ViewChild("table", {static: true})
   table!: TuiTbodyComponent<any>;

@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { ClientUser } from 'src/app'; 
+import { ClientUser } from 'src/app';
 import { ArtilceTumbanian } from '../articles/artilces.service';
 import { HistoryPresenter, History } from './History';
 
@@ -51,7 +51,7 @@ export interface FakeMMTask {
   history: History[];
 }
 
-export class TaskPresenter { 
+export class TaskPresenter {
   private _id?: number;
   private _title!: string;
   private _description!: string;
@@ -136,7 +136,6 @@ export class TaskPresenter {
   get art() {
     return this._art;
   }
- 
 
   get authorRef() {
     return this._authorRef;
@@ -180,9 +179,8 @@ export class TaskPresenter {
     }
   }
 
-
   isFinished() {
-    return ['CANCELED', 'ARCHIVED', 'ENDED', 'FINISHED' ].includes(this.status);
+    return ['CANCELED', 'ARCHIVED', 'ENDED', 'FINISHED'].includes(this.status);
   }
   get history() {
     return this._history;
@@ -252,9 +250,9 @@ export class TaskPresenter {
   }
 
   update(ref: TaskPresenter) {
-    this.restore(ref.toJSON())
+    this.restore(ref.toJSON());
   }
-  private restore(ref: FakeMMTask) {
+  restore(ref: FakeMMTask) {
     this._id = ref.id;
     this._title = ref.title ?? '';
     this._description = ref.description ?? '';
@@ -278,14 +276,19 @@ export class TaskPresenter {
         ref.authorRef.roleName
       );
     }
-    if(this.article) {
-      this._art = (ref.articleRef instanceof ArtilceTumbanian) ? ref.articleRef : new ArtilceTumbanian().restore(ref.articleRef)
+    if (this.article) {
+      this._art =
+        ref.articleRef instanceof ArtilceTumbanian
+          ? ref.articleRef
+          : new ArtilceTumbanian().restore(ref.articleRef);
     }
     this._history = ref.history.map((h) => {
-      let name = h.user === ref.editor ?  this._editorRef?.getFullName() : undefined;
-          name = !name && h.user === ref.author ?  this._authorRef?.getFullName() : name;
-      
-      return new HistoryPresenter().restore(h,name ?? "Неизвестно")
+      let name =
+        h.user === ref.editor ? this._editorRef?.getFullName() : undefined;
+      name =
+        !name && h.user === ref.author ? this._authorRef?.getFullName() : name;
+
+      return new HistoryPresenter().restore(h, name ?? 'Неизвестно');
     });
     return this;
   }
@@ -307,7 +310,7 @@ export class TaskPresenter {
       history: this.history.map((r) => r.toJSON()),
     };
   }
- 
+
   static create(
     ref: FakeMMTask,
     users?: ClientUserTumbanian[],

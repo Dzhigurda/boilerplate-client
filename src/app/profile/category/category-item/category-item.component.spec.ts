@@ -1,4 +1,6 @@
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Category } from '../Category';
 
 import { CategoryItemComponent } from './category-item.component';
 
@@ -8,7 +10,8 @@ describe('CategoryItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CategoryItemComponent ]
+      declarations: [ CategoryItemComponent ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   });
@@ -16,6 +19,7 @@ describe('CategoryItemComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CategoryItemComponent);
     component = fixture.componentInstance;
+    component.category = new Category();
     fixture.detectChanges();
   });
 

@@ -7,14 +7,17 @@ import { BaseArticle } from './Article';
 type prefixType = 'sq' | 'hl' | 'hs' | 'vl' | 'vs' | 'el';
 export class ArtilceTumbanian {
   id!: number;
-  title!: string;
+  title: string = 'No title';
   image!: string;
   imageSq!: string;
-  createdAt!: Date;
-  status!: ArticleStatus;
+  createdAt: Date = new Date();
+  status: ArticleStatus = 'CREATED';
   author?: number;
 
   createDif!: number;
+  constructor() {
+    this.createDif = +new Date() - this.createdAt.valueOf();
+  }
 
   restore(article: BaseArticle | Article) {
     if (article instanceof BaseArticle) {
@@ -136,7 +139,7 @@ export class ArtilcesService {
       { author: +author }
     );
   }
-  
+
   save(article: any) {
     return this.http
       .patch<Article>(

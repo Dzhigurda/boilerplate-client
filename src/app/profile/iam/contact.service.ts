@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { UserContactDTO } from '../../../../../server/src/domains/user';
-
+import { UserContactDTO } from '.';
+ 
 export class ContactTypeItem {
   constructor(public id: number, public name: string, public icon: string) {}
   toString() {
@@ -53,6 +53,4 @@ export class ContactService {
       environment.API_URL + '/v1/user/contact/' + contactId
     );
   }
-
-  
 }

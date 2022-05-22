@@ -51,7 +51,6 @@ export class RoleComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initAuth();
     this.authsub = this.authForm.valueChanges.subscribe((part) => {
-      console.log(this.authForm.valid, this.authForm.errors);
       if (!this.authForm.valid) return;
       if (part.role === this.currentRole) return;
       this.roleService.changeRole(this.user.id, part.role.id).subscribe({

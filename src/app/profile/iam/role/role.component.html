@@ -1,4 +1,4 @@
-<form [formGroup]="authForm">
+<form [formGroup]="authForm" *ngIf="currentRole">
   <div class="tui-row tui-row_sme">
     <div class="tui-col_12">
       <h2>Role</h2>

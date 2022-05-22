@@ -63,10 +63,7 @@ export class LoginComponent implements OnInit {
         this.loginForm.enable();
         this.isLoading = false;
         this.notificationsService
-          .show(
-            'Hi ' + (r as any).user.firstName,
-            this.notifyOptionsSuccess
-          )
+          .show('Hi ' + (r as any).user.firstName, this.notifyOptionsSuccess)
           .subscribe();
       },
       error: (err) => {

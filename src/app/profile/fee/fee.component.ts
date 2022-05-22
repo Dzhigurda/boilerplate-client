@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ClientUser } from 'src/app';
 import { TaskFee } from './Fee';
 import { FeeService } from './fee.service';
 
@@ -14,6 +15,10 @@ export class FeeComponent implements OnInit {
     string,
     { name: string; color: string; valueColor: string }
   >();
+
+  @Input()
+  user!: ClientUser;
+
   constructor(private feeService: FeeService) {
     this.status.set('CREATED', {
       name: 'Wait for pay',

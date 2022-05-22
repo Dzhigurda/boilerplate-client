@@ -14,6 +14,7 @@ import { Role, RoleService, UserRole } from '../role.service';
 import { debounceTime, forkJoin } from 'rxjs';
 import { UserService } from 'src/app/user.service';
 import {
+  TuiAlertService,
   TuiDialogContext,
   TuiDialogService,
   TuiNotificationsService,
@@ -47,11 +48,10 @@ export class UsersComponent implements OnInit {
   enabledLogin: Role[] = [];
   constructor(
     private roleService: RoleService,
-    private userService: UserService,
-    @Inject(TuiNotificationsService)
-    private readonly notificationsService: TuiNotificationsService,
+    private userService: UserService, 
     private readonly ref: ChangeDetectorRef,
-    @Inject(TuiDialogService) private readonly dialogService: TuiDialogService
+    @Inject(TuiDialogService) private readonly dialogService: TuiDialogService,
+    @Inject(TuiAlertService) private readonly notify: TuiAlertService,
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +63,14 @@ export class UsersComponent implements OnInit {
     forkJoin([this.roleService.getAll(), this.userService.getAll()]).subscribe(
       ([roles, users]) => {
         this.users = users;
-        this.roles = roles.map((r) => Object.assign(r, { count: 0, valueOf: function() { return this.count; } }));
+        this.roles = roles.map((r) =>
+          Object.assign(r, {
+            count: 0,
+            valueOf: function () {
+              return this.count;
+            },
+          })
+        );
         for (let i of this.users) {
           const role = this.roles.find((role) => role.id === i.role);
           role!.count += 1;

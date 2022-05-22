@@ -33,6 +33,7 @@ export class RolePipe implements PipeTransform {
       case AccessItem.CAN_PUBLISH_ARTICLE: return "Может публиковать статьи";
       case AccessItem.CAN_CHANGE_ROLE: return "Может менять роли";
       case AccessItem.CAN_PAY_FEE: return "Может выплачивать гонорары"; 
+      case AccessItem.CAN_EDIT_CATEGORY: return "Может редактировать категории"; 
     }
     return "-";
   }

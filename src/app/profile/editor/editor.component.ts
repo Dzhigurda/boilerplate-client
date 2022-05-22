@@ -292,12 +292,12 @@ export class EditorComponent implements OnInit {
           [30, 30, 30, 255], // black
         ],
       })
-      .then((color) => {
+      .then((color: any) => {
         this.midColor = color.hex;
         console.log('Average color', color);
         this.changeRef.detectChanges();
       })
-      .catch((e) => {
+      .catch((e: any) => {
         console.log(e);
       });
   }

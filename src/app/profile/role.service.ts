@@ -23,6 +23,7 @@ export enum AccessItem {
   CAN_PUBLISH_ARTICLE,
   CAN_CHANGE_ROLE,
   CAN_PAY_FEE,
+  CAN_EDIT_CATEGORY,
 }
 
 export interface Role {

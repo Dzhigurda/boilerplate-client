@@ -1,4 +1,7 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { TwoFactorAuthenticatorComponent } from './two-factor-authenticator.component';
 
@@ -8,7 +11,9 @@ describe('TwoFactorAuthenticatorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TwoFactorAuthenticatorComponent ]
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      declarations: [ TwoFactorAuthenticatorComponent ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   });

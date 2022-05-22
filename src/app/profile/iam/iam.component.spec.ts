@@ -1,4 +1,8 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ClientUser } from 'src/app';
 
 import { IamComponent } from './iam.component';
 
@@ -8,7 +12,9 @@ describe('IamComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IamComponent ]
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      declarations: [ IamComponent ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();
   });
@@ -16,6 +22,7 @@ describe('IamComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(IamComponent);
     component = fixture.componentInstance;
+    component.user = new ClientUser();
     fixture.detectChanges();
   });
 

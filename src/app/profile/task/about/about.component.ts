@@ -10,11 +10,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TuiMobileDialogService } from '@taiga-ui/addon-mobile';
 import {
   TuiNotification,
-  tuiNotificationOptionsProvider,
   TuiNotificationsService,
 } from '@taiga-ui/core';
 import { ClientUser } from 'src/app';
-import { ClientUserTumbanian, TaskPresenter } from '../Task';
+import { TaskPresenter } from '../Task';
 import { TaskService } from '../task.service';
 
 @Component({

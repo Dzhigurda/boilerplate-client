@@ -19,15 +19,6 @@ import {
 import { TaskPresenter } from '../Task';
 import { TaskService } from '../task.service';
 
-interface Employee {
-  readonly id: number;
-  readonly name: string;
-  readonly dept: {
-    readonly id: number;
-    readonly title: string;
-  };
-}
-
 @Component({
   selector: 'app-information-with-form-article',
   templateUrl: './information-with-form-article.component.html',
@@ -102,7 +93,7 @@ export class InformationWithFormArticleComponent implements OnInit, OnDestroy {
       try {
         if (this.task?.art?.id != tsk.article?.id) {
           this.changeArticle(tsk.article);
-        } 
+        }
       } catch (ex) {
         this.updateForm();
       }
@@ -127,12 +118,12 @@ export class InformationWithFormArticleComponent implements OnInit, OnDestroy {
   private removeAticle() {
     this.taskService.removeArticle(this.task.id!).subscribe((r) => {
       if (!r) {
-        this.showDenie('Не удалось'); 
+        this.showDenie('Не удалось');
         this.form.get('article')?.setValue(this.task.art);
         this.ref.detectChanges();
         return;
-      } 
-      this.task.removeArticle(); 
+      }
+      this.task.removeArticle();
       this.showSuccess('Статья убрана');
     });
   }

@@ -191,6 +191,9 @@ export class TaskService {
   resolve(id: number) {
     return this.sendSimpleCommand('resolve', id);
   }
+  end(id: number) {
+    return this.sendSimpleCommand('end', id);
+  }
   cancel(id: number) {
     return this.sendSimpleCommand('cancel', id);
   }

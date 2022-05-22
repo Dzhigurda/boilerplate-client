@@ -2,13 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ClientUser, UserPage } from 'src/app';
-import { UserContactDTO } from '../../../../../server/src/domains/user';
-import { ContactService } from './contact.service';
 
 @Component({
   selector: 'app-iam',

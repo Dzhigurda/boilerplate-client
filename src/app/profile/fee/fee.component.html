@@ -1,0 +1,57 @@
+<div class="content">
+  <div class="head-menu">
+    <h1>My fee</h1>
+  </div>
+  <tui-scrollbar>
+    <cdk-virtual-scroll-viewport
+      #viewport
+      tuiScrollable
+      class="viewport tui-zero-scrollbar"
+      [itemSize]="45"
+      [maxBufferPx]="500"
+      [minBufferPx]="400"
+    >
+      <ng-container *ngIf="fee.length">
+        <div class="grid">
+          <app-fee-item *ngFor="let f of fee" [fee]="f"></app-fee-item>
+        </div>
+        <hr />
+        <div class="total" *ngIf="total && total.total">
+          <div class="item-total">
+            <tui-money
+              class="value"
+              [style]="'color: ' + status.get('CANCELED')?.valueColor"
+              [value]="total?.canceled ?? 0"
+            ></tui-money>
+            <p [style]="'color: ' + status.get('CANCELED')?.color" >{{  status.get('CANCELED')?.name }}</p>
+          </div>
+          <div class="seporate"></div>
+          <div class="item-total">
+            <tui-money
+              class="value"
+              [style]="'color: ' + status.get('CREATED')?.valueColor"
+              [value]="total?.wait ?? 0"
+            ></tui-money>
+            <p  [style]="'color: ' + status.get('CREATED')?.color" >{{  status.get('CREATED')?.name }}</p>
+          </div>
+          <div class="seporate"></div>
+          <div class="item-total">
+            <tui-money
+              class="value"
+              [style]="'color: ' + status.get('PAID')?.valueColor"
+              [value]="total?.execute ?? 0"
+            ></tui-money>
+            <p [style]="'color: ' + status.get('PAID')?.color" >{{  status.get('PAID')?.name }}</p>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!fee.length">
+        <div class="empty">
+          <div class="centerbox">
+            <img src="/assets/logo.png" class="emptyImg" />
+          </div>
+        </div>
+      </ng-container>
+    </cdk-virtual-scroll-viewport>
+  </tui-scrollbar>
+</div>

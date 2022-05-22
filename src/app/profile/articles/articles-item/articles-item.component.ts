@@ -14,6 +14,7 @@ export class ArticlesItemComponent implements OnInit {
   @Output()
   marked = new EventEmitter();
 
+  @Input()
   isMarkbook = false;
   constructor() { }
 
@@ -24,5 +25,12 @@ export class ArticlesItemComponent implements OnInit {
   addMarkbook() {
     this.isMarkbook = !this.isMarkbook;
     this.marked.emit(this.article.id);
+  }
+
+  get haveBondage() {
+    return this.article.status !== "CREATED" ;
+  }
+  get statusColor() {
+    return this.article.status === "PUBLISHED" ? 'var(--tui-success-fill)' : 'var(--tui-error-fill)';
   }
 }

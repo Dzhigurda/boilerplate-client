@@ -7,33 +7,45 @@
       size="s"
       [appearance]="btSelected === 'CREATED' ? 'outline' : 'flat'"
       icon="tuiIconEdit"
-      (click)="filterCreated()"
+      (click)="filterByStatus('CREATED')"
     ></button>
     <button
       tuiIconButton
       type="button"
       size="s"
-      [appearance]="btSelected === 'DISTRIBUTED' ? 'outline' : 'flat'"
+      [appearance]="authorId === user.id ? 'outline' : 'flat'"
+      appearance="flat"
+      icon="tuiIconUser"
+      (click)="filterByUser(user.id)"
+    ></button>
+    <button
+      tuiIconButton
+      type="button"
+      size="s"
+      [appearance]="btSelected === 'PUBLISHED' ? 'outline' : 'flat'"
       appearance="flat"
       icon="tuiIconAttach"
+      (click)="filterByStatus('PUBLISHED')"
     ></button>
 
     <button
       tuiIconButton
       type="button"
       size="s"
-      [appearance]="btSelected === 'CANCELED' ? 'outline' : 'flat'"
+      [appearance]="btSelected === 'ARCHIVED' ? 'outline' : 'flat'"
       appearance="flat"
       icon="tuiIconTrash"
+      (click)="filterByStatus('ARCHIVED')"
     ></button>
     <tui-badged-content size="s" class="badgad" [contentTop]="countMark" [rounded]="false">
       <button
         tuiIconButton 
         type="button"
         size="s"
-        [appearance]="btSelected === 'BOOKMARK' ? 'outline' : 'flat'"
+        [appearance]="isMarked ? 'outline' : 'flat'"
         appearance="flat"
         icon="tuiIconBookmark"
+        (click)="filterByMarked()"
       ></button>
     </tui-badged-content>
     <button
@@ -62,15 +74,15 @@
       [maxBufferPx]="500"
       [minBufferPx]="400"
     >
-      <ng-container *ngIf="articles.length">
+      <ng-container *ngIf="articlesFiltered.length">
         <div class="grid">
-          <app-articles-item (marked)="toggleMarked($event)"
-            *ngFor="let article of articles"
+          <app-articles-item (marked)="toggleMarked($event)" [isMarkbook]="isArticleMarked(article.id)"
+            *ngFor="let article of articlesFiltered"
             [article]="article"
           ></app-articles-item>
         </div>
       </ng-container>
-      <ng-container *ngIf="!articles.length">
+      <ng-container *ngIf="!articlesFiltered.length">
         <div class="empty">
           <div class="centerbox">
             <img src="/assets/logo.png" class="emptyImg" />

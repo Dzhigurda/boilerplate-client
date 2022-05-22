@@ -4,8 +4,6 @@ import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { debounceTime, Subscription } from 'rxjs';
 import { ClientUser } from 'src/app';
 import { UserService } from 'src/app/user.service';
-import { RoleService } from '../../role.service';
-import { ContactService } from '../contact.service';
 
 @Component({
   selector: 'app-settings',

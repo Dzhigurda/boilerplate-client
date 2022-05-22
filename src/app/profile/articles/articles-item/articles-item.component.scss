@@ -7,7 +7,7 @@
   box-shadow: 0 0 0px rgba(0, 0, 0, 0);
   &:hover {
     background: #f0f0f0;
-    transition: 0.2s ease-in-out;
+    transition: 0.1s ease-in-out;
     .image {
       box-shadow: 0 0 24px rgba(0, 0, 0, 0.3);
       transform: translateX(-10px);
@@ -72,3 +72,6 @@
   }
 }
 
+tui-badged-content {
+  display: block;
+}

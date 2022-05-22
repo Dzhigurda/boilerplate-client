@@ -1,0 +1,126 @@
+.island {
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #fff; 
+  border-radius: 8px;
+
+  cursor: pointer;
+  transition: color 0.1s ease-in-out;
+  &:hover {
+    background: #f0f0f0;
+    .circle {
+      transform: translateX(-10px);
+      box-shadow: 0 0 24px rgb(0 0 0 / 30%);
+    }
+  }
+}
+
+.information {
+  flex: 1;
+}
+.logo {
+  color: var(--tui-base-01);
+  background-color: var(--tui-base-09);
+}
+
+.information {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  .text {
+    color: #444;
+    .status {
+      background-color: #484;
+      display: inline-block;
+      color: #fff;
+      padding: 0px 10px;
+      border-radius: 4px;
+      font-size: 8px;
+    }
+  }
+}
+.id {
+  color: #888;
+  flex: 0 0 20px;
+}
+
+.user,
+.task {
+  flex: 0 0 220px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: 150px; 
+  }
+  .circle {
+    transition: transform 0.2s 0.1s ease-in-out;
+    width: 70px;
+    height: 70px;
+    font-size: 18px; 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.task {
+  flex: 0 0 220px;
+  .circle {
+    color: #666;
+    background: #333;
+  }
+  span { 
+    width: 220px;
+  }
+}
+
+.user { 
+  .circle {
+    color: #666;
+    background: #333;
+  }
+  span { 
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+.date-scelet { 
+  color: #777;
+}
+.pay-info {
+  .value {
+    font-size: 20px;
+  }
+  line-height: 1.5;
+  text-align: right;
+}
+
+
+.operation-date {
+  font: var(--tui-font-text-xl);
+  text-align: center;
+}
+
+.operation-date,
+.operation-info {
+  color: var(--tui-text-02);
+}
+
+.operation-month,
+.operation-status {
+  font: var(--tui-font-text-s);
+}
+.context-menu {
+  width: 11rem;
+}
+.grid {
+  display: grid;
+  gap: 10px;
+}

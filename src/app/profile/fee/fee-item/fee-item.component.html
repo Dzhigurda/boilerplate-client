@@ -1,0 +1,111 @@
+<div class="island" [tuiDropdownContext]="content">
+  <div class="operation-date">
+    {{ fee.dateCreated | date: "dd" }}
+    <div class="operation-month">{{ fee.dateCreated | date: "MMM" }}</div>
+  </div>
+
+  <div class="user" *ngIf="!author">Загрузка...</div>
+  <div class="user" *ngIf="author">
+    <div class="circle" *ngIf="!this.task">A</div>
+    <div
+      class="circle"
+      *ngIf="this.task"
+      [style]="
+        'background: url(' +
+        this.task.image +
+        ') 50% 50%  no-repeat; background-size: cover;'
+      "
+    ></div>
+    <div class="name">
+      <span> {{ author.getFullName() }}</span>
+    </div>
+  </div>
+
+  <!-- <div class="task" *ngIf="!task">Загрузка...</div>
+  <div class="task" *ngIf="task">
+    <span>{{ task.title }}</span>
+  </div> -->
+
+  <div class="information">
+    <div class="text">
+      <div class="comment" [innerHTML]="comment"></div>
+      <div class="comment">{{ fee.executeComment }}</div>
+    </div>
+  </div>
+  <div class="pay-info">
+    <tui-money
+      class="value"
+      [style]="'color: ' + status.get(fee.status)?.valueColor"
+      [value]="fee.value"
+    ></tui-money>
+    <div class="status" [style]="'color: ' + status.get(fee.status)?.color">
+      <span class="date-scelet" *ngIf="fee.dateExecuted">{{
+        fee.dateExecuted | date: "dd/MMM"
+      }}</span>
+      {{ status.get(fee.status)?.name }} 
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-close="close" let-activeZone="activeZone">
+  <tui-data-list
+    role="menu"
+    tuiDataListDropdownManager
+    class="context-menu"
+    [tuiActiveZoneParent]="activeZone"
+  >
+    <button
+      *ngFor="let item of menuItems"
+      tuiOption
+      (click)="printToConsole(item.title, fee); close()"
+    >
+      {{ item.title }}
+      <tui-svg class="icon" [src]="item.iconName"></tui-svg>
+    </button>
+  </tui-data-list>
+</ng-template>
+
+<ng-template #cancelDialog let-observer>
+  <form>
+    <p>Describe the reason for cancellation</p>
+    <tui-input
+      tuiAutoFocus
+      [ngModelOptions]="{ standalone: true }"
+      [(ngModel)]="executeComment"
+    >
+      Reason
+    </tui-input>
+    <p>
+      <button tuiButton type="submit" (click)="cancelFee(observer)">
+        Cancel pay
+      </button>
+    </p>
+  </form>
+</ng-template>
+
+<ng-template #executeDialog let-observer>
+  <form>
+    <p>Describe the comment for pay check</p>
+    <div class="grid">
+      <tui-input
+        tuiAutoFocus
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="account"
+      >
+        Account
+      </tui-input>
+      <tui-input
+        tuiAutoFocus
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="executeComment"
+      >
+        Comment
+      </tui-input>
+    </div>
+    <p>
+      <button tuiButton type="submit" (click)="executeFee(observer)">
+        Execute pay
+      </button>
+    </p>
+  </form>
+</ng-template>

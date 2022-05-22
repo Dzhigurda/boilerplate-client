@@ -12,6 +12,7 @@ export class ArtilceTumbanian {
   imageSq!: string;
   createdAt!: Date;
   status!: ArticleStatus;
+  author?: number;
 
   createDif!: number;
 
@@ -21,6 +22,7 @@ export class ArtilceTumbanian {
     } else {
       this.id = article.id;
     }
+    this.author = article.author;
     this.title = article.title;
     this.image = article.verticalSmallImage
       ? environment.API_URL + '/' + article.verticalSmallImage
@@ -32,6 +34,36 @@ export class ArtilceTumbanian {
     this.createdAt = new Date(article.createdAt);
     this.createDif = +new Date() - article.createdAt;
     return this;
+  }
+}
+
+export interface ArticleUser {
+  id: number;
+  name: string;
+  role: string;
+  roleId: number;
+}
+
+export class ArticleUserTumbanian implements ArticleUser {
+  id!: number;
+  name!: string;
+  role!: string;
+  roleId!: number;
+
+  restore(item: ArticleUser) {
+    this.id = item.id;
+    this.name = item.name;
+    this.role = item.role;
+    this.roleId = item.roleId;
+    return this;
+  }
+
+  toString() {
+    return `${this.name} (${this.role})`;
+  }
+
+  valueOf() {
+    return this.id;
   }
 }
 
@@ -87,36 +119,24 @@ export class ArtilcesService {
   setCategory(articleID: number, category: number): Observable<boolean> {
     return this.http.patch<boolean>(
       `${environment.API_URL}/v1/articles/${articleID}/category`,
-      { category }
+      { category: category }
     );
   }
 
   setEditor(articleID: number, editor: number): Observable<boolean> {
     return this.http.patch<boolean>(
       `${environment.API_URL}/v1/articles/${articleID}/editor`,
-      { editor }
+      { editor: +editor }
     );
   }
 
   setAuthor(articleID: number, author: number): Observable<boolean> {
     return this.http.patch<boolean>(
       `${environment.API_URL}/v1/articles/${articleID}/author`,
-      { author }
+      { author: +author }
     );
   }
-
-  setTask(articleID: number, taskId: number): Observable<boolean> {
-    return this.http.patch<boolean>(
-      `${environment.API_URL}/v1/articles/${articleID}/task`,
-      { taskId }
-    );
-  }
-  removeTask(articleID: number): Observable<boolean> {
-    return this.http.delete<boolean>(
-      `${environment.API_URL}/v1/articles/${articleID}/task`
-    );
-  }
-
+  
   save(article: any) {
     return this.http
       .patch<Article>(
@@ -211,5 +231,17 @@ export class ArtilcesService {
 
   private getImageByType(id: number, type: prefixType) {
     return `${environment.API_URL}/images/normal/${id}.${type}.png`;
+  }
+
+  getAuthorsForAticle(articleId: number) {
+    return this.http
+      .get<any[]>(`${environment.API_URL}/v1/articles/${articleId}/authors`)
+      .pipe(map((r) => r.map((u) => new ArticleUserTumbanian().restore(u))));
+  }
+
+  getEditorsForArticle(articleId: number) {
+    return this.http
+      .get<any[]>(`${environment.API_URL}/v1/articles/${articleId}/editors`)
+      .pipe(map((r) => r.map((u) => new ArticleUserTumbanian().restore(u))));
   }
 }

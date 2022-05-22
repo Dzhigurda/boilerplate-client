@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Inject,
@@ -7,9 +8,8 @@ import {
   Output,
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { debounceTime, Subscriber, Subscription } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 import { ClientUser } from 'src/app';
-import { UserService } from 'src/app/user.service';
 import {
   ArtilcesService,
   ArtilceTumbanian,
@@ -79,6 +79,7 @@ export class InformationWithFormEditorComponent implements OnInit {
     private readonly articlesService: ArtilcesService,
     private readonly taskService: TaskService,
     private readonly tumb: UserTumbanianFactory,
+    private ref: ChangeDetectorRef,
     @Inject(TuiNotificationsService)
     private readonly notificationsService: TuiNotificationsService
   ) {}
@@ -223,19 +224,30 @@ export class InformationWithFormEditorComponent implements OnInit {
     this.taskService.removeArticle(this.task.id!).subscribe((r) => {
       if (!r) {
         this.showDenie('Не удалось');
+        this.form.get('article')?.setValue(this.task.art);
+        this.ref.detectChanges();
         return;
       }
       this.showSuccess('Статья убрана');
+      this.task.removeArticle(); 
     });
   }
 
   private setArticle(articleId: number) {
-    this.taskService.setArticle(this.task.id!, articleId).subscribe((r) => {
-      if (!r) {
-        this.showDenie('Не удалось');
-        return;
-      }
-      this.showSuccess('Статья закреплена');
+    this.taskService.setArticle(this.task.id!, articleId).subscribe({
+      next: (r) => {
+        if (!r) {
+          this.showDenie('Не удалось');
+          return;
+        }
+        this.task.update(r);
+        this.showSuccess('Статья закреплена');
+      },
+      error: (err) => {
+        this.showError(err);
+        this.form.get('article')?.setValue(this.task.art);
+        this.ref.detectChanges();
+      },
     });
   }
   private showDenie(err: any) {
@@ -245,9 +257,7 @@ export class InformationWithFormEditorComponent implements OnInit {
     this.notificationsService.show(err.error, this.notifyOptions).subscribe();
   }
   private showSuccess(msg: any) {
-    this.notificationsService
-      .show(msg, this.notifyOptionsSuccess)
-      .subscribe();
+    this.notificationsService.show(msg, this.notifyOptionsSuccess).subscribe();
   }
 
   updateForm() {

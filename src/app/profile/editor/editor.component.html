@@ -21,7 +21,7 @@
             </div>
           </div>
 
-          <p>{{ selectedFiles }}</p>
+          <p class="center">{{ selectedFiles }}</p>
           <ng4-files-click (filesSelect)="filesSelect($event)">
             <span class="information">
               Move the image to the gray area or click here to download...
@@ -109,22 +109,38 @@
             </div>
             <div class="row">
               <div class="field">
-                <tui-input [formControl]="authorControl">
+                <tui-combo-box
+                  tuiTextfieldSize="m"
+                  [formControl]="authorControl"
+                >
                   Author
                   <input tuiTextfield />
-                </tui-input>
+                  <tui-data-list-wrapper
+                    *tuiDataList
+                    [items]="authors"
+                  ></tui-data-list-wrapper>
+                </tui-combo-box>
+
                 <tui-error
-                [formControl]="authorControl"
+                  [formControl]="authorControl"
                   [error]="[] | tuiFieldError | async"
                 ></tui-error>
               </div>
               <div class="field">
-                <tui-input [formControl]="editorControl">
+                <tui-combo-box
+                  tuiTextfieldSize="m"
+                  [formControl]="editorControl"
+                >
                   Editor
                   <input tuiTextfield />
-                </tui-input>
+                  <tui-data-list-wrapper
+                    *tuiDataList
+                    [items]="editors"
+                  ></tui-data-list-wrapper>
+                </tui-combo-box>
+
                 <tui-error
-                [formControl]="editorControl"
+                  [formControl]="editorControl"
                   [error]="[] | tuiFieldError | async"
                 ></tui-error>
               </div>

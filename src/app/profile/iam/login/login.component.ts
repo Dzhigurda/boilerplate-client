@@ -4,7 +4,6 @@ import {
   Component,
   Inject,
   Input,
-  NgZone,
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';

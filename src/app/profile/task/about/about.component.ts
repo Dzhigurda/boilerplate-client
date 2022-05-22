@@ -112,6 +112,10 @@ export class AboutComponent implements OnInit {
     );
   }
 
+  isFinished() {
+    return this.task!.isFinished();
+  }
+
   updateForm() {
     if (!this.task) return;
     this.form.get('title')?.setValue(this.task.title);

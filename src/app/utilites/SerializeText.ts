@@ -24,7 +24,26 @@ interface TokenQueueValue extends TokenValue {
   author?: string;
   value: string[];
 }
-
+class Subtitle implements TokenHave {
+    title =  "";
+    type = 'subtitle';
+    parse(tv: TokenHave) {
+      if(!this.isSubtitle(tv)) throw new Error('Subtitle token is not valid ' + tv.type);
+      const reg = /#\s+(.+)/i.exec(tv.value as string);
+      if(!reg) throw new Error('Subtitile is not valid: ' + tv.value);
+      this.title = reg[1];
+      return this;
+    }
+    isSubtitle(tv: TokenHave): tv is TokenValue {
+      return tv.type === this.type;
+    }
+    get value() {
+      return `<h2>${this.title}</h2>`;
+    }
+    toString() {
+      return `# ${this.title}`;
+    }
+}
 class PhotoToken implements TokenHave {
   id!: number;
   type = 'photo';
@@ -36,7 +55,7 @@ class PhotoToken implements TokenHave {
     return this;
   }
   isPhoto(tv: TokenHave): tv is TokenValue {
-    return tv.type === 'photo';
+    return tv.type === this.type;
   }
   get value() {
     return `<app-photo id='${this.id}'></app-photo>`;
@@ -160,12 +179,13 @@ export class SerializeText {
     const nt3 = this.parsePhoto(nt2);
     const nt4 = this.parseAlbum(nt3);
     const nt5 = this.parseYoutube(nt4);
-    const nt6 = this.parseBreakLine(nt5);
-    const nt7 = this.parseText(nt6);
+    const nt6 = this.parseTitle(nt5)
+    const nt7 = this.parseBreakLine(nt6); 
+    const nt8 = this.parseText(nt7);
     // this.parse(terms);
     // console.log(nt7.map(r =>r.toString()).join("\n"));
     // console.log((nt7 as any[]).map(r =>r.value).join("\n"));
-    this.source = nt7 as any;
+    this.source = nt8 as any;
     return this;
   }
   private makeText() {
@@ -246,6 +266,18 @@ export class SerializeText {
     start--;
     return [quote, start];
   }
+
+  private parseTitle(terms: TokenHave[]): TokenHave[] {
+    const nt: TokenValue[] = [];
+    for (let i = 0; i < terms.length; i++) {
+      if ( terms[i]?.type != 'subtitle') {
+        nt.push(terms[i] as any);
+        continue;
+      }
+      nt.push(new Subtitle().parse(terms[i]));
+    }
+    return nt;
+  }
   private parsePhoto(terms: TokenValue[]): TokenHave[] {
     const nt: TokenValue[] = [];
     for (let i = 0; i < terms.length; i++) {
@@ -310,6 +342,7 @@ export class SerializeText {
     endQuote: /(\})/,
     seporateQuote: /(\|)/,
     breakline: /(\-\-\-)/,
+    subtitle: /#\s*.+/,
     paragraph: /.+/,
   };
 

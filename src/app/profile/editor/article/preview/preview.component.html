@@ -21,5 +21,6 @@
       <p *ngFor="let value of s.text">{{ value }}</p>
     </ng-container>
     <hr *ngIf="s.type === 'breakline'" />
+    <h2 *ngIf="s.type === 'subtitle'">{{ s.title }}</h2>
   </ng-container>
 </ng-container>

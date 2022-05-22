@@ -1,6 +1,7 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { ClientUser } from 'src/app';
+import { ArtilcesService } from '../../articles/artilces.service';
 import { ClientUserTumbanian, TaskPresenter } from '../Task';
 import { TaskService } from '../task.service';
 
@@ -16,7 +17,7 @@ export class ControlComponent implements OnInit {
   @Input()
   user!: ClientUser;
   constructor(
-    private service: TaskService,
+    private service: TaskService, 
     @Inject(TuiNotificationsService)
     private readonly notificationsService: TuiNotificationsService
   ) {}
@@ -111,14 +112,15 @@ export class ControlComponent implements OnInit {
    * @deprecated происходит когда редактор опубликовал закреплённую статью
    */
   end() {
-    // if(!this.task) return;
-    // this.service.end(this.task.id!).subscribe({
-    //   next: () => {
-    //     this.showSuccess('Принято');
-    //     this.task?.end(this.user);
-    //   },
-    //   error: (err) => this.showError(err),
-    // });
+    
+    if(!this.task) return;
+    this.service.end(this.task.id!).subscribe({
+      next: () => {
+        this.showSuccess('Принято');
+        this.task?.end(this.user);
+      },
+      error: (err) => this.showError(err),
+    });
   }
   cancel() {
     if (!this.task) return;

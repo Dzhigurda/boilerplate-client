@@ -51,7 +51,7 @@ export interface FakeMMTask {
   history: History[];
 }
 
-export class TaskPresenter {
+export class TaskPresenter { 
   private _id?: number;
   private _title!: string;
   private _description!: string;
@@ -179,6 +179,11 @@ export class TaskPresenter {
         return 'custom';
     }
   }
+
+
+  isFinished() {
+    return ['CANCELED', 'ARCHIVED', 'ENDED', 'FINISHED' ].includes(this.status);
+  }
   get history() {
     return this._history;
   }
@@ -205,6 +210,9 @@ export class TaskPresenter {
       this._art = undefined;
       this.article = undefined;
     }
+  }
+  removeArticle() {
+    this.setArticle();
   }
 
   setAuthor(user?: ClientUserTumbanian) {
@@ -271,7 +279,7 @@ export class TaskPresenter {
       );
     }
     if(this.article) {
-      this._art = new ArtilceTumbanian().restore(ref.articleRef)
+      this._art = (ref.articleRef instanceof ArtilceTumbanian) ? ref.articleRef : new ArtilceTumbanian().restore(ref.articleRef)
     }
     this._history = ref.history.map((h) => {
       let name = h.user === ref.editor ?  this._editorRef?.getFullName() : undefined;
@@ -293,6 +301,7 @@ export class TaskPresenter {
       author: this.author,
       authorRef: this.authorRef,
       article: this.article,
+      articleRef: this._art,
       editor: this.editor,
       editorRef: this.editorRef,
       history: this.history.map((r) => r.toJSON()),

@@ -90,19 +90,19 @@
         <app-information-with-form-article
           [user]="user"
           [task]="task"
-          *ngIf="isAuthor()"
+          *ngIf="isAuthor() && !isFinished()"
           [canSeeFee]="canSeeFee"
         ></app-information-with-form-article>
         <app-information-with-form-editor
           [user]="user"
           [task]="task"
-          *ngIf="isEditor()"
+          *ngIf="isEditor() && !isFinished()"
           [canSeeFee]="canSeeFee"
         ></app-information-with-form-editor>
         <app-information-with-form-guest
           [user]="user"
           [task]="task"
-          *ngIf="isGuest()"
+          *ngIf="isGuest() || isFinished()"
           [canSeeFee]="canSeeFee"
         ></app-information-with-form-guest>
         <hr />

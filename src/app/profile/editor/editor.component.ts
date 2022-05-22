@@ -18,14 +18,14 @@ import { TuiMobileDialogService } from '@taiga-ui/addon-mobile';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TuiTextAreaComponent } from '@taiga-ui/kit';
 import FastAverageColor from 'fast-average-color';
+import { forkJoin } from 'rxjs';
 import { ClientUser } from 'src/app';
 import {
   Ng4FilesConfig,
   Ng4FilesSelected,
   Ng4FilesService,
   Ng4FilesStatus,
-} from 'src/app/utilites/ng4-files';
-import { environment } from 'src/environments/environment';
+} from 'src/app/utilites/ng4-files'; 
 import { BaseArticle } from '../articles/Article';
 import { ArtilcesService } from '../articles/artilces.service';
 import { PreviewComponent } from './article/preview/preview.component';
@@ -81,6 +81,9 @@ export class EditorComponent implements OnInit {
   imageHS?: any;
   srcHB?: string;
 
+  authors: any[] = [];
+  editors: any[] = [];
+
   constructor(
     private router: ActivatedRoute,
     private articleService: ArtilcesService,
@@ -127,19 +130,47 @@ export class EditorComponent implements OnInit {
         return this.alertService.open('Editor changed').subscribe();
       })
     })
+ 
   }
 
   private updateArticle(id: number) {
-    this.articleService.getOne(id).subscribe((r) => {
-      this.article = r;
+    forkJoin([
+    this.articleService.getOne(id),
+    this.articleService.getAuthorsForAticle(id),
+    this.articleService.getEditorsForArticle(id)
+    ]).subscribe(([article, authors, editors]) => {
+      this.article = article;
+      this.authors = authors;
+      this.editors = editors;
+      console.log(authors, editors);
       this.form.setValue(this.article.getTextForm(this.user.id));
-      this.form.valid; 
-      this.catalogControl.setValue(this.article.getCategory());
-      this.authorControl.setValue(this.article.getAuthor());
-      this.editorControl.setValue(this.article.getEditor())
+      this.form.valid;  
+      this.catalogControl.setValue(this.article.getCategory()); 
+      this.updateEditor();
+      this.updateAuthor();
       this.updateImage();
       this.updatePreview();
     });
+  }
+  private updateEditor() {
+    const currentEditorId = this.article!.getEditor();
+    if(currentEditorId) {
+      const editor = this.getEditor(currentEditorId);
+      this.editorControl.setValue(editor)
+    } 
+  }
+  private updateAuthor() { 
+    const currentAuthorId = this.article!.getAuthor();
+    if(currentAuthorId) {
+      const author = this.getAuthor(currentAuthorId);
+      this.authorControl.setValue(author)
+    }
+  }
+  private getAuthor(authorId: number) {
+    return this.authors.find(r => r.id === authorId);
+  }
+  private getEditor(editorId: number) {
+    return this.editors.find(r => r.id === editorId);
   }
   updatePreview() {
     this.preview.title = this.article?.title;

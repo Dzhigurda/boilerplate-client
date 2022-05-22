@@ -1,12 +1,15 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { Subscription } from 'rxjs';
 import { ClientUser } from 'src/app';
 import {
@@ -14,6 +17,7 @@ import {
   ArtilceTumbanian,
 } from '../../articles/artilces.service';
 import { TaskPresenter } from '../Task';
+import { TaskService } from '../task.service';
 
 interface Employee {
   readonly id: number;
@@ -61,12 +65,25 @@ export class InformationWithFormArticleComponent implements OnInit, OnDestroy {
   change = new EventEmitter<TaskPresenter>();
 
   private form$?: Subscription;
+  private notifyOptions = {
+    status: TuiNotification.Error,
+  };
 
-  constructor(private readonly articlesService: ArtilcesService) {}
+  private notifyOptionsSuccess = {
+    status: TuiNotification.Success,
+  };
 
-  ngOnInit(): void { 
+  constructor(
+    private readonly articlesService: ArtilcesService,
+    private readonly taskService: TaskService,
+    @Inject(TuiNotificationsService)
+    private readonly notificationsService: TuiNotificationsService,
+    private ref: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
     this.articlesService.getByAuthor(this.user.id).subscribe((art) => {
-      this.articles = art.map(r => new ArtilceTumbanian().restore(r));
+      this.articles = art.map((r) => new ArtilceTumbanian().restore(r));
     });
 
     this.taskChange.subscribe((r) => {
@@ -83,11 +100,58 @@ export class InformationWithFormArticleComponent implements OnInit, OnDestroy {
     this.form$ = this.form.valueChanges.subscribe((tsk) => {
       if (!this.form.valid) return alert(this.form.errors);
       try {
-        this.task.setArticle(tsk.article);
-        this.change.emit(this.task);
+        if (this.task?.art?.id != tsk.article?.id) {
+          this.changeArticle(tsk.article);
+        } 
       } catch (ex) {
         this.updateForm();
       }
+    });
+  }
+  changeArticle(tumbanian?: ArtilceTumbanian) {
+    if (this.task!.status !== 'DISTRIBUTED') {
+      this.notificationsService
+        .show('Not permited', this.notifyOptions)
+        .subscribe();
+      if (this.task.articleId) {
+        this.form.get('article')?.setValue(this.task.art);
+      }
+      return;
+    }
+    if (!tumbanian?.id) {
+      this.removeAticle();
+    } else {
+      this.setArticle(tumbanian.id);
+    }
+  }
+  private removeAticle() {
+    this.taskService.removeArticle(this.task.id!).subscribe((r) => {
+      if (!r) {
+        this.showDenie('Не удалось'); 
+        this.form.get('article')?.setValue(this.task.art);
+        this.ref.detectChanges();
+        return;
+      } 
+      this.task.removeArticle(); 
+      this.showSuccess('Статья убрана');
+    });
+  }
+
+  private setArticle(articleId: number) {
+    this.taskService.setArticle(this.task.id!, articleId).subscribe({
+      next: (r) => {
+        if (!r) {
+          this.showDenie('Не удалось');
+          return;
+        }
+        this.task.update(r);
+        this.showSuccess('Статья закреплена');
+      },
+      error: (err) => {
+        this.showError(err);
+        this.form.get('article')?.setValue(this.task.art);
+        this.ref.detectChanges();
+      },
     });
   }
 
@@ -100,5 +164,15 @@ export class InformationWithFormArticleComponent implements OnInit, OnDestroy {
       this.form.get('article')?.setValue(null);
     }
     this.initForm();
+  }
+
+  private showDenie(err: any) {
+    this.notificationsService.show(err, this.notifyOptions).subscribe();
+  }
+  private showError(err: any) {
+    this.notificationsService.show(err.error, this.notifyOptions).subscribe();
+  }
+  private showSuccess(msg: any) {
+    this.notificationsService.show(msg, this.notifyOptionsSuccess).subscribe();
   }
 }

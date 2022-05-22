@@ -11,6 +11,13 @@ export class UserService {
   
   constructor(private http: HttpClient) {}
 
+  getOne(id: number) {
+    return this.http.get<User>(`${environment.API_URL}/v1/user/${id}`).pipe(
+      map((r: any) => {
+        return new ClientUser().restore(r);
+      })
+    );  
+  }
   getMe() {
     return this.http.get<User>(environment.API_URL + '/v1/user/me').pipe(
       map((r: any) => {

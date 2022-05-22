@@ -9,10 +9,12 @@ import { TuiMobileDialogModule } from '@taiga-ui/addon-mobile';
 import {
   TuiAccordionModule,
   TuiBadgedContentModule,
+  TuiDropdownContextModule,
   TuiFieldErrorPipeModule,
   TuiInputDateModule,
   TuiInputNumberModule,
   TuiInputPasswordModule,
+  TuiLazyLoadingModule,
   TuiMultiSelectModule,
   TuiProgressModule,
   TuiTabsModule,
@@ -61,12 +63,14 @@ import {
   TuiRingChartModule,
 } from '@taiga-ui/addon-charts';
 import {
+  TuiCardModule,
   TuiCurrencyPipeModule,
   TuiMoneyModule,
 } from '@taiga-ui/addon-commerce';
 import { VerifyComponent } from './verify/verify.component';
 import { UsersComponent } from './users/users.component';
 import {
+  TuiReorderModule,
   TuiTableModule,
   TuiTablePaginationModule,
 } from '@taiga-ui/addon-table';
@@ -85,6 +89,11 @@ import { TimeAgoExtendsPipe } from '../utilites/TimeAgoExtends.pipe';
 import { EditorComponent } from './editor/editor.component';
 import { Ng4FilesModule } from '../utilites/ng4-files';
 import { ArticleModule } from './editor/article/article.module';
+import { FeeComponent } from './fee/fee.component';
+import { FeeItemComponent } from './fee/fee-item/fee-item.component';
+import { TuiActiveZoneModule } from '@taiga-ui/cdk';
+import { CategoryComponent } from './category/category.component';
+import { CategoryItemComponent } from './category/category-item/category-item.component';
 
 @NgModule({
   declarations: [
@@ -113,6 +122,10 @@ import { ArticleModule } from './editor/article/article.module';
     ArticlesItemComponent,
     TimeAgoExtendsPipe,
     EditorComponent,
+    FeeComponent,
+    FeeItemComponent,
+    CategoryComponent,
+    CategoryItemComponent,
   ],
   imports: [
     ProfileRouterModule,
@@ -164,7 +177,12 @@ import { ArticleModule } from './editor/article/article.module';
     Ng4FilesModule,
     ArticleModule,
     TuiErrorModule,
-    TuiFieldErrorPipeModule 
+    TuiFieldErrorPipeModule,
+    TuiCardModule,
+    TuiDropdownContextModule, 
+    TuiActiveZoneModule,
+    TuiReorderModule,
+    TuiLazyLoadingModule
   ],
 })
 export class ProfileModule {}

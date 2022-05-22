@@ -13,10 +13,7 @@ import { TuiMobileDialogService } from '@taiga-ui/addon-mobile';
 import { TuiNotificationsService } from '@taiga-ui/core';
 import { debounceTime, Subscription } from 'rxjs';
 import { ClientUser } from 'src/app';
-import {
-  User,
-  UserContactDTO,
-} from '../../../../../../server/src/domains/user';
+import { UserContactDTO } from '../../../../../../server/src/domains/user';
 import { ContactService } from '../contact.service';
 
 @Component({
@@ -35,7 +32,7 @@ export class ContactComponent implements OnInit, OnDestroy {
   remove = new EventEmitter<number>();
   @Output()
   save = new EventEmitter<UserContactDTO>();
-  
+
   @Output()
   add = new EventEmitter<UserContactDTO>();
 

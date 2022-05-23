@@ -13,6 +13,8 @@ export class PreviewComponent implements OnInit {
   @Output()
   articleChange = new EventEmitter();
 
+  @Output() 
+  updateView = new EventEmitter<void>();
   @Input()
   title?: string;
   @Input()
@@ -30,6 +32,9 @@ export class PreviewComponent implements OnInit {
       this.article = text; 
       this.update();
     });
+    this.updateView.subscribe(() => {
+      this.update();
+    })
   }
 
   update() {

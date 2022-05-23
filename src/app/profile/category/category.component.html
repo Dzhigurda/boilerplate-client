@@ -1,12 +1,13 @@
 <div class="content">
   <div class="head-menu">
-    <h1>My fee</h1>
+    <h1>Categories</h1>
     <button
       tuiIconButton
       type="button"
       size="s"
       appearance="primary"
-      icon="tuiIconSortOff" (click)="showDialog()"
+      icon="tuiIconSortOff"
+      (click)="showDialog()"
     ></button>
     <button
       tuiIconButton
@@ -28,7 +29,7 @@
     >
       <ng-container *ngIf="categories">
         <app-category-item
-          *ngFor="let category of enabled"
+          *ngFor="let category of categories"
           [category]="category"
         ></app-category-item>
       </ng-container>
@@ -43,13 +44,13 @@
   </tui-scrollbar>
 </div>
 
-<ng-template
-  let-observer
-  #orderDialog 
->
+<ng-template let-observer #orderDialog>
   <form>
     <p>Reorder categories</p>
-    <tui-reorder [(items)]="categories" (enabledChange)="saveOrder($event)" [(enabled)]="enabled"></tui-reorder>
- 
+    <tui-reorder
+      [(items)]="categories"
+      (enabledChange)="saveOrder($event)"
+      [(enabled)]="enabled"
+    ></tui-reorder>
   </form>
 </ng-template>

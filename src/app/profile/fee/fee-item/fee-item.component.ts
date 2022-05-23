@@ -98,7 +98,7 @@ export class FeeItemComponent implements OnInit {
       .replace('@task' + this.task.id, `<b>${this.task!.title}</b>`);
   }
 
-  printToConsole(action: string, contextInfo: unknown): void {
+  executeContextmenuCommand(action: string, contextInfo: unknown): void {
     if ('Execute pay' === action) {
       this.dialogService.open(this.executeDialog).subscribe();
       return;

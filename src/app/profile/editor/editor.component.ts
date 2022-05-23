@@ -28,6 +28,8 @@ import {
 } from 'src/app/utilites/ng4-files'; 
 import { BaseArticle } from '../articles/Article';
 import { ArtilcesService } from '../articles/artilces.service';
+import { Category } from '../category/Category';
+import { CategoryService } from '../category/category.service';
 import { PreviewComponent } from './article/preview/preview.component';
 
 export function TextFieldValidator(field: AbstractControl): Validators | null {
@@ -83,6 +85,7 @@ export class EditorComponent implements OnInit {
 
   authors: any[] = [];
   editors: any[] = [];
+  categories: Category[] = [];
 
   constructor(
     private router: ActivatedRoute,
@@ -91,7 +94,8 @@ export class EditorComponent implements OnInit {
     private readonly dialogsService: TuiMobileDialogService,
     private ssd: DomSanitizer,
     private changeRef: ChangeDetectorRef,
-    private ng4FilesService: Ng4FilesService
+    private ng4FilesService: Ng4FilesService,
+    private categoryService: CategoryService,
   ) {}
 
   ngOnInit(): void {
@@ -99,7 +103,11 @@ export class EditorComponent implements OnInit {
     this.router.params.subscribe((params) => {
       this.id = +params['id'];
       this.updateArticle(this.id!);
-    });
+    });  
+  }
+
+  updateDetectForm() {
+
     this.form.get('title')?.valueChanges.subscribe((value) => {
       this.preview.title = value;
     });
@@ -113,7 +121,7 @@ export class EditorComponent implements OnInit {
 
     this.catalogControl.valueChanges.subscribe((value: number) => {
       if(this.article?.category === value) return;
-      this.articleService.setCategory(this.article!.getId(),  value).subscribe(r => {
+      this.articleService.setCategory(this.article!.getId(),  +value).subscribe(r => {
         return this.alertService.open('Category changed').subscribe();
       })
     })
@@ -130,27 +138,36 @@ export class EditorComponent implements OnInit {
         return this.alertService.open('Editor changed').subscribe();
       })
     })
- 
   }
 
   private updateArticle(id: number) {
     forkJoin([
-    this.articleService.getOne(id),
-    this.articleService.getAuthorsForAticle(id),
-    this.articleService.getEditorsForArticle(id)
-    ]).subscribe(([article, authors, editors]) => {
+      this.articleService.getOne(id),
+      this.articleService.getAuthorsForAticle(id),
+      this.articleService.getEditorsForArticle(id),
+      this.categoryService.getAll()
+    ]).subscribe(([article, authors, editors, categories]) => {
       this.article = article;
       this.authors = authors;
       this.editors = editors;
-      console.log(authors, editors);
+      this.categories = categories; 
       this.form.setValue(this.article.getTextForm(this.user.id));
-      this.form.valid;  
-      this.catalogControl.setValue(this.article.getCategory()); 
+      this.form.valid;   
+      this.updateCategory();
       this.updateEditor();
       this.updateAuthor();
       this.updateImage();
       this.updatePreview();
+
+      this.updateDetectForm(); 
     });
+  }
+  private updateCategory() {
+    const currentCategoryId = this.article!.getCategory();
+    if(currentCategoryId) {
+      const category = this.getCategory(currentCategoryId);
+      this.catalogControl.setValue(category)
+    } 
   }
   private updateEditor() {
     const currentEditorId = this.article!.getEditor();
@@ -172,10 +189,15 @@ export class EditorComponent implements OnInit {
   private getEditor(editorId: number) {
     return this.editors.find(r => r.id === editorId);
   }
+  private getCategory(categoryId: number) {
+    return this.categories.find(r => r.id === categoryId);
+  }
   updatePreview() {
     this.preview.title = this.article?.title;
+    this.preview.description = this.form.value.description;
     this.preview?.articleChange?.emit(this.article?.text);
-    this.preview.image = this.imageHS;
+    this.preview.image = this.imageHS; 
+    this.preview?.updateView?.emit();
   }
   updateImage() {
     const h = Math.round(Math.random() * 10000);

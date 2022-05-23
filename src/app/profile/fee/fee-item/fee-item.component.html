@@ -57,7 +57,7 @@
     <button
       *ngFor="let item of menuItems"
       tuiOption
-      (click)="printToConsole(item.title, fee); close()"
+      (click)="executeContextmenuCommand(item.title, fee); close()"
     >
       {{ item.title }}
       <tui-svg class="icon" [src]="item.iconName"></tui-svg>

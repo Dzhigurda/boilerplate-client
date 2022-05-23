@@ -1,9 +1,15 @@
 .island {
   padding: 10px 20px;
-  display: flex;
+  margin: 0 20px;
+  display: block;
   align-items: center;
   gap: 10px;
-
+  border-radius: 4px;
+  cursor: pointer;
+  color: #888;
+  &.publish {
+    color: #000;
+  }
   .name {
     font-weight: bold;
   }

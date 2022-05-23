@@ -1,4 +1,65 @@
-<div class="island">
-  <div class="name"> {{category.name}}</div>
-  <div class="about">{{category.about}}</div>
+<div
+  [ngClass]="{ island: true, publish: category.publish }"
+  (click)="open(editor)"
+>
+  <div class="name">{{ category.name }}</div>
+  <div class="about">{{ category.about }}</div>
 </div>
+<ng-template let-observer #editor>
+  <h2>Category editor</h2>
+  <form [formGroup]="form">
+    <p>
+      <tui-input
+        formControlName="name"
+        tuiHintContent="Title of category, can see users"
+      >
+        Name&nbsp;
+        <span class="tui-required"></span>
+        <input tuiTextfield type="text" />
+      </tui-input>
+      <tui-error
+        formControlName="name"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </p>
+    <p>
+      <tui-text-area formControlName="about" [expandable]="true">
+        About category
+      </tui-text-area>
+      <tui-error
+        formControlName="about"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </p>
+    <p>
+      <button
+        tuiButton
+        type="button"
+        size="m"
+        class="tui-space_right-3"
+        (click)="save(observer)"
+      >
+        Save
+      </button>
+      <button
+        tuiButton
+        type="button"
+        appearance="outline"
+        class="tui-space_right-3"
+        size="m"
+        (click)="reset()"
+      >
+        Reset
+      </button> 
+      <button
+        tuiButton
+        type="button"
+        appearance="outline"
+        size="m"
+        (click)="observer.complete()"
+      >
+        Cancel
+      </button>
+    </p>
+  </form>
+</ng-template>

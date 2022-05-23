@@ -127,6 +127,7 @@
                 ></tui-error>
               </div>
               <div class="field">
+                <!-- TODO Если это не редактор, то не может устанавливать редактора -->
                 <tui-combo-box
                   tuiTextfieldSize="m"
                   [formControl]="editorControl"
@@ -143,13 +144,22 @@
                   [formControl]="editorControl"
                   [error]="[] | tuiFieldError | async"
                 ></tui-error>
+
               </div>
             </div>
             <div class="field">
-              <tui-input [formControl]="catalogControl">
+              <tui-combo-box
+                tuiTextfieldSize="m"
+                [formControl]="catalogControl"
+              >
                 Category
                 <input tuiTextfield />
-              </tui-input>
+                <tui-data-list-wrapper
+                  *tuiDataList
+                  [items]="categories"
+                ></tui-data-list-wrapper>
+              </tui-combo-box>
+
               <tui-error
                 [formControl]="catalogControl"
                 [error]="[] | tuiFieldError | async"

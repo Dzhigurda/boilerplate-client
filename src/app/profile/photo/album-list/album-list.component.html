@@ -1,0 +1,22 @@
+<div class="album-list">
+  <app-album-item
+    *ngFor="let album of albums$ | async; else: loading; empty: blank"
+    [album]="album"
+    (open)="editor.emit(album)"
+  ></app-album-item>
+</div>
+<ng-template #loading>
+  <div class="empty">
+    <div class="centerbox">
+      <img src="/assets/loading.gif" class="emptyImg" />
+    </div>
+  </div>
+</ng-template>
+<ng-template #blank>
+  <div class="empty">
+    <div class="centerbox">
+      <img src="/assets/logo.png" class="emptyImg" />
+    </div>
+  </div>
+</ng-template>
+<app-album-modal [open-modal]="editor"></app-album-modal>

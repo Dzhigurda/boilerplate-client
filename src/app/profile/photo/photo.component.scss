@@ -1,0 +1,22 @@
+.head-menu {
+  display: flex;
+  margin-right: 0px;
+  padding: 0 20px;
+  align-items: center;
+  gap: 10px;
+  h1 {
+    flex: 1;
+  }
+}
+.content {
+  padding: 10px 0px;
+}
+
+.viewport {
+  height: calc(100vh - 240px);
+} 
+
+.tabs {
+  margin: 0 20px;
+}
+ 

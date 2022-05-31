@@ -1,0 +1,49 @@
+<div class="content">
+  <div class="tabs">
+    <tui-tabs [(activeItemIndex)]="activeItemIndex">
+      <button tuiTab>
+        <tui-svg src="tuiIconPicture"></tui-svg>
+        Photo
+      </button>
+      <button tuiTab>
+        <tui-svg src="tuiIconCopy"></tui-svg>
+        Albums
+      </button>
+    </tui-tabs>
+  </div>
+  <ng-container *ngIf="activeItemIndex == 1">
+    <app-search-form-album
+      (add)="addAlbum()"
+      (search)="searchAlbum($event)"
+    ></app-search-form-album>
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        #viewport
+        tuiScrollable
+        class="viewport tui-zero-scrollbar"
+        [itemSize]="45"
+        [maxBufferPx]="500"
+        [minBufferPx]="400"
+      >
+        <app-album-list></app-album-list>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </ng-container>
+  <ng-container *ngIf="activeItemIndex == 0">
+    <app-search-form-photo
+      (search)="onSearchPhoto($event)"
+    ></app-search-form-photo>
+    <tui-scrollbar>
+      <cdk-virtual-scroll-viewport
+        #viewport2
+        tuiScrollable
+        class="viewport tui-zero-scrollbar"
+        [itemSize]="45"
+        [maxBufferPx]="500"
+        [minBufferPx]="400"
+      >
+        <app-photo-list></app-photo-list>
+      </cdk-virtual-scroll-viewport>
+    </tui-scrollbar>
+  </ng-container>
+</div>

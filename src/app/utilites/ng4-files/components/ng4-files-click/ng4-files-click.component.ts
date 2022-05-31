@@ -7,6 +7,8 @@ import {
   EventEmitter,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 
 import { Ng4FilesService, Ng4FilesUtilsService } from '../../services';
@@ -25,6 +27,7 @@ export class Ng4FilesClickComponent implements OnInit, DoCheck {
   @Output() filesSelect: EventEmitter<Ng4FilesSelected> =
     new EventEmitter<Ng4FilesSelected>();
 
+ 
   public maxFilesCount!: number;
   public acceptExtensions!: string;
 
@@ -37,6 +40,7 @@ export class Ng4FilesClickComponent implements OnInit, DoCheck {
   ngDoCheck() {
     this.changeDetector.detectChanges();
   }
+ 
 
   ngOnInit() {
     const config = this.ng4FilesService.getConfig(this.configId);

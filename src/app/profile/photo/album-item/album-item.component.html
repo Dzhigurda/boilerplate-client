@@ -1,0 +1,17 @@
+<div class="album" (click)="open.emit()">
+  <div
+    [ngClass]="{ image: true, ban: album.banned }"
+    [ngStyle]="{ 'background-image': 'url(' + url + ')' }"
+  ></div>
+  <div class="desc">
+    <h2>{{ album.name }}</h2>
+    <p>{{ album.about }}</p>
+  </div>
+  <div class="footer">
+    <p class="author">Anton Dzhigurda</p>
+    <p class="date">
+      {{ album.createAt | date: "dd MMM yyyy // hh:mm" }}
+      <span>{{ album.status }}</span>
+    </p>
+  </div>
+</div>

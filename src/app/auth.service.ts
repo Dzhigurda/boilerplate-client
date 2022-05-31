@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { UserDAO } from '../../../server/src/domains/user/';
 
@@ -29,7 +29,14 @@ export class AuthService {
         password,
         token,
       })
-      .pipe(map((r) => this.saveJWTTokens(r, saveRefresh)));
+      .pipe(
+        map((r) => this.saveJWTTokens(r, saveRefresh)),
+        tap({
+          next: () => {
+            this.router.navigateByUrl('/profile');
+          },
+        })
+      );
   }
 
   private context: any;
@@ -80,8 +87,6 @@ export class AuthService {
   private saveJWTTokens(r: AuthAndUserDAO, saveRefresh: boolean) {
     this.setJWT(r.access);
     if (saveRefresh) this.setRefreshJWT(r.refresh);
-
-    this.router.navigateByUrl('/profile');
     return r;
   }
   public refreshToken(refresh: string) {

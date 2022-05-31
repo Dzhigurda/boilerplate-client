@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -9,7 +10,7 @@ import {
   Output,
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
+import { TuiAlertService, TuiNotification, TuiNotificationsService } from '@taiga-ui/core';
 import { Subscription } from 'rxjs';
 import { ClientUser } from 'src/app';
 import { RoleService, UserRole } from '../../role.service';
@@ -18,6 +19,7 @@ import { RoleService, UserRole } from '../../role.service';
   selector: 'app-role',
   templateUrl: './role.component.html',
   styleUrls: ['./role.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoleComponent implements OnInit, OnDestroy {
   @Input()
@@ -43,8 +45,8 @@ export class RoleComponent implements OnInit, OnDestroy {
 
   constructor(
     private roleService: RoleService,
-    @Inject(TuiNotificationsService)
-    private readonly notificationsService: TuiNotificationsService,
+    @Inject(TuiAlertService)
+    private readonly notificationsService: TuiAlertService,
     private ref: ChangeDetectorRef
   ) {}
 
@@ -58,17 +60,16 @@ export class RoleComponent implements OnInit, OnDestroy {
           this.user.role = part.role.id;
           this.currentRole = part.role;
           this.notificationsService
-            .show('Role saved', this.notifyOptionsSuccess)
+            .open('Role saved', this.notifyOptionsSuccess)
             .subscribe();
           this.userChange.emit();
           this.ref.detectChanges();
         },
         error: (er) => {
           this.notificationsService
-            .show(er.error, this.notifyOptions)
+            .open(er.error, this.notifyOptions)
             .subscribe();
-          this.setDefaultRole();
-
+          this.setDefaultRole(); 
           this.ref.detectChanges();
         },
       });
@@ -84,7 +85,8 @@ export class RoleComponent implements OnInit, OnDestroy {
     this.roleService.getAll().subscribe((roles) => {
       this.items = roles;
       this.currentRole = this.items.find((r) => r.id === this.user.role)!;
-      this.setDefaultRole();
+      this.setDefaultRole(); 
+      this.ref.detectChanges();
     });
   }
   private setDefaultRole() {

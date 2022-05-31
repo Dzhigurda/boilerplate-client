@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Category } from '../Category';
@@ -11,6 +12,7 @@ describe('CategoryItemComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ CategoryItemComponent ],
+      imports: [HttpClientTestingModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     })
     .compileComponents();

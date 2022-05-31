@@ -2,25 +2,68 @@
 <div class="success" *ngIf="!error">Success!</div>
 <h1>{{ title ?? "Нет заголовка" }}</h1>
 <img [src]="image" />
-<div class="description">{{ description }}</div> 
+<div class="description">{{ description }}</div>
 <ng-container *ngIf="source">
-  <ng-container *ngFor="let s of source">
-    <app-album
-      *ngIf="s.type === 'albums'"
-      [id]="s.id"
-      [count]="s.count"
-    ></app-album>
-    <app-photo *ngIf="s.type === 'photo'" [id]="s.id"></app-photo>
-    <app-quote-art *ngIf="s.type === 'quote'" [author]="s.author">
-      <ng-container *ngIf="s.text.type === 'text'">
-        <p *ngFor="let value of s.text.text">{{ value }}</p>
+  <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+    <div *ngFor="let s of source" class="example-box" cdkDrag>
+      <ng-container *ngIf="s.type === 'albums'">
+        <app-album
+          [token]="s"
+          (remove)="removeToken($event)"
+          (remove)="removeToken($event)"
+          (updateText)="serialize()"
+          (openModal)="openAlbumModal.emit($event)"
+        ></app-album>
       </ng-container>
-    </app-quote-art>
-    <app-youtube *ngIf="s.type === 'youtube'" [code]="s.code"></app-youtube>
-    <ng-container *ngIf="s.type === 'text'">
-      <p *ngFor="let value of s.text">{{ value }}</p>
-    </ng-container>
-    <hr *ngIf="s.type === 'breakline'" />
-    <h2 *ngIf="s.type === 'subtitle'">{{ s.title }}</h2>
-  </ng-container>
+
+      <ng-container *ngIf="s.type === 'photo'">
+        <app-photo
+          [token]="s"
+          (needSave)="needSave.emit()"
+          (remove)="removeToken($event)"
+          (updateText)="serialize()"
+          (open-modal)="openPhotoModal.emit($event)"
+          (replaceToAlbum)="replacePhotoToAlbum(s, $event)"
+        ></app-photo>
+      </ng-container>
+
+      <ng-container *ngIf="s.type === 'quote'">
+        <app-uploader
+          [articlePart]="s"
+          (addPhoto)="appendToken($event.token, $event.tokenText)"
+        >
+          <app-quote-art [token]="s"></app-quote-art>
+        </app-uploader>
+      </ng-container>
+
+      <ng-container *ngIf="s.type === 'youtube'">
+        <app-uploader
+          [articlePart]="s"
+          (addPhoto)="appendToken($event.token, $event.tokenText)"
+        >
+          <app-youtube [token]="s"></app-youtube>
+        </app-uploader>
+      </ng-container>
+
+      <ng-container *ngIf="s.type === 'text'">
+        <app-uploader
+          [articlePart]="s"
+          (addPhoto)="appendToken($event.token, $event.tokenText)"
+        >
+          <app-paragraph [token]="s"></app-paragraph>
+        </app-uploader>
+      </ng-container>
+
+      <hr *ngIf="s.type === 'breakline'" />
+
+      <ng-container *ngIf="s.type === 'subtitle'">
+        <app-uploader
+          [articlePart]="s"
+          (addPhoto)="appendToken($event.token, $event.tokenText)"
+        >
+          <app-title [token]="s"></app-title>
+        </app-uploader>
+      </ng-container>
+    </div>
+  </div>
 </ng-container>

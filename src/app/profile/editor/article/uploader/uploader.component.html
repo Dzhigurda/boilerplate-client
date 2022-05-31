@@ -1,0 +1,9 @@
+<ng4-files-drop
+  [ngClass]="{ place: placeBlink }"
+  (filesSelect)="filesSelect($event)"
+  (DragLeave)="hidePlace($event)"
+  (DragEnter)="showPlace($event)"
+> 
+    <ng-content></ng-content>
+    <div class="place" *ngIf="placeBlink"></div>
+</ng4-files-drop>

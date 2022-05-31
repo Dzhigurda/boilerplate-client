@@ -1,0 +1,158 @@
+<ng-template let-observer #modalEditor>
+  <ng4-files-drop
+    (filesSelect)="filesSelect($event)"
+    (DragLeave)="hidePlace($event)"
+    (DragEnter)="showPlace($event)"
+  >
+    <div [ngClass]="{ page: true, place: placeBlink }">
+      <div class="content-modal">
+        <div class="album">
+          <h3>Albums photo</h3>
+          <tui-scrollbar>
+            <cdk-virtual-scroll-viewport
+              #viewport
+              tuiScrollable
+              class="viewport tui-zero-scrollbar"
+              [itemSize]="45"
+              [maxBufferPx]="500"
+              [minBufferPx]="400"
+            >
+              <div
+                cdkDropList
+                class="photo-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <app-photo-items
+                  cdkDrag
+                  *ngFor="let ph of photo"
+                  [photo]="ph"
+                  (open-image-editor)="openPhotoModal.emit($event.id)"
+                ></app-photo-items>
+              </div>
+            </cdk-virtual-scroll-viewport>
+          </tui-scrollbar>
+        </div>
+        <div class="layer">
+          <h3>Album metadate editor</h3>
+          <form [formGroup]="form">
+            <div class="field">
+              <tui-input formControlName="name">
+                Name
+                <input tuiTextfield />
+              </tui-input>
+              <tui-error
+                formControlName="name"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+
+            <div class="field">
+              <tui-text-area
+                #text
+                class="autoHeight"
+                formControlName="about"
+                [expandable]="true"
+                [rows]="1000"
+              >
+                About
+              </tui-text-area>
+
+              <tui-error
+                formControlName="about"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+
+            <div class="field">
+              <tui-input formControlName="defaultPhotographer">
+                Default photographer
+                <input tuiTextfield />
+              </tui-input>
+              <tui-error
+                formControlName="defaultPhotographer"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+            <div class="field">
+              <tui-input formControlName="defaultPhotographerLink">
+                Default photographer link
+                <input tuiTextfield />
+              </tui-input>
+              <tui-error
+                formControlName="defaultPhotographerLink"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+
+            <div class="field">
+              <tui-input formControlName="source">
+                Source
+                <input tuiTextfield />
+              </tui-input>
+              <tui-error
+                formControlName="source"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+            <div class="field">
+              <tui-input formControlName="sourceLink">
+                Source link
+                <input tuiTextfield />
+              </tui-input>
+              <tui-error
+                formControlName="sourceLink"
+                [error]="[] | tuiFieldError | async"
+              ></tui-error>
+            </div>
+          </form>
+        </div>
+
+        <header class="header">
+          <section class="logo">
+            <img [src]="cover" />
+            <hr />
+            <p>ID: {{ album.id }}</p>
+            <p>Status: {{ album.status }}</p>
+            <p>Create at: {{ album.createAt | date: "dd MMM yyyy HH:mm" }}</p>
+            <p>Count image: {{ album?.photo?.length ?? "single" }}</p>
+            <p>User owner: {{ album.userId }}</p>
+            <p>Banned: {{ album.banned ? "Yes" : "No" }}</p>
+          </section>
+        </header>
+      </div>
+      <div class="control">
+        <!-- <button tuiButton (click)="onSave(observer)">Save</button> -->
+        <button
+          tuiButton
+          appearance="secondary"
+          *ngIf="!album.banned"
+          (click)="onBan(observer)"
+        >
+          Ban
+        </button>
+        <button
+          tuiButton
+          appearance="secondary"
+          *ngIf="album.banned"
+          (click)="onUnban(observer)"
+        >
+          Unban
+        </button>
+        <button
+          tuiButton
+          appearance="custom"
+          *ngIf="album.isNotFulled()"
+          (click)="onDelete(observer)"
+        >
+          Delete
+        </button>
+        <button tuiButton appearance="custom" (click)="observer.complete()">
+          Close
+        </button>
+      </div>
+    </div>
+  </ng4-files-drop>
+</ng-template>
+<app-photo-modal 
+  [open-modal]="openPhotoModal"
+></app-photo-modal>

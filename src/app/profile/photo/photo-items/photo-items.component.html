@@ -1,0 +1,16 @@
+<div class="photo" (click)="onOpenEditor()">
+  <tui-badged-content
+    [colorTop]="photo.colorBanned || ''"
+    size="l"
+    [rounded]="false"
+  >
+    <img [src]="photo.getSquierImage()" loading="lazy" />
+  </tui-badged-content>
+  <div class="desc">
+    <h2>{{ photo.name || "No title" }}</h2>
+    <p>{{ photo.about || "No about" }}</p>
+    <p class="meta">
+      {{ photo.createAt | date: "dd MMM yyyy" }} {{ photo.status }}
+    </p>
+  </div>
+</div>

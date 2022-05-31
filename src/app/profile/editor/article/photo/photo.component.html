@@ -1,4 +1,46 @@
-<div class="photo">
-  <tui-svg src="tuiIconPicture"></tui-svg>
-</div>
-<p>image {{ id }}</p>
+<ng4-files-drop (filesSelect)="filesSelect($event)">
+  <ng-container *ngIf="!photo">
+    <div class="photo">
+      <tui-svg src="tuiIconPicture"></tui-svg>
+    </div>
+    <p class="error" *ngIf="error">{{ error }}</p>
+  </ng-container>
+  <ng-container *ngIf="photo">
+    <div
+      class="photo"
+      [tuiDropdownContext]="photoContext"
+      (dblclick)="openModal.emit(photo.id)"
+    >
+      <img [src]="photo.getCoverImage()" />
+    </div>
+    <p>{{ photo.about ?? "image" }}</p>
+
+    <ng-template #photoContext let-activeZone="activeZone" let-close="close">
+      <tui-data-list
+        role="menu"
+        tuiDataListDropdownManager
+        class="context-menu"
+        [tuiActiveZoneParent]="activeZone"
+      >
+        <ng4-files-click #ng4file (filesSelect)="filesSelect($event); close()">
+          <div class="likeButton">
+            Replace image
+            <tui-svg class="icon" src="tuiIconUpload"></tui-svg>
+          </div>
+        </ng4-files-click>
+        <button tuiOption (click)="openModal.emit(photo.id); close()">
+          Edit
+          <tui-svg class="icon" src="tuiIconEyeClosed"></tui-svg>
+        </button>
+        <button tuiOption (click)="removeImage(); close()">
+          Remove
+          <tui-svg class="icon" src="tuiIconEyeClosed"></tui-svg>
+        </button>
+        <button tuiOption (click)="deleteImage(); close()">
+          Delete
+          <tui-svg class="icon" src="tuiIconTrash"></tui-svg>
+        </button>
+      </tui-data-list>
+    </ng-template>
+  </ng-container>
+</ng4-files-drop>

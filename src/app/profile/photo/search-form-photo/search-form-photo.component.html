@@ -1,0 +1,44 @@
+<form [formGroup]="filters">
+  <div class="filters">
+    <div class="field">
+      <tui-input
+        tuiTextfieldSize="m"
+        [tuiTextfieldCleaner]="true"
+        formControlName="name"
+      >
+        Name
+        <input tuiTextfield />
+      </tui-input>
+    </div>
+    <div class="field">
+      <tui-input
+        tuiTextfieldSize="m"
+        [tuiTextfieldCleaner]="true"
+        formControlName="about"
+      >
+        About
+        <input tuiTextfield />
+      </tui-input>
+    </div>
+    <div class="field">
+      <tui-input
+        tuiTextfieldSize="m"
+        [tuiTextfieldCleaner]="true"
+        formControlName="photographer"
+      >
+        Photographer
+        <input tuiTextfield />
+      </tui-input>
+    </div>
+    <div class="field">
+      <tui-input
+        tuiTextfieldSize="m"
+        [tuiTextfieldCleaner]="true"
+        formControlName="source"
+      >
+        Source
+        <input tuiTextfield />
+      </tui-input>
+    </div>
+  </div>
+</form>

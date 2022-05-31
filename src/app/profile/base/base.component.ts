@@ -11,6 +11,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 import { Router } from '@angular/router';
 import {
+  TuiAlertService,
   TuiDialogContext,
   TuiDialogService,
   TuiNotification,
@@ -20,6 +21,9 @@ import { ClientUser, UserPage } from 'src/app';
 import { AuthService } from 'src/app/auth.service';
 import { UserService } from 'src/app/user.service';
 import { Role, RoleService } from '../role.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../state/app.state';
+import { addUser } from '../state/user/user.action';
 
 @Component({
   selector: 'app-base',
@@ -49,16 +53,18 @@ export class BaseComponent implements OnInit {
     private roleService: RoleService,
     private userService: UserService,
     private router: Router,
-    @Inject(TuiNotificationsService)
-    private readonly notificationsService: TuiNotificationsService,
+    private store: Store<AppState>,
+    @Inject(TuiAlertService)
+    private readonly notificationsService: TuiAlertService,
     private readonly ref: ChangeDetectorRef,
     @Inject(TuiDialogService) private readonly dialogService: TuiDialogService
   ) {}
 
   ngOnInit(): void {
     this.userService.getMe().subscribe((r) => {
-      this.user = r; 
+      this.user = r;
       this.role = r.roleRef;
+      this.store.dispatch(addUser({ user: this.user }));
       if (this.user.STATUS === 'CREATED') {
         /// show dialog verify
         this.showDialog(this.dialogVerify);
@@ -82,7 +88,7 @@ export class BaseComponent implements OnInit {
   }
   verify(observer: any) {
     if (!this.verifyCode.valid) {
-      this.notificationsService.show('Token is not valid');
+      this.notificationsService.open('Token is not valid').subscribe();
       return;
     }
     const token = this.verifyCode.value;
@@ -90,20 +96,20 @@ export class BaseComponent implements OnInit {
       next: (res: any) => {
         if (res) {
           this.notificationsService
-            .show('Your code accept', this.notifyOptionsSuccess)
+            .open('Your code accept', this.notifyOptionsSuccess)
             .subscribe();
           observer.complete();
           this.user!.STATUS = 'CHECKED';
           this.ref.detectChanges();
         } else {
           this.notificationsService
-            .show("Your code doesn't accept", this.notifyOptions)
+            .open("Your code doesn't accept", this.notifyOptions)
             .subscribe();
         }
       },
       error: (err: any) => {
         this.notificationsService
-          .show("Your code doesn't accept", this.notifyOptions)
+          .open("Your code doesn't accept", this.notifyOptions)
           .subscribe();
       },
     });

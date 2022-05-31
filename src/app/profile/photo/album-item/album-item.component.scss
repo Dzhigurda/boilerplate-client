@@ -1,0 +1,49 @@
+.album {
+  text-decoration: none;
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
+  border-radius: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .image {
+    display: block;
+    width: 100%;
+    border-radius: 8px;
+    height: 250px;
+    flex: 0 0 250px;
+    background-size: cover;
+    background-position: center;
+    height: max-content;
+    &.ban {
+      filter: grayscale(1);
+    }
+  }
+  .desc {
+    padding: 0px 20px;
+    flex: 1;
+    h2 {
+      color: var(--tui-text-02);
+    }
+    p {
+      color: var(--tui-text-03);
+    }
+  }
+  .footer {
+    flex: 0 0 16px;
+    padding: 0px 20px;
+    .author {
+      color: var(--tui-text-02);
+      margin-bottom: 0;
+    }
+    p {
+      color: var(--tui-text-03);
+      span {
+        float: right;
+      }
+    }
+  }
+  &:hover {
+    transform: translateY(-10px);
+  }
+}

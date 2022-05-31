@@ -9,6 +9,8 @@ import { TuiMobileDialogModule } from '@taiga-ui/addon-mobile';
 import {
   TuiAccordionModule,
   TuiBadgedContentModule,
+  TuiCarouselModule,
+  TuiCheckboxBlockModule,
   TuiDropdownContextModule,
   TuiFieldErrorPipeModule,
   TuiInputDateModule,
@@ -41,6 +43,7 @@ import {
   TuiLinkModule,
   TuiPrimitiveTextfieldModule,
   TuiScrollbarModule,
+  TuiTextfieldControllerModule,
   TuiTooltipModule,
 } from '@taiga-ui/core';
 import { TuiSvgModule } from '@taiga-ui/core';
@@ -91,9 +94,23 @@ import { Ng4FilesModule } from '../utilites/ng4-files';
 import { ArticleModule } from './editor/article/article.module';
 import { FeeComponent } from './fee/fee.component';
 import { FeeItemComponent } from './fee/fee-item/fee-item.component';
-import { TuiActiveZoneModule } from '@taiga-ui/cdk';
+import { TuiActiveZoneModule, TuiForModule } from '@taiga-ui/cdk';
 import { CategoryComponent } from './category/category.component';
 import { CategoryItemComponent } from './category/category-item/category-item.component';
+import { PhotoComponent } from './photo/photo.component';
+import { PhotoItemsComponent } from './photo/photo-items/photo-items.component';
+import { PhotoModalComponent } from './photo/photo-modal/photo-modal.component';
+import { AlbumListComponent } from './photo/album-list/album-list.component';
+import { PhotoListComponent } from './photo/photo-list/photo-list.component';
+import { AlbumItemComponent } from './photo/album-item/album-item.component';
+import { AlbumModalComponent } from './photo/album-modal/album-modal.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { StoreModule } from '@ngrx/store';
+import { albumsReducer } from './state/album/album.reducer';
+import { photoReducer } from './state/photo/photo.reducer';
+import { SearchFormPhotoComponent } from './photo/search-form-photo/search-form-photo.component';
+import { SearchFormAlbumComponent } from './photo/search-form-album/search-form-album.component';
+import { userReducer } from './state/user/user.reducer';
 
 @NgModule({
   declarations: [
@@ -126,6 +143,15 @@ import { CategoryItemComponent } from './category/category-item/category-item.co
     FeeItemComponent,
     CategoryComponent,
     CategoryItemComponent,
+    PhotoComponent,
+    PhotoItemsComponent,
+    PhotoModalComponent,
+    AlbumListComponent,
+    PhotoListComponent,
+    AlbumItemComponent,
+    AlbumModalComponent,
+    SearchFormPhotoComponent,
+    SearchFormAlbumComponent,
   ],
   imports: [
     ProfileRouterModule,
@@ -172,17 +198,22 @@ import { CategoryItemComponent } from './category/category-item/category-item.co
     TuiMultiSelectModule,
     TuiTooltipModule,
     TuiHintModule,
-    TuiTabsModule,
-    MarkdownModule.forRoot(),
+    TuiTabsModule, 
     Ng4FilesModule,
     ArticleModule,
     TuiErrorModule,
     TuiFieldErrorPipeModule,
     TuiCardModule,
-    TuiDropdownContextModule, 
+    TuiDropdownContextModule,
     TuiActiveZoneModule,
     TuiReorderModule,
-    TuiLazyLoadingModule
+    TuiLazyLoadingModule,
+    TuiCheckboxBlockModule,
+    TuiTextfieldControllerModule,
+    TuiForModule,
+    DragDropModule,
+    MarkdownModule.forRoot(),
+    StoreModule.forRoot({ albums: albumsReducer, photo: photoReducer, users:  userReducer}),
   ],
 })
 export class ProfileModule {}

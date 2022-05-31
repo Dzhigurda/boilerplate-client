@@ -17,10 +17,10 @@ import {
   TuiAlertService,
   TuiDialogContext,
   TuiDialogService,
-  TuiNotificationsService,
 } from '@taiga-ui/core';
 import { PolymorpheusContent } from '@tinkoff/ng-polymorpheus';
 
+export type RoleWithType = Role & { count: number };
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -40,18 +40,19 @@ export class UsersComponent implements OnInit {
     userId: new FormControl(0, Validators.required),
   });
   users: ClientUser[] = [];
-  roles!: (UserRole & { count: number })[];
+  roles: RoleWithType[] = [];
+  rolesList: Role[] = [];
   data?: ClientUser[] = [];
 
   readonly columns = ['firstName', 'lastName', 'role', 'STATUS'];
 
-  enabledLogin: Role[] = [];
+  enabledLogin: RoleWithType[] = [];
   constructor(
     private roleService: RoleService,
-    private userService: UserService, 
+    private userService: UserService,
     private readonly ref: ChangeDetectorRef,
     @Inject(TuiDialogService) private readonly dialogService: TuiDialogService,
-    @Inject(TuiAlertService) private readonly notify: TuiAlertService,
+    @Inject(TuiAlertService) private readonly notify: TuiAlertService
   ) {}
 
   ngOnInit(): void {
@@ -63,27 +64,22 @@ export class UsersComponent implements OnInit {
     forkJoin([this.roleService.getAll(), this.userService.getAll()]).subscribe(
       ([roles, users]) => {
         this.users = users;
-        this.roles = roles.map((r) =>
-          Object.assign(r, {
-            count: 0,
-            valueOf: function () {
-              return this.count;
-            },
-          })
-        );
-        for (let i of this.users) {
-          const role = this.roles.find((role) => role.id === i.role);
-          role!.count += 1;
-        }
+        this.rolesList = roles;
+        this.recount();
         this.filters();
       }
     );
   }
 
   recount() {
-    for (let role of this.roles) {
-      role!.count = 0;
-    }
+    this.roles = this.rolesList.map((r) =>
+      Object.assign(r, {
+        count: 0,
+        valueOf: function () {
+          return this.count;
+        },
+      })
+    );
     for (let i of this.users) {
       const role = this.roles.find((role) => role.id === i.role);
       role!.count += 1;

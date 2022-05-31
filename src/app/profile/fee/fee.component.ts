@@ -39,6 +39,7 @@ export class FeeComponent implements OnInit {
 
   ngOnInit(): void {
     this.feeService.getMe().subscribe((r) => {
+      r.reverse();
       this.fee = r;
       this.calculate();
     });

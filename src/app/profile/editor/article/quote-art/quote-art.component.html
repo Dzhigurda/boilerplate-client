@@ -4,7 +4,7 @@
       <tui-svg src="tuiIconBookmark"></tui-svg>
     </div>
     <div class="textarea">
-      <ng-content></ng-content>
+      <app-paragraph *ngIf="text" [token]="text"></app-paragraph>
     </div>
   </div>
   <div class="author" *ngIf="author">

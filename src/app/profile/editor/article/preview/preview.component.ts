@@ -1,5 +1,9 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
-import { SerializeText } from 'src/app/utilites/SerializeText';
+import { AlbumToken, SerializeText, TokenValue } from 'src/app/utilites/SerializeText';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { debounceTime } from 'rxjs';
+import { Album } from 'src/app/profile/photo/services/album';
+import { ArticlePhoto, PhotoURLs } from 'src/app/profile/photo/services/photo';
 
 @Component({
   selector: 'app-preview',
@@ -11,10 +15,11 @@ export class PreviewComponent implements OnInit {
   article!: string;
 
   @Output()
-  articleChange = new EventEmitter();
+  textChange = new EventEmitter();
 
-  @Output() 
-  updateView = new EventEmitter<void>();
+  @Output()
+  needSave = new EventEmitter();
+
   @Input()
   title?: string;
   @Input()
@@ -22,29 +27,90 @@ export class PreviewComponent implements OnInit {
   @Input()
   image!: string;
 
-  source?: any[];
+  @Output("open-album-modal")
+  openAlbumModal = new EventEmitter<Album>();
+  @Output("open-photo-modal")
+  openPhotoModal = new EventEmitter<number>();
+
+  source?: TokenValue[];
   error?: string;
 
   constructor() {}
 
   ngOnInit(): void {
-    this.articleChange.subscribe((text) => {
-      this.article = text; 
-      this.update();
-    });
-    this.updateView.subscribe(() => {
-      this.update();
-    })
+    // this.textChange.pipe(debounceTime(100)).subscribe((text) => {
+    //   // changeDetect
+    //   this.article = text;
+    //   this.update();
+    // });
+  }
+  appendToken(token: TokenValue, tokenText: string) {
+    const text =
+      this.source
+        ?.map((r) => {
+          if (r === token) {
+            return `${r}\n${tokenText}\n`;
+          }
+          return r.toString();
+        })
+        .join('\n') ?? '';
+    console.log(text);
+    this.article = text;
+    this.textChange.emit(text);
+    this.update();
+  }
+
+  removeToken(token: TokenValue) {
+    const text =
+      this.source
+        ?.map((r) => {
+          if (r === token) {
+            return ``;
+          }
+          return r.toString();
+        })
+        .join('\n') ?? '';
+    console.log(text);
+    this.article = text;
+    this.textChange.emit(text);
+    this.update();
+  }
+
+  setText(text: string) {
+    this.article = text;
+    this.update();
   }
 
   update() {
     try {
-      this.error ="";
+      this.error = '';
       this.source = new SerializeText(this.article).render().getSource();
       console.log(this.source);
     } catch (ex: any) {
       console.log(ex);
       this.error = ex.message;
     }
+  }
+
+  replacePhotoToAlbum(token: TokenValue, albumId: number) {
+    if(!this.source) return; 
+    const index = this.source.findIndex(t => t === token);
+    if(!~index) return;
+    const albumToken = new AlbumToken().setValue(albumId);
+    this.source.splice(index, 1, albumToken);
+    this.serialize();
+  }
+
+  drop(event: any) {
+    moveItemInArray(this.source!, event.previousIndex, event.currentIndex);
+    this.serialize();
+  }
+  serialize() {
+    const text = this.source
+      ?.map((r) => r.toString())
+      .join('\n')
+      .replace(/(\n{2,})/, '\n\n');
+    console.log(text);
+    this.textChange.emit(text);
   }
 }

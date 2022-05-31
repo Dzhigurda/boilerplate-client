@@ -29,6 +29,9 @@ export class Category {
     this.about = about;
   }
 
+  isPublish() {
+    return this.status === "PUBLISH";
+  }
   publish() {
     if (!this.name) throw new Error('Нельзя опубликовать');
     if (!this.about) throw new Error('Нельзя опубликовать');

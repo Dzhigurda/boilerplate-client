@@ -1,0 +1,24 @@
+<ng-container>
+  <div class="grid">
+    <app-photo-items
+      *ngFor="let f of photoFiltered$ | async; else: loading; empty: blank"
+      [photo]="f"
+      (open-image-editor)="openPhotoModal.emit(f.id)"
+    ></app-photo-items>
+  </div>
+</ng-container>
+<ng-template #loading>
+  <div class="empty">
+    <div class="centerbox">
+      <img src="/assets/loading.gif" class="emptyImg" />
+    </div>
+  </div>
+</ng-template>
+<ng-template #blank>
+  <div class="empty">
+    <div class="centerbox">
+      <img src="/assets/logo.png" class="emptyImg" />
+    </div>
+  </div>
+</ng-template>
+<app-photo-modal [open-modal]="openPhotoModal"></app-photo-modal>

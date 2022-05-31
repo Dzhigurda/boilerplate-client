@@ -1,0 +1,115 @@
+<ng-template let-observer #modalEditor> 
+  <div class="content-modal">
+    <header class="header">
+      <section class="logo">
+        <img [src]="photo.getCoverImage()" />
+        <hr />
+        <p>ID: {{ photo.id }}</p>
+        <p>Status: {{ photo.status }}</p>
+        <p>Create at: {{ photo.createAt | date: "dd MMM yyyy HH:mm" }}</p>
+        <p>Album: {{ photo.albumId ?? "single" }}</p>
+        <p>User owner: {{ photo.userId ?? "-" }}</p>
+        <p>Order index: {{ photo.orderIndex }}</p>
+      </section>
+    </header>
+    <div class="layer">
+      <h3>Photo metadate</h3>
+      <form [formGroup]="form">
+        <div class="field">
+          <tui-input formControlName="name">
+            Name
+            <input tuiTextfield />
+          </tui-input>
+          <tui-error
+            formControlName="name"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+
+        <div class="field">
+          <tui-text-area
+            #text
+            class="autoHeight"
+            formControlName="about"
+            [expandable]="true"
+            [rows]="1000"
+          >
+            About
+          </tui-text-area>
+
+          <tui-error
+            formControlName="about"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+
+        <div class="field">
+          <tui-input formControlName="photographer">
+            Photographer
+            <input tuiTextfield />
+          </tui-input>
+          <tui-error
+            formControlName="photographer"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+        <div class="field">
+          <tui-input formControlName="photographerLink">
+            Photographer link
+            <input tuiTextfield />
+          </tui-input>
+          <tui-error
+            formControlName="photographerLink"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+
+        <div class="field">
+          <tui-input formControlName="source">
+            Source
+            <input tuiTextfield />
+          </tui-input>
+          <tui-error
+            formControlName="source"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+        <div class="field">
+          <tui-input formControlName="sourceLink">
+            Source link
+            <input tuiTextfield />
+          </tui-input>
+          <tui-error
+            formControlName="sourceLink"
+            [error]="[] | tuiFieldError | async"
+          ></tui-error>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="control">
+    <button tuiButton (click)="save(observer)">Save</button>
+    <button
+      tuiButton
+      appearance="secondary"
+      *ngIf="photo.status != 'BANNED'"
+      (click)="ban(observer)"
+    >
+      Ban
+    </button>
+    <button
+      tuiButton
+      appearance="secondary"
+      *ngIf="photo.status === 'BANNED'"
+      (click)="unban(observer)"
+    >
+      Unban
+    </button>
+    <button tuiButton appearance="custom" (click)="delete(observer)">
+      Delete
+    </button>
+    <button tuiButton appearance="custom" (click)="observer.complete()">
+      Close
+    </button>
+  </div>
+</ng-template>

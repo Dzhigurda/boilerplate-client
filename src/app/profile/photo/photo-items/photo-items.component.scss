@@ -1,0 +1,51 @@
+.photo {
+  user-select: none;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 8px;
+  img {
+    display: block;
+    border-radius: 8px;
+    transition: 0.2s ease-in;
+  }
+  .desc {
+    flex: 1;
+    h2 {
+      margin: 0;
+      line-height: 1.2; 
+      font-size: 14px;
+      color: var(--tui-text-01);
+      height: 36px;
+      width: 100%;
+      overflow: hidden; 
+    }
+    p {
+      color: var(--tui-text-02);
+      font-size: 11px;
+      line-height: 14px;
+      margin: 0;
+      height: 32px;
+      width: 100%;
+      overflow: hidden;  
+    }
+    .meta { 
+      height: 16px; 
+      color: var(--tui-text-03);
+    }
+  }
+  &:hover {
+    background: #f0f0f0;
+    transition: 0.1s ease-in-out;
+    img {
+      box-shadow: 0 0 24px rgba(0, 0, 0, 0.3);
+      transform: translateX(-10px);
+    }
+    .icon {
+      color: rgb(0, 77, 128);
+      //   transform: translateX(10px);
+    }
+  }
+}
+ 

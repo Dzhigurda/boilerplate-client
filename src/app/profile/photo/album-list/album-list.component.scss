@@ -1,0 +1,26 @@
+.empty {
+  padding: 20px;
+  display: flex;
+  height: calc(100vh - 280px);
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px dashed #f0f0f0;
+  .emptyImg {
+    width: 100%;
+    max-width: 350px;
+    opacity: 0.1;
+  }
+
+  p {
+    font-size: 22px;
+    color: #ccc;
+    text-align: center;
+  }
+}
+.album-list {
+  padding: 20px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}

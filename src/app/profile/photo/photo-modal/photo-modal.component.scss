@@ -1,0 +1,47 @@
+.content-modal {
+  display: flex;
+  gap: 1rem;
+  flex-direction: row-reverse;
+  .header {
+    flex: 0 0 calc(200px + 1rem);
+    img {
+      margin-left: 1rem;
+      display: block;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      width: 200px;
+    }
+  }
+  .layer {
+    flex: 1;
+  }
+}
+.control {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+h3 {
+  margin: 0px 0 10px 0;
+}
+
+.field {
+  margin: 0px 0 10px 0;
+}
+
+.logo {
+  p {
+    color: var(--tui-text-03);
+    font-size: 12px;
+    margin: 3px 0 3px 1rem;
+  }
+
+  hr {
+    margin-bottom: 1rem;
+  }
+  border-left: 1px solid #f0f0f0;
+}
+
+.viewport {
+  height: calc(100vh - 240px);
+}

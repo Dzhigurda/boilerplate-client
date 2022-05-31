@@ -1,4 +1,41 @@
-<div class="album">
-    <tui-svg src="tuiIconPicture"></tui-svg>
+<ng4-files-drop (filesSelect)="filesSelect($event)">
+  <div
+    [ngClass]="{ album: true, loading: loaded_image }"
+    [tuiDropdownContext]="albumContext"
+    (dblclick)="openModal.emit(album)"
+  >
+    <tui-svg src="tuiIconPicture" *ngIf="!cover"></tui-svg>  
+        <img   [src]="cover" draggable="true" /> 
   </div>
-<p>album: {{ id }}; count: {{ count }}</p>
+  <div class="preview-list" *ngIf="album?.photo">
+    <img
+      [src]="base + photo.pathTumbanian"
+      *ngFor="let photo of album?.photo"
+    />
+  </div>
+  <p *ngIf="album">{{ album.name }}</p>
+  <p *ngIf="!album">album: {{ id }}; count: {{ count }}</p>
+</ng4-files-drop>
+<ng-template #albumContext let-activeZone="activeZone" let-close="close">
+  <tui-data-list
+    role="menu"
+    tuiDataListDropdownManager
+    class="context-menu"
+    [tuiActiveZoneParent]="activeZone"
+  >
+    <ng4-files-click #ng4file (filesSelect)="filesSelect($event); close()">
+      <div class="likeButton">
+        Add images
+        <tui-svg class="icon" src="tuiIconUpload"></tui-svg>
+      </div>
+    </ng4-files-click>
+    <button tuiOption (click)="openModal.emit(album); close()">
+      Edit album metadata
+      <tui-svg class="icon" src="tuiIconComment"></tui-svg>
+    </button>
+    <button tuiOption (click)="removeImage(); close()">
+      Remove album
+      <tui-svg class="icon" src="tuiIconEyeClosed"></tui-svg>
+    </button>
+  </tui-data-list>
+</ng-template>

@@ -144,7 +144,6 @@
                   [formControl]="editorControl"
                   [error]="[] | tuiFieldError | async"
                 ></tui-error>
-
               </div>
             </div>
             <div class="field">
@@ -232,9 +231,17 @@
         [minBufferPx]="400"
       >
         <div class="preview-container">
-          <app-preview #dynamic></app-preview>
+          <app-preview
+            #dynamic
+            (needSave)="save()"
+            (textChange)="updateText($event)"
+            (open-album-modal)="openAlbumModal.emit($event)"
+            (open-photo-modal)="openPhotoModal.emit($event)"
+          ></app-preview>
         </div>
       </cdk-virtual-scroll-viewport>
     </tui-scrollbar>
   </div>
 </div>
+<app-photo-modal [open-modal]="openPhotoModal"></app-photo-modal>
+<app-album-modal [open-modal]="openAlbumModal"></app-album-modal>

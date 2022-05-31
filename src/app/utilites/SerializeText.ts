@@ -10,41 +10,44 @@ export type TempTypes =
   | 'text'
   | 'quote';
 
-interface TokenHave {
+export interface TokenHave {
   type: string;
 }
-interface TokenValue extends TokenHave {
+export interface TokenValue extends TokenHave {
   type: string;
   value: string | string[];
   entity?: string;
   entityId?: number;
   entityProperty?: any;
 }
-interface TokenQueueValue extends TokenValue {
+
+export interface TokenQueueValue extends TokenValue {
   author?: string;
   value: string[];
 }
-class Subtitle implements TokenHave {
-    title =  "";
-    type = 'subtitle';
-    parse(tv: TokenHave) {
-      if(!this.isSubtitle(tv)) throw new Error('Subtitle token is not valid ' + tv.type);
-      const reg = /#\s+(.+)/i.exec(tv.value as string);
-      if(!reg) throw new Error('Subtitile is not valid: ' + tv.value);
-      this.title = reg[1];
-      return this;
-    }
-    isSubtitle(tv: TokenHave): tv is TokenValue {
-      return tv.type === this.type;
-    }
-    get value() {
-      return `<h2>${this.title}</h2>`;
-    }
-    toString() {
-      return `# ${this.title}`;
-    }
+
+export class Subtitle implements TokenHave {
+  title = '';
+  type = 'subtitle';
+  parse(tv: TokenHave) {
+    if (!this.isSubtitle(tv))
+      throw new Error('Subtitle token is not valid ' + tv.type);
+    const reg = /#\s+(.+)/i.exec(tv.value as string);
+    if (!reg) throw new Error('Subtitile is not valid: ' + tv.value);
+    this.title = reg[1];
+    return this;
+  }
+  isSubtitle(tv: TokenHave): tv is TokenValue {
+    return tv.type === this.type;
+  }
+  get value() {
+    return `<h2>${this.title}</h2>`;
+  }
+  toString() {
+    return `\n# ${this.title}\n`;
+  }
 }
-class PhotoToken implements TokenHave {
+export class PhotoToken implements TokenHave {
   id!: number;
   type = 'photo';
   parse(tv: TokenHave) {
@@ -61,13 +64,19 @@ class PhotoToken implements TokenHave {
     return `<app-photo id='${this.id}'></app-photo>`;
   }
   toString() {
-    return `foto${this.id}`;
+    return `\nfoto${this.id}\n`;
   }
 }
-class AlbumToken implements TokenHave {
+export class AlbumToken implements TokenHave {
   id!: number;
   count!: number;
   type = 'albums';
+
+  setValue(id: number, count: number = 1) {
+    this.id = id;
+    this.count = count;
+    return this;
+  }
   parse(tv: TokenHave) {
     if (!this.isAlbums(tv)) throw new Error('Album token is not valid');
     const reg = /album(\d+)(_(\d+))?/i.exec(tv.value as string);
@@ -83,10 +92,10 @@ class AlbumToken implements TokenHave {
     return `<app-album id='${this.id}' count='${this.count}'></app-album>`;
   }
   toString() {
-    return `album${this.id}_${this.count}`;
+    return `\nalbum${this.id}_${this.count}\n`;
   }
 }
-class YoutubeToken implements TokenHave {
+export class YoutubeToken implements TokenHave {
   type = 'youtube';
   code!: string;
   parse(tv: TokenHave) {
@@ -103,10 +112,10 @@ class YoutubeToken implements TokenHave {
     return `<app-youtube code='${this.code}'></app-youtube>`;
   }
   toString() {
-    return `youtube_${this.code}`;
+    return `\nyoutube_${this.code}\n`;
   }
 }
-class QuoteToken implements TokenHave {
+export class QuoteToken implements TokenHave {
   type = 'quote';
   text!: TextToken;
   author?: string;
@@ -126,10 +135,10 @@ class QuoteToken implements TokenHave {
     return `<app-quote-art author='${this.author}'>${this.text.value}</app-quote>`;
   }
   toString() {
-    return `{${this.text}|${this.author}}`;
+    return `\n{${this.text}|${this.author}}\n`;
   }
 }
-class TextToken implements TokenHave {
+export class TextToken implements TokenHave {
   type = 'text';
   text!: string[];
   parse(tv: TokenHave) {
@@ -142,13 +151,13 @@ class TextToken implements TokenHave {
   }
 
   get value() {
-    return `<p>${this.text.join('</p>\n</p>')}</p>`;
+    return `\n<p>${this.text.join('</p>\n</p>')}</p>\n`;
   }
   toString() {
     return this.text.join('\n');
   }
 }
-class BreaklineToken implements TokenHave {
+export class BreaklineToken implements TokenHave {
   type = 'breakline';
   parse(tv: TokenHave) {
     if (tv.type != 'breakline') throw new Error('breakline is not valid');
@@ -158,7 +167,7 @@ class BreaklineToken implements TokenHave {
     return `<hr/>`;
   }
   toString() {
-    return '---';
+    return '\n---\n';
   }
 }
 
@@ -179,8 +188,8 @@ export class SerializeText {
     const nt3 = this.parsePhoto(nt2);
     const nt4 = this.parseAlbum(nt3);
     const nt5 = this.parseYoutube(nt4);
-    const nt6 = this.parseTitle(nt5)
-    const nt7 = this.parseBreakLine(nt6); 
+    const nt6 = this.parseTitle(nt5);
+    const nt7 = this.parseBreakLine(nt6);
     const nt8 = this.parseText(nt7);
     // this.parse(terms);
     // console.log(nt7.map(r =>r.toString()).join("\n"));
@@ -221,15 +230,18 @@ export class SerializeText {
         continue;
       }
       if (terms[i].type == 'paragraph') {
-        if (last()?.type != 'text') {
+        // Закомментирован сбор блоков текста в один
+        // if (last()?.type != 'text') {
           nt.push({ type: 'text', value: [terms[i].value as string] });
           continue;
-        }
-        (last().value as string[]).push(terms[i].value as string);
+        // }
+        // (last().value as string[]).push(terms[i].value as string);
       }
     }
     return nt;
   }
+
+ 
   private parseQuotes(terms: TokenValue[]): TokenValue[] {
     const nt: TokenValue[] = [];
     const last = () => nt[nt.length - 1];
@@ -270,7 +282,7 @@ export class SerializeText {
   private parseTitle(terms: TokenHave[]): TokenHave[] {
     const nt: TokenValue[] = [];
     for (let i = 0; i < terms.length; i++) {
-      if ( terms[i]?.type != 'subtitle') {
+      if (terms[i]?.type != 'subtitle') {
         nt.push(terms[i] as any);
         continue;
       }

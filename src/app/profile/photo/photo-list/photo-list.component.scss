@@ -1,0 +1,36 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px 30px;
+  padding: 20px 20px;
+  position: relative;
+  min-height: calc(100vh - 280px);
+  height: 100%;
+}
+
+.empty {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  margin: 0 20px;
+  display: flex;
+  height: calc(100vh - 280px);
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px dashed var(--tui-text-03);
+  .emptyImg {
+    width: 100%;
+    max-width: 350px;
+    opacity: 0.1;
+  }
+
+  p {
+    font-size: 22px;
+    color: #ccc;
+    text-align: center;
+  }
+}

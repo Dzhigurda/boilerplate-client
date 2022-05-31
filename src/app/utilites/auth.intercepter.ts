@@ -11,7 +11,13 @@ import {
 import { Router } from '@angular/router';
 
 import { Subject, Observable, empty, of, EmptyError, EMPTY, NEVER } from 'rxjs';
-import { map, onErrorResumeNext, switchMap, tap } from 'rxjs/operators';
+import {
+  catchError,
+  map,
+  onErrorResumeNext,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 
 @Injectable()
@@ -37,10 +43,7 @@ export class JwtInterceptor implements HttpInterceptor {
 
   refreshToken() {
     let refresh = this.authService.getRefreshJWT();
-    if (!refresh) {
-      this.authService.logout();
-      return EMPTY;
-    }
+    if (!refresh) return this.logout();
     if (this.refreshTokenInProgress) {
       return new Observable((observer) => {
         this.tokenRefreshed$.subscribe(() => {
@@ -48,50 +51,46 @@ export class JwtInterceptor implements HttpInterceptor {
           observer.complete();
         });
       });
-    } else {
-      this.refreshTokenInProgress = true;
-      return this.authService.refreshToken(refresh).pipe(
-        tap(() => {
-          this.refreshTokenInProgress = false;
-          this.tokenRefreshedSource.next();
-        })
-      );
     }
+    this.refreshTokenInProgress = true;
+    return this.authService.refreshToken(refresh).pipe(
+      tap(() => {
+        this.refreshTokenInProgress = false;
+        this.tokenRefreshedSource.next();
+      })
+    );
   }
 
   logout() {
     this.authService.logout();
+    return EMPTY;
   }
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    console.log(request, next);
     request = this.addAuthHeader(request, 0);
     return next.handle(request).pipe(
-      tap({
-        error: (err) => {
-          if (err instanceof HttpErrorResponse) {
-            if (err.status === 401) {
-              this.refreshToken()
-                .pipe(
-                  switchMap(() => {
-                    request = this.addAuthHeader(request, 0);
-                    return next.handle(request);
-                  })
-                )
-                .subscribe();
-            } else if (err.status === 402) {
-              this.authService.logout();
-            } else {
-              // NOT
-            }
+      catchError((error) => {
+        if (error instanceof HttpErrorResponse) {
+          if (error.status === 401) {
+            return this.refreshToken()
+              .pipe(
+                switchMap(() => {
+                  request = this.addAuthHeader(request, 0);
+                  return next.handle(request);
+                })
+              )
+          } else if (error.status === 402) {
+            return this.logout();
+          } else {
+            // NOT
           }
-        },
+        }
+        throw error;
       }),
       switchMap((event: HttpEvent<any>, index) => {
-        console.log(index, event);
         if (event instanceof HttpResponse) {
           if (event.status === 200) {
             return of(event);
@@ -103,8 +102,7 @@ export class JwtInterceptor implements HttpInterceptor {
               })
             );
           } else if (event.status === 402) {
-            this.authService.logout();
-            return EMPTY;
+            return this.logout();
           } else {
             of(event);
           }

@@ -1,5 +1,5 @@
 <div
-  [ngClass]="{ island: true, publish: category.publish }"
+  [ngClass]="{ island: true, publish: category.isPublish() }"
   (click)="open(editor)"
 >
   <div class="name">{{ category.name }}</div>
@@ -30,6 +30,15 @@
         formControlName="about"
         [error]="[] | tuiFieldError | async"
       ></tui-error>
+    </p>
+    <p>  
+          <tui-checkbox-block 
+              formControlName="publish"
+              contentAlign="right"
+              size="m"
+          >
+              Publiush
+          </tui-checkbox-block> 
     </p>
     <p>
       <button

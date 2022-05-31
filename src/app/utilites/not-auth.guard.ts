@@ -14,7 +14,7 @@ export class NotAuthGuard implements CanActivate {
     if(this.authService.hasJWT()) {
       this.router.navigateByUrl("/profile");
     }
-    return !this.authService.hasJWT();
+    return true;
   }
   
 }
